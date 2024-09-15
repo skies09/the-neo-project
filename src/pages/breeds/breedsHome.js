@@ -3,22 +3,22 @@ import React, { useEffect, useState } from "react";
 export default function Breeds() {
 	const [groups, setGroups] = useState([]);
 
-	useEffect(() => {
-		// Get the dog groups
-		const fetchData = async () => {
-			const url = `${process.env.REACT_APP_NEO_PROJECT_BASE_URL}breeds/groups`;
+	// useEffect(() => {
+	// 	// Get the dog groups
+	// 	const fetchData = async () => {
+	// 		const url = `${process.env.REACT_APP_NEO_PROJECT_BASE_URL}breeds/groups`;
 
-			try {
-				const response = await fetch(url);
-				const groupsData = await response.json();
-				setGroups(groupsData);
-			} catch (error) {
-				console.error("Error fetching groups:", error.message);
-			}
-		};
+	// 		try {
+	// 			const response = await fetch(url);
+	// 			const groupsData = await response.json();
+	// 			setGroups(groupsData);
+	// 		} catch (error) {
+	// 			console.error("Error fetching groups:", error.message);
+	// 		}
+	// 	};
 
-		fetchData();
-	}, []);
+	// 	fetchData();
+	// }, []);
 
 	return (
 		<div id="breeds" className="w-screen overflow-hidden h-[80vh] mt-4 ">
