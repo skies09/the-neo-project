@@ -3,11 +3,14 @@ module.exports = {
 	content: ["./src/**/*.{js,jsx,ts,tsx}"],
 	theme: {
 		colors: {
-			colorOne: "#545B6C",
-			colorTwo: "#AD9BAC",
-			colorThree: "#EEEEEE",
-			colorFour: "#5C9CBC",
-			colorFive: "#C4C4E4",
+			skyBlue: "#5ED3E8",
+			aquamarine: "#ADFFD2",
+			turquoise: "#5AEDD7",
+			sunset: "#FFCF99",
+			flax: "#FFF799",
+			honeydew: "#F1FAEE",
+			mintCream: "#F4FDF3",
+			oxfordBlue: "#0B2545",
 		},
 		fontFamily: {
 			sans: ["Open Sans", "sans-serif"],
@@ -15,6 +18,7 @@ module.exports = {
 			mono: ["Montserrat", "sans-serif"],
 			satisfy: ["Satisfy", "cursive"],
 			greatVibes: ["Great Vibes", "cursive"],
+			poppins: ["Poppins", "sans-serif"],
 		},
 		extend: {
 			transitionDuration: {
