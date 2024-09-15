@@ -9,7 +9,7 @@ export default function Header() {
 				<div className="flex flex-row items-center mx-4">
 					<FontAwesomeIcon
 						icon={faPaw}
-						size="md lg:xl"
+						size="lg"
 						className="text-flax drop-shadow-md"
 					/>
 				</div>
@@ -19,7 +19,7 @@ export default function Header() {
 				<div className="flex flex-row items-center mx-4">
 					<FontAwesomeIcon
 						icon={faPaw}
-						size="md lg:xl"
+						size="lg"
 						className="text-flax drop-shadow-md"
 					/>
 				</div>
