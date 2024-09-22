@@ -9,7 +9,20 @@ export default function Breeds() {
 			const url = `${process.env.REACT_APP_NEO_PROJECT_BASE_URL}breeds/groups`;
 
 			try {
-				const response = await fetch(url);
+				const response = await fetch(url, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						// Add other headers if needed, like authorization
+						// 'Authorization': 'Bearer <token>',
+					},
+				});
+
+				// Check if response status is OK (status code 200-299)
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+
 				const groupsData = await response.json();
 				setGroups(groupsData);
 			} catch (error) {
