@@ -6,7 +6,8 @@ export default function Breeds() {
 	useEffect(() => {
 		// Get the dog groups
 		const fetchData = async () => {
-			const url = `${process.env.REACT_APP_NEO_PROJECT_BASE_URL}breeds/groups`;
+			// const url = `${process.env.REACT_APP_NEO_PROJECT_BASE_URL}breeds/groups`;
+			const url = `${process.env.GROUPS_URL}`;
 
 			try {
 				const response = await fetch(url, {
