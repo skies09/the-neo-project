@@ -4,22 +4,18 @@ export default function Breeds() {
 	const [groups, setGroups] = useState([]);
 
 	useEffect(() => {
-		// Get the dog groups
-		const fetchData = async () => {
-			// const url = `${process.env.REACT_APP_NEO_PROJECT_BASE_URL}breeds/groups`;
-			const url = `${process.env.GROUPS_URL}`;
+		const fetchGroups = async () => {
+			const url = process.env.REACT_APP_NEO_PROJECT_CF_GROUPS_URL;
+			console.log(url, "URL");
 
 			try {
 				const response = await fetch(url, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
-						// Add other headers if needed, like authorization
-						// 'Authorization': 'Bearer <token>',
 					},
 				});
 
-				// Check if response status is OK (status code 200-299)
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
@@ -31,7 +27,7 @@ export default function Breeds() {
 			}
 		};
 
-		fetchData();
+		fetchGroups();
 	}, []);
 
 	return (
