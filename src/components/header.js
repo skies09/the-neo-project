@@ -13,7 +13,7 @@ export default function Header() {
 						className="text-flax drop-shadow-md"
 					/>
 				</div>
-				<h1 className="font-satisfy text-2xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+				<h1 className="font-satisfy text-2xl md:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
 					The Neo Project
 				</h1>
 				<div className="flex flex-row items-center mx-4">

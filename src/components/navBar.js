@@ -41,7 +41,7 @@ const Navbar = () => {
 						to="/kennelAdmin"
 						className="text-skyBlue hover:text-sunset font-poppins font-semibold"
 					>
-						Kennel admin
+						Kennels
 					</Link>
 				</div>
 
@@ -98,7 +98,7 @@ const Navbar = () => {
 						to="/kennelAdmin"
 						className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
 					>
-						Kennel admin
+						Kennels
 					</Link>
 				</div>
 			)}
