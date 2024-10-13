@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import AdoptionCard from "../components/cards/adoptCard";
 // import { motion } from "framer-motion";
 
-export default function Home() {
+const Home = () => {
 	const [dogOfTheDay, setDogOfTheDay] = useState({});
 
 	useEffect(() => {
@@ -93,7 +93,7 @@ export default function Home() {
 				</div>
 
 				{/* Right side (Signup) */}
-				{dogOfTheDay && (
+				{Object.keys(dogOfTheDay).length !== 0 && (
 					<div className="flex flex-col items-stretch justify-start flex-1 bg-gray-100 mt-4 lg:mt-0">
 						<p className="text-oxfordBlue text-2xl font-bold font-poppins text-center">
 							Dog of the day
@@ -106,4 +106,6 @@ export default function Home() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default Home;

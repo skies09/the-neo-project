@@ -2,12 +2,12 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Header from "./components/header";
-import Home from "./pages/home";
+import Home from "./pages/home.tsx";
 import Navbar from "./components/navBar";
 import Adoption from "./pages/adoption/adoptionCalculator";
 import BreedCalculator from "./pages/breedCalculator/breedCalculator";
 import Breeds from "./pages/breeds/breedsHome";
-import KennelAdmin from "./pages/kennel/kennelAdmin";
+import KennelAdmin from "./pages/kennel/kennelAdmin.tsx";
 
 export default function App() {
 	return (
