@@ -4,7 +4,7 @@ import { faPaw } from "@fortawesome/free-solid-svg-icons";
 
 export default function Header() {
 	return (
-		<div className="w-screen overflow-hidden h-auto items-center justify-center flex py-8 bg-skyBlue mt-16">
+		<div className="w-screen overflow-hidden h-auto items-center justify-center flex py-8 bg-skyBlue pt-24">
 			<div className="relative flex flex-row justify-center items-center">
 				<div className="flex flex-row items-center mx-4">
 					<FontAwesomeIcon
