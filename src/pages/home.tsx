@@ -48,7 +48,7 @@ const Home = () => {
 			<div className="flex flex-col-reverse md:flex-row h-full min-h-auto">
 				<div className="flex items-stretch justify-center flex-1 bg-gray-100">
 					<div className="w-full mx-10 my-4 flex flex-col justify-between items-center">
-						<div className="max-w-md bg-honeydew rounded-lg shadow-lg p-4 m-2 text-center w-full h-full">
+						<div className="max-w-md bg-honeydew rounded-lg shadow-lg p-4 m-2 text-center w-full h-auto">
 							<p className="text-lg font-poppins font-semibold text-oxfordBlue mb-2">
 								Check out dogs available for adoption
 							</p>
@@ -98,7 +98,7 @@ const Home = () => {
 						<p className="text-oxfordBlue text-2xl font-bold font-poppins text-center">
 							Dog of the day
 						</p>
-						<div className="flex flex-col justify-center items-center w-full">
+						<div className="flex flex-col justify-center items-center w-full my-24">
 							<AdoptionCard dog={dogOfTheDay} />
 						</div>
 					</div>
