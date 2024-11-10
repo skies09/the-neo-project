@@ -7,7 +7,7 @@ export default function Breeds() {
 
 	useEffect(() => {
 		const fetchGroups = async () => {
-			const url = process.env.REACT_APP_NEO_PROJECT_CF_GROUPS_URL;
+			const url = process.env.REACT_APP_NEO_PROJECT_GROUPS_URL
 
 			try {
 				const response = await fetch(url, {
@@ -31,9 +31,9 @@ export default function Breeds() {
 		fetchGroups();
 	}, []);
 
-	const fetchBreeds = async (group) => {
+	const fetchBreedsOfGroup = async (group) => {
 		setSelectedGroup(group);
-		const url = `${process.env.REACT_APP_NEO_PROJECT_CF_BREEDS_URL}${group}`;
+		const url = `${process.env.REACT_APP_NEO_PROJECT_BREEDS_OF_GROUP_URL}${group}`;
 		console.log(url, "URL");
 		try {
 			const response = await fetch(url);
@@ -42,7 +42,29 @@ export default function Breeds() {
 			}
 
 			const breedsData = await response.json();
-			console.log(breedsData, "breed data");
+			setBreeds(breedsData);
+		} catch (error) {
+			console.error("Error fetching breeds:", error.message);
+		}
+	};
+
+	const fetchAll = async () => {
+
+		const url = process.env.REACT_APP_NEO_PROJECT_LIST_ALL_BREEDS_URL
+
+		try {
+			const response = await fetch(url, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const breedsData = await response.json();
 			setBreeds(breedsData);
 		} catch (error) {
 			console.error("Error fetching breeds:", error.message);
@@ -61,7 +83,7 @@ export default function Breeds() {
 							<li className="m-2" key={index}>
 								<button
 									className="font-mono text-base text-oxfordBlue p-4 border rounded-lg hover:bg-sunset"
-									onClick={() => fetchBreeds(group)}
+									onClick={() => fetchBreedsOfGroup(group)}
 								>
 									{group}
 								</button>
@@ -72,16 +94,16 @@ export default function Breeds() {
 				<div className="flex justify-center items-center mt-4">
 					<button
 						className="font-mono text-base text-oxfordBlue p-4 border rounded-lg hover:bg-sunset"
-						onClick={() => {
-							console.log("Search all");
-						}}
+						onClick={() => fetchAll()}
 					>
 						All Breeds
 					</button>
 				</div>
-				{selectedGroup && breeds.length > 0 && (
+				{breeds.length > 0 && (
 					<div className="mt-4">
+					{selectedGroup && (
 						<h3 className="text-xl font-bold text-center">{`${selectedGroup} Breeds:`}</h3>
+					)}
 						<ul className="flex flex-wrap justify-center mt-2">
 							{breeds.map((breed, index) => (
 								<li className="m-2" key={breed.id}>
