@@ -6,35 +6,35 @@ export default function Breeds() {
 	const [selectedGroup, setSelectedGroup] = useState(null);
 
 	useEffect(() => {
-		const fetchGroups = async () => {
-			const url = process.env.REACT_APP_NEO_PROJECT_GROUPS_URL
+	const fetchGroups = async () => {
+		const url = process.env.REACT_APP_NEO_PROJECT_BASE_URL + 'api/breeds/groups/'
 
-			try {
-				const response = await fetch(url, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				});
+		try {
+			const response = await fetch(url, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
 
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-
-				const groupsData = await response.json();
-				setGroups(groupsData);
-			} catch (error) {
-				console.error("Error fetching groups:", error.message);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-		};
 
-		fetchGroups();
+			const groupsData = await response.json();
+			setGroups(groupsData);
+		} catch (error) {
+			console.error("Error fetching groups:", error.message);
+		}
+	};
+
+	fetchGroups();
 	}, []);
 
 	const fetchBreedsOfGroup = async (group) => {
 		setSelectedGroup(group);
-		const url = `${process.env.REACT_APP_NEO_PROJECT_BREEDS_OF_GROUP_URL}${group}`;
-		console.log(url, "URL");
+		const url = `${process.env.REACT_APP_NEO_PROJECT_BASE_URL}api/breeds/groups/${group}`;
+
 		try {
 			const response = await fetch(url);
 			if (!response.ok) {
@@ -50,7 +50,7 @@ export default function Breeds() {
 
 	const fetchAll = async () => {
 
-		const url = process.env.REACT_APP_NEO_PROJECT_LIST_ALL_BREEDS_URL
+		const url = process.env.REACT_APP_NEO_PROJECT_BASE_URL + 'api/breeds/list_all'
 
 		try {
 			const response = await fetch(url, {

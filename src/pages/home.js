@@ -8,7 +8,9 @@ const Home = () => {
 
 	useEffect(() => {
 		const fetchGroups = async () => {
-			const url = process.env.REACT_APP_NEO_PROJECT_DOG_OF_THE_DAY_URL;
+			const url =
+				process.env.REACT_APP_NEO_PROJECT_BASE_URL +
+				"api/adoptionDogs/dod";
 
 			try {
 				const response = await fetch(url, {
