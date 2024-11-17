@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import emailjs from "@emailjs/browser";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 const KennelAdmin = () => {
+	const [loggingIn, setIsLoggingIn] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 	const [isLoginForm, setIsLoginForm] = useState(true);
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
 
 	function sendEmail(values) {
 		emailjs
@@ -28,6 +33,32 @@ const KennelAdmin = () => {
 				}
 			);
 	}
+
+	const login = async (values) => {
+		const url =
+			process.env.REACT_APP_NEO_PROJECT_BASE_URL + "api/auth/login/";
+
+		try {
+			const response = await fetch(url, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					username: values.username,
+					password: values.password,
+				}),
+			});
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			console.log("REDIRECT?");
+		} catch (error) {
+			setErrorMessage("Error logging in");
+			console.error("Error logging in:", error.message);
+		}
+		setIsLoggingIn(false);
+	};
 
 	const renderContactForm = () => {
 		return (
@@ -203,34 +234,87 @@ const KennelAdmin = () => {
 								<p className="text-oxfordBlue text-2xl font-bold mb-4 font-poppins text-center">
 									Kennel Login
 								</p>
-								<form className="space-y-4">
-									<div>
-										<label className="block text-oxfordBlue font-sans">
-											Email
-										</label>
-										<input
-											type="email"
+								<Formik
+									initialValues={{
+										username: "",
+										password: "",
+									}}
+									validationSchema={Yup.object({
+										username: Yup.string(),
+										password: Yup.string(),
+									})}
+									onSubmit={(values, { setSubmitting }) => {
+										setErrorMessage("");
+										setIsLoggingIn(true);
+
+										login(values);
+										setSubmitting(false);
+									}}
+								>
+									<Form className="my-4 flex flex-col justify-start items-start w-full lg:w-full">
+										<p className="block text-md text-oxfordBlue font-sans">
+											Username
+										</p>
+										<Field
 											className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 font-sans"
-											placeholder="Enter your email"
+											type="text"
+											id="username"
+											name="username"
+											placeholder="Username"
 										/>
-									</div>
-									<div>
-										<label className="block text-oxfordBlue font-sans">
-											Password
-										</label>
-										<input
-											type="password"
-											className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 font-sans"
-											placeholder="Enter your password"
-										/>
-									</div>
-								</form>
-							</div>
-							{/* Left side button */}
-							<div className="flex items-center justify-center mt-4">
-								<button className="w-full px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-700 font-mono">
-									Login
-								</button>
+										<div className="relative w-full">
+											<p className="block text-md text-oxfordBlue font-sans">
+												Password
+											</p>
+
+											<Field
+												className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 font-sans pr-10"
+												type={
+													showPassword
+														? "text"
+														: "password"
+												}
+												id="password"
+												name="password"
+												placeholder="Password"
+											/>
+
+											<span
+												onClick={() =>
+													setShowPassword(
+														!showPassword
+													)
+												}
+												className="absolute right-3 top-8 cursor-pointer text-gray-500 hover:text-oxfordBlue"
+											>
+												<FontAwesomeIcon
+													icon={
+														!showPassword
+															? faEyeSlash
+															: faEye
+													}
+												/>
+											</span>
+										</div>
+										{errorMessage && (
+											<div className="flex text-center mt-4 w-full justify-center items-center">
+												<p className="text-sm lg:text-lg text-center font-poppins font-medium text-[#FF0000]">
+													{errorMessage}
+												</p>
+											</div>
+										)}
+										<div className="flex items-center justify-center mt-4 w-full">
+											<button
+												type="submit"
+												className="px-10 py-2 bg-oxfordBlue text-honeydew rounded-lg transition-all shadow-md font-poppins font-semibold hover:bg-skyBlue hover:text-oxfordBlue"
+											>
+												{loggingIn
+													? "Logging in ..."
+													: "Login"}
+											</button>
+										</div>
+									</Form>
+								</Formik>
 							</div>
 						</div>
 					)}
