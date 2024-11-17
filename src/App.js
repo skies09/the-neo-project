@@ -7,7 +7,7 @@ import Navbar from "./components/navBar";
 import Adoption from "./pages/adoption/adoptionCalculator";
 import BreedCalculator from "./pages/breedCalculator/breedCalculator";
 import Breeds from "./pages/breeds/breedsHome";
-import KennelAdmin from "./pages/kennel/kennelAdmin.tsx";
+import KennelAdmin from "./pages/kennel/kennelAdmin";
 
 export default function App() {
 	return (
