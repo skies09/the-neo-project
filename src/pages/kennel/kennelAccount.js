@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const KennelAccount = () => {
 	const { kennel: kennelId } = useSelector((state) => state.kennel);

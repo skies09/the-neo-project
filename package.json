@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.26.0",
+    "axios-auth-refresh": "^3.3.1",
     "@emailjs/browser": "^4.3.3",
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@fortawesome/free-brands-svg-icons": "^6.5.2",

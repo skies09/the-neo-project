@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-const Contact = () => {
+const Contact = (form) => {
 	const containerRef = useRef(null);
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const [loading, setLoading] = useState(false);
 
 	function sendEmail(values) {
-		values.from = "All Roads Transport";
+		values.from = "Neo Project";
 		emailjs
 			.send(
 				process.env.REACT_APP_EMAIL_SERVICE_KEY,

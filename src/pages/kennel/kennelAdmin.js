@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import emailjs from "@emailjs/browser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { setKennel } from "../../store/kennels/actions";
+import { useKennelActions } from "../../hooks/kennel.actions";
 
 const KennelAdmin = () => {
 	const [loggingIn, setIsLoggingIn] = useState(false);
@@ -15,8 +14,8 @@ const KennelAdmin = () => {
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
+
+	const kennelActions = useKennelActions();
 
 	function sendEmail(values) {
 		emailjs
@@ -39,41 +38,17 @@ const KennelAdmin = () => {
 			);
 	}
 
-	const login = async (values) => {
-		const url =
-			process.env.REACT_APP_NEO_PROJECT_BASE_URL + "api/auth/login/";
+	const login = (values) => {
+		const data = {
+			username: values.username,
+			password: values.password,
+		};
 
-		try {
-			const response = await fetch(url, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					username: values.username,
-					password: values.password,
-				}),
-			});
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+		kennelActions.login(data).catch((err) => {
+			if (err.message) {
+				setErrorMessage(err.request.response);
 			}
-			const data = await response.json();
-
-			// Check if the user object exists in the response
-			if (!data.user) {
-				throw new Error("User not found in the response payload.");
-			}
-
-			const user = data.user;
-			console.log(user, "user object");
-			dispatch(setKennel(user.id));
-			navigate("/KennelAccount");
-		} catch (error) {
-			setErrorMessage("Error logging in");
-			// TODO: Show button link to contact form
-			console.error("Error logging in:", error.message);
-		}
-		setIsLoggingIn(false);
+		});
 	};
 
 	const renderContactForm = () => {
@@ -256,8 +231,12 @@ const KennelAdmin = () => {
 										password: "",
 									}}
 									validationSchema={Yup.object({
-										username: Yup.string(),
-										password: Yup.string(),
+										username: Yup.string().required(
+											"Username is required"
+										),
+										password: Yup.string().required(
+											"Password is required"
+										),
 									})}
 									onSubmit={(values, { setSubmitting }) => {
 										setErrorMessage("");
@@ -267,63 +246,74 @@ const KennelAdmin = () => {
 										setSubmitting(false);
 									}}
 								>
-									<Form className="my-4 flex flex-col justify-start items-start w-full lg:w-full">
-										<p className="block text-md text-oxfordBlue font-sans">
-											Username
-										</p>
-										<Field
-											className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 font-sans"
-											type="text"
-											id="username"
-											name="username"
-											placeholder="Username"
-										/>
-										<div className="relative w-full">
+									{({ values, isSubmitting }) => (
+										<Form className="my-4 flex flex-col justify-start items-start w-full lg:w-full">
 											<p className="block text-md text-oxfordBlue font-sans">
-												Password
+												Username
 											</p>
-
 											<Field
-												className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 font-sans pr-10"
-												type={
-													showPassword
-														? "text"
-														: "password"
-												}
-												id="password"
-												name="password"
-												placeholder="Password"
+												className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 font-sans"
+												type="text"
+												id="username"
+												name="username"
+												placeholder="Username"
 											/>
+											<div className="relative w-full">
+												<p className="block text-md text-oxfordBlue font-sans">
+													Password
+												</p>
 
-											<span
-												onClick={() =>
-													setShowPassword(
-														!showPassword
-													)
-												}
-												className="absolute right-3 top-8 cursor-pointer text-gray-500 hover:text-oxfordBlue"
-											>
-												<FontAwesomeIcon
-													icon={
-														!showPassword
-															? faEyeSlash
-															: faEye
+												<Field
+													className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 font-sans pr-10"
+													type={
+														showPassword
+															? "text"
+															: "password"
 													}
+													id="password"
+													name="password"
+													placeholder="Password"
 												/>
-											</span>
-										</div>
 
-										<div className="flex items-center justify-center mt-4 w-full">
-											<button
-												type="submit"
-												className="px-10 py-2 bg-oxfordBlue text-honeydew rounded-lg transition-all shadow-md font-poppins font-semibold hover:bg-skyBlue hover:text-oxfordBlue"
-											>
-												{loggingIn
-													? "Logging in ..."
-													: "Login"}
-											</button>
-										</div>
-									</Form>
+												<span
+													onClick={() =>
+														setShowPassword(
+															!showPassword
+														)
+													}
+													className="absolute right-3 top-8 cursor-pointer text-gray-500 hover:text-oxfordBlue"
+												>
+													<FontAwesomeIcon
+														icon={
+															!showPassword
+																? faEyeSlash
+																: faEye
+														}
+													/>
+												</span>
+											</div>
+
+											<div className="flex items-center justify-center mt-4 w-full">
+												<button
+													disabled={
+														!values.password ||
+														!values.username
+													}
+													type="submit"
+													className={`px-10 py-2 rounded-lg transition-all shadow-md font-poppins font-semibold bg-oxfordBlue text-honeydew ${
+														!values.password ||
+														!values.username
+															? "opacity-60 cursor-not-allowed"
+															: "hover:bg-skyBlue hover:text-oxfordBlue"
+													}`}
+												>
+													{loggingIn
+														? "Logging in ..."
+														: "Login"}
+												</button>
+											</div>
+										</Form>
+									)}
 								</Formik>
 							</div>
 							{errorMessage && (

@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 import Header from "./components/header";
 import Home from "./pages/home";
@@ -26,7 +27,15 @@ export default function App() {
 					/>
 					<Route path="/breeds" element={<Breeds />} />
 					<Route path="/kennelAdmin" element={<KennelAdmin />} />
-					<Route path="/KennelAccount" element={<KennelAccount />} />
+					<Route
+						path="/KennelAccount"
+						element={
+							<ProtectedRoute>
+								<KennelAccount />
+							</ProtectedRoute>
+						}
+					/>
+
 					<Route path="/Contact" element={<Contact />} />
 				</Routes>
 			</Router>
