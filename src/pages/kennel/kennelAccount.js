@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import ProfileCard from "../../components/cards/ProfileCard";
 
 const KennelAccount = () => {
 	const { kennel: kennelId } = useSelector((state) => state.kennel);
+	const [showProfile, setShowProfile] = useState(true);
+	const [profileEdited, setProfileEdited] = useState(false);
 	const [kennelData, setKennelData] = useState({});
-	const [isEditing, setIsEditing] = useState(false);
-	const [formValues, setFormValues] = useState(kennelData);
 
 	useEffect(() => {
 		const fetchKennelDetails = async () => {
-			const url =
+			const auth = JSON.parse(localStorage.getItem("auth"));
+			let url =
 				process.env.REACT_APP_NEO_PROJECT_BASE_URL +
 				"api/kennel/" +
 				kennelId;
-
+			if (!kennelId) {
+				url =
+					process.env.REACT_APP_NEO_PROJECT_BASE_URL +
+					"api/kennel/" +
+					auth.kennel.id;
+			}
 			try {
 				const response = await fetch(url, {
 					method: "GET",
@@ -28,145 +35,52 @@ const KennelAccount = () => {
 
 				const data = await response.json();
 				setKennelData(data);
+				setProfileEdited(false);
 			} catch (error) {
 				console.error("Error fetching groups:", error.message);
 			}
 		};
 
 		fetchKennelDetails();
-	}, [kennelId]);
-
-	// Handle form field changes
-	const handleInputChange = (e) => {
-		const { name, value } = e.target;
-		setFormValues((prevValues) => ({
-			...prevValues,
-			[name]: value,
-		}));
-	};
-
-	// Handle the form submission to save the changes
-	const handleSave = () => {
-		// Save the data (this could be a POST or PUT request to an API)
-		console.log("Saved kennel details:", formValues);
-		setIsEditing(false);
-	};
+	}, [kennelId, profileEdited]);
 
 	return (
 		<div id="kennelAdmin" className="w-screen overflow-hidden h-auto mt-4">
-			<h2>{kennelData.name}</h2>
-
-			{isEditing ? (
-				<div className="edit-form">
-					<form>
-						<div>
-							<label>Email:</label>
-							<input
-								type="email"
-								name="email"
-								value={kennelData.email}
-								onChange={handleInputChange}
-							/>
-						</div>
-						<div>
-							<label>Username:</label>
-							<input
-								type="text"
-								name="username"
-								value={kennelData.username}
-								onChange={handleInputChange}
-							/>
-						</div>
-						<div>
-							<label>Name:</label>
-							<input
-								type="text"
-								name="name"
-								value={kennelData.name}
-								onChange={handleInputChange}
-							/>
-						</div>
-						<div>
-							<label>Address Line 1:</label>
-							<input
-								type="text"
-								name="address_line_1"
-								value={kennelData.address_line_1}
-								onChange={handleInputChange}
-							/>
-						</div>
-						<div>
-							<label>City:</label>
-							<input
-								type="text"
-								name="city"
-								value={kennelData.city}
-								onChange={handleInputChange}
-							/>
-						</div>
-						<div>
-							<label>Town:</label>
-							<input
-								type="text"
-								name="town"
-								value={kennelData.town}
-								onChange={handleInputChange}
-							/>
-						</div>
-						<div>
-							<label>Postcode:</label>
-							<input
-								type="text"
-								name="postcode"
-								value={kennelData.postcode}
-								onChange={handleInputChange}
-							/>
-						</div>
-						<div>
-							<label>Contact Number:</label>
-							<input
-								type="text"
-								name="contact_number"
-								value={kennelData.contact_number}
-								onChange={handleInputChange}
-							/>
-						</div>
-
-						<button type="button" onClick={handleSave}>
-							Save
-						</button>
-					</form>
-				</div>
-			) : (
-				<div className="view-details">
-					<p>
-						<strong>Email:</strong> {kennelData.email}
-					</p>
-					<p>
-						<strong>Username:</strong> {kennelData.username}
-					</p>
-					<p>
-						<strong>Name:</strong> {kennelData.name}
-					</p>
-					<p>
-						<strong>Address Line 1:</strong>{" "}
-						{kennelData.address_line_1}
-					</p>
-					<p>
-						<strong>City:</strong> {kennelData.city}
-					</p>
-					<p>
-						<strong>Town:</strong> {kennelData.town}
-					</p>
-					<p>
-						<strong>Postcode:</strong> {kennelData.postcode}
-					</p>
-					<p>
-						<strong>Contact Number:</strong>{" "}
-						{kennelData.contact_number}
-					</p>
-
-					<button onClick={() => setIsEditing(true)}>Edit</button>
+			<div className="flex justify-center items-center mx-auto">
+				<p className="text-xl md:text-2xl font-poppins font-semibold text-oxfordBlue mb-2">
+					{kennelData.name}
+				</p>
+			</div>
+			<div className="text-white py-4 flex justify-center">
+				<button
+					onClick={() => setShowProfile(true)}
+					className={`px-6 py-2 mx-2 ${
+						showProfile
+							? "bg-oxfordBlue text-honeydew"
+							: "bg-honeydew text-oxfordBlue "
+					} rounded-lg transition-all shadow-md font-poppins font-semibold`}
+				>
+					Profile
+				</button>
+				<button
+					onClick={() => setShowProfile(false)}
+					className={`px-6 py-2 mx-2 ${
+						!showProfile
+							? "bg-oxfordBlue text-honeydew"
+							: "bg-honeydew text-oxfordBlue"
+					} rounded-lg transition-all shadow-md font-poppins font-semibold`}
+				>
+					Dogs
+				</button>
+			</div>
+			{showProfile && (
+				<div className="w-5/6 mx-auto p-6 bg-honeydew rounded-xl shadow-lg my-4 flex flex-col justify-between">
+					<div>
+						<ProfileCard
+							kennelData={kennelData}
+							setProfileEdited={setProfileEdited}
+						/>
+					</div>
 				</div>
 			)}
 		</div>

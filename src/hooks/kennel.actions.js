@@ -15,7 +15,7 @@ function useKennelActions() {
 		edit,
 	};
 
-	// Login the user
+	// Login the kennel
 	function login(data) {
 		return axios.post(`${baseURL}api/auth/login/`, data).then((res) => {
 			// Registering the account and tokens in the store
@@ -25,28 +25,29 @@ function useKennelActions() {
 		});
 	}
 
-	// Edit the user
-	function edit(data, userId) {
+	// Edit the kennel
+	function edit(data, kennelId) {
 		return axiosService
-			.patch(`${baseURL}/user/${userId}/`, data, {
+			.patch(`${baseURL}api/kennel/${kennelId}/`, data, {
 				headers: {
-					"content-type": "multipart/form-data",
+					"Content-Type": "application/json", // Explicitly set for JSON requests
 				},
 			})
 			.then((res) => {
+				console.log(res, "RES");
 				// Registering the account in the store
 				localStorage.setItem(
 					"auth",
 					JSON.stringify({
 						access: getAccessToken(),
 						refresh: getRefreshToken(),
-						user: res.data,
+						kennel: res.data,
 					})
 				);
 			});
 	}
 
-	// Logout the user
+	// Logout the kennel
 	function logout() {
 		return axiosService
 			.post(`${baseURL}/auth/logout/`, { refresh: getRefreshToken() })
@@ -79,7 +80,7 @@ function getRefreshToken() {
 	return auth.refresh;
 }
 
-// Set the access, token and user property
+// Set the access, token and kennel property
 function setKennelData(data) {
 	localStorage.setItem(
 		"auth",
