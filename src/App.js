@@ -8,6 +8,8 @@ import Adoption from "./pages/adoption/adoptionCalculator";
 import BreedCalculator from "./pages/breedCalculator/breedCalculator";
 import Breeds from "./pages/breeds/breedsHome";
 import KennelAdmin from "./pages/kennel/kennelAdmin";
+import KennelAccount from "./pages/kennel/kennelAccount";
+import Contact from "./pages/contact";
 
 export default function App() {
 	return (
@@ -24,6 +26,8 @@ export default function App() {
 					/>
 					<Route path="/breeds" element={<Breeds />} />
 					<Route path="/kennelAdmin" element={<KennelAdmin />} />
+					<Route path="/KennelAccount" element={<KennelAccount />} />
+					<Route path="/Contact" element={<Contact />} />
 				</Routes>
 			</Router>
 		</>

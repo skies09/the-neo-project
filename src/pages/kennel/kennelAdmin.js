@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { setKennel } from "../../store/kennels/actions";
 
 const KennelAdmin = () => {
 	const [loggingIn, setIsLoggingIn] = useState(false);
@@ -12,6 +15,8 @@ const KennelAdmin = () => {
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	function sendEmail(values) {
 		emailjs
@@ -52,9 +57,20 @@ const KennelAdmin = () => {
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			console.log("REDIRECT?");
+			const data = await response.json();
+
+			// Check if the user object exists in the response
+			if (!data.user) {
+				throw new Error("User not found in the response payload.");
+			}
+
+			const user = data.user;
+			console.log(user, "user object");
+			dispatch(setKennel(user.id));
+			navigate("/KennelAccount");
 		} catch (error) {
 			setErrorMessage("Error logging in");
+			// TODO: Show button link to contact form
 			console.error("Error logging in:", error.message);
 		}
 		setIsLoggingIn(false);
@@ -296,13 +312,7 @@ const KennelAdmin = () => {
 												/>
 											</span>
 										</div>
-										{errorMessage && (
-											<div className="flex text-center mt-4 w-full justify-center items-center">
-												<p className="text-sm lg:text-lg text-center font-poppins font-medium text-[#FF0000]">
-													{errorMessage}
-												</p>
-											</div>
-										)}
+
 										<div className="flex items-center justify-center mt-4 w-full">
 											<button
 												type="submit"
@@ -316,6 +326,26 @@ const KennelAdmin = () => {
 									</Form>
 								</Formik>
 							</div>
+							{errorMessage && (
+								<div className="flex flex-col justify-center items-center mx-auto">
+									<div className="flex text-center mt-2 w-full justify-center items-center">
+										<p className="text-sm lg:text-lg text-center font-poppins font-medium text-[#FF0000]">
+											{errorMessage}
+										</p>
+									</div>
+									<p className="mt-2 text-sm lg:text-lg text-center font-poppins font-medium">
+										Trouble logging in?
+										<br />
+										Contact us
+									</p>
+									<Link
+										to="/Contact"
+										className="px-10 py-2 w-full mx-auto bg-oxfordBlue text-honeydew rounded-lg transition-all shadow-md font-poppins font-semibold hover:bg-skyBlue hover:text-oxfordBlue"
+									>
+										Contact us
+									</Link>
+								</div>
+							)}
 						</div>
 					)}
 
