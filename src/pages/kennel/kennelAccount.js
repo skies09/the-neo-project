@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ProfileCard from "../../components/cards/ProfileCard";
+import UploadDogForm from "../../components/form/uploadDogForm";
 
 const KennelAccount = () => {
 	const { kennel: kennelId } = useSelector((state) => state.kennel);
 	const [showProfile, setShowProfile] = useState(true);
 	const [profileEdited, setProfileEdited] = useState(false);
+	const [showDogUploadForm, setShowDogUploadForm] = useState(false);
+	const [dogAdded, setDogAdded] = useState(false);
 	const [kennelData, setKennelData] = useState({});
+
+	useEffect(() => {
+		if (dogAdded) {
+			setShowDogUploadForm(false);
+			setDogAdded(false);
+		}
+	}, [dogAdded]);
 
 	useEffect(() => {
 		const fetchKennelDetails = async () => {
@@ -81,6 +91,31 @@ const KennelAccount = () => {
 							setProfileEdited={setProfileEdited}
 						/>
 					</div>
+				</div>
+			)}
+			{!showProfile && (
+				<div className="flex flex-col justify-center items-center mx-auto mt-3">
+					<button
+						onClick={() => setShowDogUploadForm(true)}
+						className={`px-6 py-2 mx-2 ${
+							showDogUploadForm
+								? "bg-oxfordBlue text-honeydew"
+								: "bg-honeydew text-oxfordBlue "
+						} rounded-lg transition-all shadow-md font-poppins font-semibold`}
+					>
+						Add Dogs
+					</button>
+					{showDogUploadForm && (
+						<UploadDogForm
+							kennelData={kennelData}
+							setDogAdded={setDogAdded}
+						/>
+					)}
+					{!showDogUploadForm && (
+						<div className="w-5/6 mx-auto p-6 bg-honeydew rounded-xl shadow-lg my-4 flex flex-col justify-between">
+							<div>DOGS IN KENNEL</div>
+						</div>
+					)}
 				</div>
 			)}
 		</div>

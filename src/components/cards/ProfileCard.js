@@ -240,7 +240,7 @@ const ProfileCard = ({ kennelData, setProfileEdited }) => {
 						<strong>Contact Number:</strong>{" "}
 						{kennelData.contact_number}
 					</p>
-					<div className="flex justify-center items-center mx-auto pt-4">
+					<div className="flex justify-start items-start pt-4">
 						<button
 							onClick={() => setIsEditing(true)}
 							className="px-6 py-2 mx-2 bg-oxfordBlue text-honeydew rounded-lg transition-all shadow-md font-poppins font-normal"
