@@ -1,29 +1,67 @@
-import React, { useState } from "react";
+import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useKennelActions } from "../../hooks/kennel.actions";
+import axiosService from "../../helpers/axios";
 
 const UploadDogForm = ({ kennelData, setDogAdded }) => {
-	const kennelActions = useKennelActions();
-
-	// Handle the form submission to save the changes
+	// Upload dogs
 	const handleSave = (values) => {
-		console.log("Saved kennel details:", values);
-		// kennelActions.edit(values, kennelData.id).catch((err) => {
-		// 	if (err.message) {
-		// 		console.log(err.message, "Error msg");
-		// 		// Toasty
-		// 		// setErrorMessage(err.request.response);
-		// 	}
-		// });
+		const data = {
+			name: values.name,
+			gender: values.gender,
+			age: values.age,
+			weight: values.weight,
+			good_with_dogs: values.goodWithDogs === "true" ? true : false,
+			good_with_cats: values.goodWithCats === "true" ? true : false,
+			good_with_children:
+				values.goodWithChildren === "true" ? true : false,
+			breed: values.breed,
+			is_crossbreed: values.isCrossbreed === "true" ? true : false,
+			extra_information: values.additionalInformation,
+			kennel: kennelData.id,
+		};
+		console.log("Save dog details:", data);
+
+		axiosService
+			.post("/api/dog/", data)
+			.then((res) => {
+				console.log("Response ", res);
+			})
+			.catch((err) => {
+				console.log("Error ", err);
+			});
+
 		setDogAdded(true);
 	};
 
 	return (
 		<div className="relative w-11/12 flex items-center justify-center h-full mb-20">
 			<Formik
-				initialValues={{}}
-				validationSchema={Yup.object({})}
+				initialValues={{
+					name: "",
+					breed: "",
+					isCrossbreed: "",
+					gender: "",
+					age: "",
+					weight: "",
+					goodWithDogs: "",
+					goodWithCats: "",
+					goodWithChildren: "",
+				}}
+				validationSchema={Yup.object({
+					name: Yup.string().required("Name is required"),
+					breed: Yup.string().required("Breed is required"),
+					isCrossbreed: Yup.string().required(
+						"Crossbreed is Required"
+					),
+					gender: Yup.string().required("Gender is required"),
+					age: Yup.number(),
+					weight: Yup.string().required("Weight is required"),
+					goodWithDogs: Yup.string(),
+					goodWithCats: Yup.string(),
+					goodWithChildren: Yup.string(),
+					additionalInformation: Yup.string(),
+				})}
 				onSubmit={handleSave}
 			>
 				{({ values, handleChange, handleBlur }) => (
@@ -50,6 +88,7 @@ const UploadDogForm = ({ kennelData, setDogAdded }) => {
 							{/* Left Column */}
 							<div className="flex flex-col w-full lg:w-1/2 space-y-4">
 								<div>
+									{/* Turn this into dropdown with breed options */}
 									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
 										Breed
 									</p>
@@ -81,8 +120,8 @@ const UploadDogForm = ({ kennelData, setDogAdded }) => {
 											selected
 											hidden
 										></option>
-										<option value="true">True</option>
-										<option value="false">False</option>
+										<option value="true">Yes</option>
+										<option value="false">No</option>
 									</Field>
 									<ErrorMessage
 										name="isCrossbreed"
@@ -108,8 +147,8 @@ const UploadDogForm = ({ kennelData, setDogAdded }) => {
 										>
 											Select gender
 										</option>
-										<option value="male">Male</option>
-										<option value="female">Female</option>
+										<option value="Male">Male</option>
+										<option value="Female">Female</option>
 									</Field>
 									<ErrorMessage
 										name="gender"
@@ -119,8 +158,12 @@ const UploadDogForm = ({ kennelData, setDogAdded }) => {
 								</div>
 								<div>
 									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Age
+										Age{" "}
+										<span className="text-sm lg:text-base font-normal opacity-70">
+											(if unknown leave blank)
+										</span>
 									</p>
+
 									<Field
 										className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
 										as="select"
@@ -269,12 +312,12 @@ const UploadDogForm = ({ kennelData, setDogAdded }) => {
 							<Field
 								as="textarea"
 								className="w-full h-24 rounded-xl my-1 p-2 font-monoTwo border border-oxfordBlue"
-								id="additionalNotes"
-								name="additionalNotes"
+								id="additionalInformation"
+								name="additionalInformation"
 								placeholder="Enter any additional notes here..."
 							/>
 							<ErrorMessage
-								name="additionalNotes"
+								name="additionalInformation"
 								component="div"
 								className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
 							/>

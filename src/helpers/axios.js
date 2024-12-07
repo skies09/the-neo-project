@@ -7,7 +7,7 @@ import {
 } from "../hooks/kennel.actions";
 
 const axiosService = axios.create({
-	baseURL: process.env.REACT_APP_API_URL,
+	baseURL: process.env.REACT_APP_NEO_PROJECT_BASE_URL,
 	headers: {
 		"Content-Type": "application/json",
 	},
@@ -34,7 +34,7 @@ const refreshAuthLogic = async (failedRequest) => {
 				refresh: getRefreshToken(),
 			},
 			{
-				baseURL: process.env.REACT_APP_API_URL,
+				baseURL: process.env.REACT_APP_NEO_PROJECT_BASE_URL,
 			}
 		)
 		.then((resp) => {
