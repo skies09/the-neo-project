@@ -53,7 +53,7 @@ function useKennelActions() {
 		const refresh = getRefreshToken();
 		if (!refresh) {
 			localStorage.removeItem("auth");
-			navigate("/login");
+			navigate("/kennelAdmin");
 			return;
 		}
 
@@ -61,11 +61,11 @@ function useKennelActions() {
 			.post(`${baseURL}auth/logout/`, { refresh })
 			.then(() => {
 				localStorage.removeItem("auth");
-				navigate("/login");
+				navigate("/kennelAdmin");
 			})
 			.catch(() => {
 				localStorage.removeItem("auth");
-				navigate("/login");
+				navigate("/kennelAdmin");
 			});
 	}
 }

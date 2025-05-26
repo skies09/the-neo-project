@@ -4,7 +4,7 @@ import { useAuth } from "../AuthContext";
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const { isLoggedIn } = useAuth();
+	const { isLoggedIn, logout } = useAuth();
 
 	return (
 		<div className="w-full h-16 bg-oxfordBlue fixed top-0 z-50">
@@ -22,10 +22,16 @@ const Navbar = () => {
 				{/* Desktop Links */}
 				<div className="hidden md:flex space-x-6">
 					<Link
-						to="/adopt"
+						to="/allDogs"
 						className="text-skyBlue hover:text-sunset font-poppins font-semibold"
 					>
 						Adopt a dog
+					</Link>
+					<Link
+						to="/adopt"
+						className="text-skyBlue hover:text-sunset font-poppins font-semibold"
+					>
+						Find your dog
 					</Link>
 					<Link
 						to="/breedCalculator"
@@ -41,18 +47,27 @@ const Navbar = () => {
 					</Link>
 
 					{isLoggedIn ? (
-						<Link
-							to="/kennelAccount"
-							className="text-skyBlue hover:text-sunset font-poppins font-semibold"
-							onClick={() => setIsOpen(!isOpen)}
-						>
-							Kennels
-						</Link>
+						<div>
+							<Link
+								to="/kennelAccount"
+								className="text-skyBlue hover:text-sunset font-poppins font-semibold mr-6"
+							>
+								Kennels
+							</Link>
+							<Link
+								to="/kennelAdmin"
+								className="text-skyBlue hover:text-sunset font-poppins font-semibold"
+								onClick={() => {
+									logout();
+								}}
+							>
+								Logout
+							</Link>
+						</div>
 					) : (
 						<Link
 							to="/kennelAdmin"
 							className="text-skyBlue hover:text-sunset font-poppins font-semibold"
-							onClick={() => setIsOpen(!isOpen)}
 						>
 							Kennels
 						</Link>
@@ -91,11 +106,18 @@ const Navbar = () => {
 			{isOpen && (
 				<div className="md:hidden bg-oxfordBlue">
 					<Link
-						to="/adopt"
+						to="/allDogs"
 						className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
 						onClick={() => setIsOpen(!isOpen)}
 					>
 						Adopt a dog
+					</Link>
+					<Link
+						to="/adopt"
+						className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+						onClick={() => setIsOpen(!isOpen)}
+					>
+						Find your dog
 					</Link>
 					<Link
 						to="/breedCalculator"
@@ -112,13 +134,26 @@ const Navbar = () => {
 						Dog breeds
 					</Link>
 					{isLoggedIn ? (
-						<Link
-							to="/kennelAccount"
-							className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
-							onClick={() => setIsOpen(!isOpen)}
-						>
-							Kennels
-						</Link>
+						<div>
+							<Link
+								to="/kennelAccount"
+								className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+								onClick={() => setIsOpen(!isOpen)}
+							>
+								Kennels
+							</Link>
+							<Link
+								to="/kennelAdmin"
+								className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+								onClick={() => {
+									logout();
+									setIsOpen(false);
+									setIsOpen(!isOpen);
+								}}
+							>
+								Logout
+							</Link>
+						</div>
 					) : (
 						<Link
 							to="/kennelAdmin"

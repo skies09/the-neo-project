@@ -1,50 +1,10 @@
-import React, { useEffect, useState } from "react";
-import AdoptionCard from "../../components/cards/adoptCard";
+import React from "react";
 
 export default function Adoption() {
-	const [dogData, setDogData] = useState([]);
-	useEffect(() => {
-		const fetchDogs = async () => {
-			let url = process.env.REACT_APP_NEO_PROJECT_BASE_URL + "api/dog/";
-
-			try {
-				const response = await fetch(url, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				});
-
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-
-				const data = await response.json();
-				setDogData(data.results);
-			} catch (error) {
-				console.error("Error fetching groups:", error.message);
-			}
-		};
-
-		fetchDogs();
-	}, []);
-
 	return (
 		<div id="adopt" className="w-screen overflow-hidden h-[80vh] mt-4">
 			<div className="flex justify-center items-center font-poppins text-2xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
 				Find your dog
-			</div>
-			<div>
-				{" "}
-				{dogData && (
-					<ul className="flex flex-wrap justify-center mt-2">
-						{dogData.map((dog, index) => (
-							<li className="m-2" key={index}>
-								<AdoptionCard dog={dog} />
-							</li>
-						))}
-					</ul>
-				)}
 			</div>
 		</div>
 	);

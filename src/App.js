@@ -11,6 +11,7 @@ import Breeds from "./pages/breeds/breedsHome";
 import KennelAdmin from "./pages/kennel/kennelAdmin";
 import KennelAccount from "./pages/kennel/kennelAccount";
 import Contact from "./pages/contact";
+import AllDogs from "./pages/adoption/allDogs";
 
 export default function App() {
 	return (
@@ -20,6 +21,7 @@ export default function App() {
 				<Header />
 				<Routes>
 					<Route exact path="/" element={<Home />} />
+					<Route path="/allDogs" element={<AllDogs />} />
 					<Route path="/adopt" element={<Adoption />} />
 					<Route
 						path="/breedCalculator"
