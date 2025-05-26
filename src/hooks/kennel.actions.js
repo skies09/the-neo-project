@@ -1,13 +1,15 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axiosService from "../helpers/axios";
-import axios from "axios";
 import { setKennel } from "./../store/kennels/actions";
+import { useAuth } from "../AuthContext";
 
+// Hook for kennel actions
 function useKennelActions() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const baseURL = process.env.REACT_APP_NEO_PROJECT_BASE_URL;
+	const { login: loginToContext } = useAuth();
 
 	return {
 		login,
@@ -17,25 +19,23 @@ function useKennelActions() {
 
 	// Login the kennel
 	function login(data) {
-		return axios.post(`${baseURL}api/auth/login/`, data).then((res) => {
-			// Registering the account and tokens in the store
-			setKennelData(res.data);
-			dispatch(setKennel(res.data.user.id));
-			navigate("/KennelAccount");
-		});
+		return axiosService
+			.post(`${baseURL}api/auth/login/`, data)
+			.then((res) => {
+				setKennelData(res.data);
+				dispatch(setKennel(res.data.user.id));
+				loginToContext(res.data.user); // <- Update context
+				navigate("/KennelAccount");
+			});
 	}
 
-	// Edit the kennel
+	// Edit kennel details
 	function edit(data, kennelId) {
 		return axiosService
 			.patch(`${baseURL}api/kennel/${kennelId}/`, data, {
-				headers: {
-					"Content-Type": "application/json", // Explicitly set for JSON requests
-				},
+				headers: { "Content-Type": "application/json" },
 			})
 			.then((res) => {
-				console.log(res, "RES");
-				// Registering the account in the store
 				localStorage.setItem(
 					"auth",
 					JSON.stringify({
@@ -44,50 +44,58 @@ function useKennelActions() {
 						kennel: res.data,
 					})
 				);
+				loginToContext(res.data); // <-- Update AuthContext state here
 			});
 	}
 
 	// Logout the kennel
 	function logout() {
+		const refresh = getRefreshToken();
+		if (!refresh) {
+			localStorage.removeItem("auth");
+			navigate("/login");
+			return;
+		}
+
 		return axiosService
-			.post(`${baseURL}/auth/logout/`, { refresh: getRefreshToken() })
+			.post(`${baseURL}auth/logout/`, { refresh })
 			.then(() => {
+				localStorage.removeItem("auth");
+				navigate("/login");
+			})
+			.catch(() => {
 				localStorage.removeItem("auth");
 				navigate("/login");
 			});
 	}
 }
 
-// Get the kennel
+// Get the kennel from localStorage
 function getKennel() {
-	const auth = JSON.parse(localStorage.getItem("auth")) || null;
-	if (auth) {
-		return auth.kennel;
-	} else {
-		return null;
-	}
+	const auth = JSON.parse(localStorage.getItem("auth"));
+	return auth?.kennel || null;
 }
 
-// Get the access token
+// Get access token
 function getAccessToken() {
 	const auth = JSON.parse(localStorage.getItem("auth"));
-	return auth.access;
+	return auth?.access || null;
 }
 
-// Get the refresh token
+// Get refresh token
 function getRefreshToken() {
 	const auth = JSON.parse(localStorage.getItem("auth"));
-	return auth.refresh;
+	return auth?.refresh || null;
 }
 
-// Set the access, token and kennel property
+// Set kennel + tokens in localStorage
 function setKennelData(data) {
 	localStorage.setItem(
 		"auth",
 		JSON.stringify({
 			access: data.access,
 			refresh: data.refresh,
-			kennel: data.user,
+			kennel: data.user, // Ensures it's accessible via getKennel()
 		})
 	);
 }

@@ -106,25 +106,31 @@ const AdoptionCard = ({ dog }) => {
 							)}
 							<div className="p-6">
 								<p className="font-poppins font-bold text-xl mb-2 text-oxfordBlue text-center">
-									Kennel Name
+									{dog.kennel.name}
 								</p>
 								<p className="text-oxfordBlue font-mono">
 									Address:{" "}
 									<span className="font-semibold font-poppins">
-										Kennel address
+										{dog.kennel.address_line_1}
+										<br />
+										{dog.kennel.town}
+										<br />
+										{dog.kennel.city}
+										<br />
+										{dog.kennel.postcode}
 									</span>
 								</p>
 								<p className="text-oxfordBlue font-mono">
 									Email:{" "}
 									<span className="font-semibold font-poppins">
-										Kennel email
+										{dog.kennel.email}
 									</span>
 								</p>
 
 								<p className="text-oxfordBlue font-mono">
 									Contact number:{" "}
 									<span className="font-semibold font-poppins">
-										Kennel contact number
+										{dog.kennel.contact_number}
 									</span>
 								</p>
 							</div>

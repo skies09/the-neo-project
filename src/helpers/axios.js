@@ -15,9 +15,20 @@ const axiosService = axios.create({
 
 axiosService.interceptors.request.use(async (config) => {
 	/**
-	 * Retrieving the access and refresh tokens from the local storage
+	 * Retrieving the access token from local storage
 	 */
-	config.headers.Authorization = `Bearer ${getAccessToken()}`;
+	const token = getAccessToken();
+
+	// Skip adding Authorization header for login and refresh endpoints
+	if (
+		config.url.includes("/api/auth/login") ||
+		config.url.includes("/auth/refresh") ||
+		!token
+	) {
+		return config;
+	}
+
+	config.headers.Authorization = `Bearer ${token}`;
 	return config;
 });
 
@@ -30,25 +41,25 @@ const refreshAuthLogic = async (failedRequest) => {
 	return axios
 		.post(
 			"/auth/refresh/",
-			{
-				refresh: getRefreshToken(),
-			},
-			{
-				baseURL: process.env.REACT_APP_NEO_PROJECT_BASE_URL,
-			}
+			{ refresh: getRefreshToken() },
+			{ baseURL: process.env.REACT_APP_NEO_PROJECT_BASE_URL }
 		)
 		.then((resp) => {
 			const { access } = resp.data;
-			failedRequest.response.config.headers["Authorization"] =
-				"Bearer " + access;
+
+			// IMPORTANT: update the localStorage with new access token and keep refresh & kennel data intact
+			const oldAuth = JSON.parse(localStorage.getItem("auth")) || {};
 			localStorage.setItem(
 				"auth",
 				JSON.stringify({
-					access,
-					refresh: getRefreshToken(),
-					user: getKennel(),
+					access, // updated access token
+					refresh: oldAuth.refresh, // keep the same refresh token
+					kennel: oldAuth.kennel, // keep kennel info as is
 				})
 			);
+
+			failedRequest.response.config.headers["Authorization"] =
+				"Bearer " + access;
 		})
 		.catch(() => {
 			localStorage.removeItem("auth");

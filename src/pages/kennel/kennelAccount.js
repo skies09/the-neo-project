@@ -11,11 +11,13 @@ const KennelAccount = () => {
 	const [dogAdded, setDogAdded] = useState(false);
 	const [kennelData, setKennelData] = useState({});
 	const [dogData, setDogData] = useState([]);
+	const [dogToEdit, setDogToEdit] = useState(null);
 
 	useEffect(() => {
 		if (dogAdded) {
 			setShowDogUploadForm(false);
 			setDogAdded(false);
+			setDogToEdit(null);
 		}
 	}, [dogAdded]);
 
@@ -81,6 +83,39 @@ const KennelAccount = () => {
 		fetchDogs();
 	}, []);
 
+	const handleDeleteDog = async (dogId) => {
+		const confirmDelete = window.confirm(
+			"Are you sure you want to delete this dog?"
+		);
+		if (!confirmDelete) return;
+
+		const token = JSON.parse(localStorage.getItem("auth"))?.access;
+
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_NEO_PROJECT_BASE_URL}api/dog/${dogId}/`,
+				{
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			if (response.status === 204) {
+				// Remove the deleted dog from state
+				setDogData((prevDogs) =>
+					prevDogs.filter((dog) => dog.id !== dogId)
+				);
+			} else {
+				throw new Error(`Delete failed with status ${response.status}`);
+			}
+		} catch (error) {
+			console.error("Error deleting dog:", error.message);
+		}
+	};
+
 	return (
 		<div id="kennelAdmin" className="w-screen overflow-hidden h-auto mt-4">
 			<div className="flex justify-center items-center mx-auto">
@@ -136,6 +171,7 @@ const KennelAccount = () => {
 						<UploadDogForm
 							kennelData={kennelData}
 							setDogAdded={setDogAdded}
+							dogToEdit={dogToEdit}
 						/>
 					)}
 					{!showDogUploadForm && (
@@ -162,12 +198,26 @@ const KennelAccount = () => {
 														<button
 															type="button"
 															className="bg-oxfordBlue text-honeydew px-4 py-2 rounded-md shadow-md font-monoTwo"
+															onClick={() => {
+																setShowDogUploadForm(
+																	true
+																);
+																setDogToEdit(
+																	dog
+																);
+															}}
 														>
 															Edit
 														</button>
+
 														<button
 															type="button"
-															className="bg-honeydew text-oxfordBlue px-4 py-2 rounded-md shadow-md font-monoTwo"
+															onClick={() =>
+																handleDeleteDog(
+																	dog.id
+																)
+															}
+															className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md font-monoTwo hover:bg-red-600"
 														>
 															Delete
 														</button>

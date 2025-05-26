@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { getKennel } from "../hooks/kennel.actions";
+import { useAuth } from "../AuthContext";
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-	useEffect(() => {
-		const kennel = getKennel();
-		if (kennel) {
-			setIsLoggedIn(true);
-		}
-	}, []);
+	const { isLoggedIn } = useAuth();
 
 	return (
 		<div className="w-full h-16 bg-oxfordBlue fixed top-0 z-50">

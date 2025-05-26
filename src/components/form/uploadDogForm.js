@@ -3,50 +3,62 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axiosService from "../../helpers/axios";
 
-const UploadDogForm = ({ kennelData, setDogAdded }) => {
-	// Upload dogs
-	const handleSave = (values) => {
+const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }) => {
+	// Upload/Edit dogs
+	const handleSave = async (values) => {
 		const data = {
 			name: values.name,
 			gender: values.gender,
 			age: values.age,
 			weight: values.weight,
-			good_with_dogs: values.goodWithDogs === "true" ? true : false,
-			good_with_cats: values.goodWithCats === "true" ? true : false,
+			good_with_dogs:
+				values.goodWithDogs === "unknown"
+					? null
+					: values.goodWithDogs === "true",
+			good_with_cats:
+				values.goodWithCats === "unknown"
+					? null
+					: values.goodWithCats === "true",
 			good_with_children:
-				values.goodWithChildren === "true" ? true : false,
+				values.goodWithChildren === "unknown"
+					? null
+					: values.goodWithChildren === "true",
 			breed: values.breed,
-			is_crossbreed: values.isCrossbreed === "true" ? true : false,
+			is_crossbreed:
+				values.isCrossbreed === "unknown"
+					? null
+					: values.isCrossbreed === "true",
 			extra_information: values.additionalInformation,
 			kennel: kennelData.id,
 		};
-		console.log("Save dog details:", data);
 
-		axiosService
-			.post("/api/dog/", data)
-			.then((res) => {
-				console.log("Response ", res);
-			})
-			.catch((err) => {
-				console.log("Error ", err);
-			});
-
-		setDogAdded(true);
+		try {
+			if (dogToEdit?.id) {
+				await axiosService.put(`/api/dog/${dogToEdit.id}/`, data);
+			} else {
+				await axiosService.post("/api/dog/", data);
+			}
+			setDogAdded(true);
+		} catch (err) {
+			console.error("Error saving dog:", err);
+		}
 	};
 
 	return (
 		<div className="relative w-11/12 flex items-center justify-center h-full mb-20">
 			<Formik
 				initialValues={{
-					name: "",
-					breed: "",
-					isCrossbreed: "",
-					gender: "",
-					age: "",
-					weight: "",
-					goodWithDogs: "",
-					goodWithCats: "",
-					goodWithChildren: "",
+					name: dogToEdit?.name || "",
+					breed: dogToEdit?.breed || "",
+					isCrossbreed: dogToEdit?.is_crossbreed?.toString() || "",
+					gender: dogToEdit?.gender || "",
+					age: dogToEdit?.age || "",
+					weight: dogToEdit?.weight || "",
+					goodWithDogs: dogToEdit?.good_with_dogs?.toString() || "",
+					goodWithCats: dogToEdit?.good_with_cats?.toString() || "",
+					goodWithChildren:
+						dogToEdit?.good_with_children?.toString() || "",
+					additionalInformation: dogToEdit?.extra_information || "",
 				}}
 				validationSchema={Yup.object({
 					name: Yup.string().required("Name is required"),
@@ -106,58 +118,6 @@ const UploadDogForm = ({ kennelData, setDogAdded }) => {
 								</div>
 								<div>
 									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Is crossbreed
-									</p>
-									<Field
-										className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-										as="select"
-										id="isCrossbreed"
-										name="isCrossbreed"
-									>
-										<option
-											value=""
-											disabled
-											selected
-											hidden
-										></option>
-										<option value="true">Yes</option>
-										<option value="false">No</option>
-									</Field>
-									<ErrorMessage
-										name="isCrossbreed"
-										component="div"
-										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-									/>
-								</div>
-								<div>
-									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Gender
-									</p>
-									<Field
-										className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-										as="select"
-										id="gender"
-										name="gender"
-									>
-										<option
-											value=""
-											disabled
-											selected
-											hidden
-										>
-											Select gender
-										</option>
-										<option value="Male">Male</option>
-										<option value="Female">Female</option>
-									</Field>
-									<ErrorMessage
-										name="gender"
-										component="div"
-										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-									/>
-								</div>
-								<div>
-									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
 										Age{" "}
 										<span className="text-sm lg:text-base font-normal opacity-70">
 											(if unknown leave blank)
@@ -187,6 +147,79 @@ const UploadDogForm = ({ kennelData, setDogAdded }) => {
 
 									<ErrorMessage
 										name="age"
+										component="div"
+										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
+									/>
+								</div>
+								<div>
+									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
+										Is crossbreed
+									</p>
+									<div
+										role="group"
+										aria-labelledby="isCrossbreed-group"
+										className="flex justify-center space-x-6 mt-1"
+									>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="isCrossbreed"
+												value="true"
+											/>
+											<span>Yes</span>
+										</label>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="isCrossbreed"
+												value="false"
+											/>
+											<span>No</span>
+										</label>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="isCrossbreed"
+												value="dontknow"
+											/>
+											<span>Don't know</span>
+										</label>
+									</div>
+									<ErrorMessage
+										name="isCrossbreed"
+										component="div"
+										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
+									/>
+								</div>
+
+								<div>
+									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
+										Gender
+									</p>
+									<div
+										role="group"
+										aria-labelledby="gender-group"
+										className="flex justify-center space-x-6 mt-1"
+									>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="gender"
+												value="Male"
+											/>
+											<span>Male</span>
+										</label>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="gender"
+												value="Female"
+											/>
+											<span>Female</span>
+										</label>
+									</div>
+									<ErrorMessage
+										name="gender"
 										component="div"
 										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
 									/>
@@ -229,74 +262,118 @@ const UploadDogForm = ({ kennelData, setDogAdded }) => {
 									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
 										Good with other dogs
 									</p>
-									<Field
-										className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-										as="select"
-										id="goodWithDogs"
-										name="goodWithDogs"
+									<div
+										role="group"
+										aria-labelledby="goodWithDogs-group"
+										className="flex justify-center space-x-6 mt-1"
 									>
-										<option
-											value=""
-											disabled
-											selected
-											hidden
-										></option>
-										<option value="true">Yes</option>
-										<option value="false">No</option>
-										<option value="unknown">Unknown</option>
-									</Field>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="goodWithDogs"
+												value="true"
+											/>
+											<span>Yes</span>
+										</label>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="goodWithDogs"
+												value="false"
+											/>
+											<span>No</span>
+										</label>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="goodWithDogs"
+												value="unknown"
+											/>
+											<span>Don’t know</span>
+										</label>
+									</div>
 									<ErrorMessage
 										name="goodWithDogs"
 										component="div"
 										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
 									/>
 								</div>
+
 								<div>
 									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
 										Good with cats
 									</p>
-									<Field
-										className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-										as="select"
-										id="goodWithCats"
-										name="goodWithCats"
+									<div
+										role="group"
+										aria-labelledby="goodWithCats-group"
+										className="flex justify-center space-x-6 mt-1"
 									>
-										<option
-											value=""
-											disabled
-											selected
-											hidden
-										></option>
-										<option value="true">Yes</option>
-										<option value="false">No</option>
-										<option value="unknown">Unknown</option>
-									</Field>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="goodWithCats"
+												value="true"
+											/>
+											<span>Yes</span>
+										</label>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="goodWithCats"
+												value="false"
+											/>
+											<span>No</span>
+										</label>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="goodWithCats"
+												value="unknown"
+											/>
+											<span>Don’t know</span>
+										</label>
+									</div>
 									<ErrorMessage
 										name="goodWithCats"
 										component="div"
 										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
 									/>
 								</div>
+
 								<div>
 									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
 										Good with children
 									</p>
-									<Field
-										className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-										as="select"
-										id="goodWithChildren"
-										name="goodWithChildren"
+									<div
+										role="group"
+										aria-labelledby="goodWithChildren-group"
+										className="flex justify-center space-x-6 mt-1"
 									>
-										<option
-											value=""
-											disabled
-											selected
-											hidden
-										></option>
-										<option value="true">Yes</option>
-										<option value="false">No</option>
-										<option value="unknown">Unknown</option>
-									</Field>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="goodWithChildren"
+												value="true"
+											/>
+											<span>Yes</span>
+										</label>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="goodWithChildren"
+												value="false"
+											/>
+											<span>No</span>
+										</label>
+										<label className="inline-flex items-center space-x-2 font-monoTwo">
+											<Field
+												type="radio"
+												name="goodWithChildren"
+												value="unknown"
+											/>
+											<span>Don’t know</span>
+										</label>
+									</div>
 									<ErrorMessage
 										name="goodWithChildren"
 										component="div"
