@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getKennel } from "../hooks/kennel.actions";
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+	useEffect(() => {
+		const kennel = getKennel();
+		if (kennel) {
+			setIsLoggedIn(true);
+		}
+	}, []);
 
 	return (
 		<div className="w-full h-16 bg-oxfordBlue fixed top-0 z-50">
@@ -37,12 +46,24 @@ const Navbar = () => {
 					>
 						Dog breeds
 					</Link>
-					<Link
-						to="/kennelAdmin"
-						className="text-skyBlue hover:text-sunset font-poppins font-semibold"
-					>
-						Kennels
-					</Link>
+
+					{isLoggedIn ? (
+						<Link
+							to="/kennelAccount"
+							className="text-skyBlue hover:text-sunset font-poppins font-semibold"
+							onClick={() => setIsOpen(!isOpen)}
+						>
+							Kennels
+						</Link>
+					) : (
+						<Link
+							to="/kennelAdmin"
+							className="text-skyBlue hover:text-sunset font-poppins font-semibold"
+							onClick={() => setIsOpen(!isOpen)}
+						>
+							Kennels
+						</Link>
+					)}
 				</div>
 
 				{/* Hamburger Icon for Mobile */}
@@ -97,13 +118,23 @@ const Navbar = () => {
 					>
 						Dog breeds
 					</Link>
-					<Link
-						to="/kennelAdmin"
-						className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
-						onClick={() => setIsOpen(!isOpen)}
-					>
-						Kennels
-					</Link>
+					{isLoggedIn ? (
+						<Link
+							to="/kennelAccount"
+							className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+							onClick={() => setIsOpen(!isOpen)}
+						>
+							Kennels
+						</Link>
+					) : (
+						<Link
+							to="/kennelAdmin"
+							className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+							onClick={() => setIsOpen(!isOpen)}
+						>
+							Kennels
+						</Link>
+					)}
 				</div>
 			)}
 		</div>

@@ -26,15 +26,15 @@ export default function App() {
 						element={<BreedCalculator />}
 					/>
 					<Route path="/breeds" element={<Breeds />} />
-					<Route path="/kennelAdmin" element={<KennelAdmin />} />
 					<Route
-						path="/KennelAccount"
+						path="/kennelAccount"
 						element={
 							<ProtectedRoute>
 								<KennelAccount />
 							</ProtectedRoute>
 						}
 					/>
+					<Route path="/kennelAdmin" element={<KennelAdmin />} />
 
 					<Route path="/Contact" element={<Contact />} />
 				</Routes>

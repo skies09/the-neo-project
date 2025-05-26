@@ -5,11 +5,12 @@ import UploadDogForm from "../../components/form/uploadDogForm";
 
 const KennelAccount = () => {
 	const { kennel: kennelId } = useSelector((state) => state.kennel);
-	const [showProfile, setShowProfile] = useState(true);
+	const [showProfile, setShowProfile] = useState(false);
 	const [profileEdited, setProfileEdited] = useState(false);
 	const [showDogUploadForm, setShowDogUploadForm] = useState(false);
 	const [dogAdded, setDogAdded] = useState(false);
 	const [kennelData, setKennelData] = useState({});
+	const [dogData, setDogData] = useState([]);
 
 	useEffect(() => {
 		if (dogAdded) {
@@ -54,6 +55,32 @@ const KennelAccount = () => {
 		fetchKennelDetails();
 	}, [kennelId, profileEdited]);
 
+	useEffect(() => {
+		const fetchDogs = async () => {
+			let url = process.env.REACT_APP_NEO_PROJECT_BASE_URL + "api/dog/";
+
+			try {
+				const response = await fetch(url, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
+
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+
+				const data = await response.json();
+				setDogData(data.results);
+			} catch (error) {
+				console.error("Error fetching groups:", error.message);
+			}
+		};
+
+		fetchDogs();
+	}, []);
+
 	return (
 		<div id="kennelAdmin" className="w-screen overflow-hidden h-auto mt-4">
 			<div className="flex justify-center items-center mx-auto">
@@ -63,16 +90,6 @@ const KennelAccount = () => {
 			</div>
 			<div className="text-white py-4 flex justify-center">
 				<button
-					onClick={() => setShowProfile(true)}
-					className={`px-6 py-2 mx-2 ${
-						showProfile
-							? "bg-oxfordBlue text-honeydew"
-							: "bg-honeydew text-oxfordBlue "
-					} rounded-lg transition-all shadow-md font-poppins font-semibold`}
-				>
-					Profile
-				</button>
-				<button
 					onClick={() => setShowProfile(false)}
 					className={`px-6 py-2 mx-2 ${
 						!showProfile
@@ -81,6 +98,16 @@ const KennelAccount = () => {
 					} rounded-lg transition-all shadow-md font-poppins font-semibold`}
 				>
 					Dogs
+				</button>
+				<button
+					onClick={() => setShowProfile(true)}
+					className={`px-6 py-2 mx-2 ${
+						showProfile
+							? "bg-oxfordBlue text-honeydew"
+							: "bg-honeydew text-oxfordBlue "
+					} rounded-lg transition-all shadow-md font-poppins font-semibold`}
+				>
+					Profile
 				</button>
 			</div>
 			{showProfile && (
@@ -113,7 +140,44 @@ const KennelAccount = () => {
 					)}
 					{!showDogUploadForm && (
 						<div className="w-5/6 mx-auto p-6 bg-honeydew rounded-xl shadow-lg my-4 flex flex-col justify-between">
-							<div>DOGS IN KENNEL</div>
+							<div>
+								{" "}
+								{dogData && (
+									<ul className="flex flex-wrap justify-center mt-2">
+										{dogData.map((dog, index) => (
+											<li className="m-2" key={index}>
+												<div className="flex flex-col font-mono text-base text-oxfordBlue p-2 border rounded-lg">
+													<div>Name: {dog.name}</div>
+													<div>
+														Gender: {dog.gender}
+													</div>
+													<div>
+														Breed: {dog.breed}
+													</div>
+													<div>Age: {dog.age}</div>
+													<div>
+														Weight: {dog.weight}kg
+													</div>
+													<div className="flex flex-row justify-center space-x-4 mt-4">
+														<button
+															type="button"
+															className="bg-oxfordBlue text-honeydew px-4 py-2 rounded-md shadow-md font-monoTwo"
+														>
+															Edit
+														</button>
+														<button
+															type="button"
+															className="bg-honeydew text-oxfordBlue px-4 py-2 rounded-md shadow-md font-monoTwo"
+														>
+															Delete
+														</button>
+													</div>
+												</div>
+											</li>
+										))}
+									</ul>
+								)}
+							</div>
 						</div>
 					)}
 				</div>
