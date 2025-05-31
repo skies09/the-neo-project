@@ -121,19 +121,28 @@ const KennelAccount = () => {
 		);
 		if (!confirmDelete) return;
 
-		const token = JSON.parse(localStorage.getItem("auth"))?.access;
+		const auth = JSON.parse(localStorage.getItem("auth"));
+		const token = auth?.access;
+		const idToUse = kennelId || auth?.kennel?.public_id;
 
+		if (!idToUse || !token) {
+			setError("Missing kennel ID or token.");
+			setLoadingDogs(false);
+			return;
+		}
 		try {
-			const response = await fetch(
-				`${process.env.REACT_APP_NEO_PROJECT_BASE_URL}api/dogs/${dogId}`,
-				{
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
+			const url =
+				process.env.REACT_APP_NEO_PROJECT_BASE_URL +
+				`api/kennels/${idToUse}/dogs/${dogId}/`;
+
+			const response = await fetch(url, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				credentials: "include",
+			});
 
 			if (response.status === 204) {
 				setDogData((prevDogs) =>
