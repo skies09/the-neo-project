@@ -46,7 +46,7 @@ const KennelAdmin = () => {
 
 		kennelActions.login(data).catch((err) => {
 			if (err.message) {
-				setErrorMessage(err.request.response);
+				setErrorMessage("Unable to log in");
 			}
 		});
 	};

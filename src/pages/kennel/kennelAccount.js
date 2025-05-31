@@ -12,6 +12,9 @@ const KennelAccount = () => {
 	const [kennelData, setKennelData] = useState({});
 	const [dogData, setDogData] = useState([]);
 	const [dogToEdit, setDogToEdit] = useState(null);
+	const [loadingDogs, setLoadingDogs] = useState(false);
+	const [loadingKennel, setLoadingKennel] = useState(false);
+	const [error, setError] = useState(null);
 
 	useEffect(() => {
 		if (dogAdded) {
@@ -23,17 +26,20 @@ const KennelAccount = () => {
 
 	useEffect(() => {
 		const fetchKennelDetails = async () => {
+			setLoadingKennel(true);
 			const auth = JSON.parse(localStorage.getItem("auth"));
-			let url =
-				process.env.REACT_APP_NEO_PROJECT_BASE_URL +
-				"api/kennel/" +
-				kennelId;
-			if (!kennelId) {
-				url =
-					process.env.REACT_APP_NEO_PROJECT_BASE_URL +
-					"api/kennel/" +
-					auth.kennel.id;
+			const idToUse = kennelId || auth?.kennel?.id;
+
+			if (!idToUse) {
+				setLoadingKennel(false);
+				setError("Kennel ID not found.");
+				return;
 			}
+
+			const url =
+				process.env.REACT_APP_NEO_PROJECT_BASE_URL +
+				`api/kennels/${idToUse}/`;
+
 			try {
 				const response = await fetch(url, {
 					method: "GET",
@@ -49,8 +55,11 @@ const KennelAccount = () => {
 				const data = await response.json();
 				setKennelData(data);
 				setProfileEdited(false);
-			} catch (error) {
-				console.error("Error fetching groups:", error.message);
+				setError(null);
+			} catch (err) {
+				setError("Error fetching kennel details: " + err.message);
+			} finally {
+				setLoadingKennel(false);
 			}
 		};
 
@@ -59,29 +68,52 @@ const KennelAccount = () => {
 
 	useEffect(() => {
 		const fetchDogs = async () => {
-			let url = process.env.REACT_APP_NEO_PROJECT_BASE_URL + "api/dog/";
+			setLoadingDogs(true);
+			const auth = JSON.parse(localStorage.getItem("auth"));
+			const token = auth?.access;
+			const idToUse = kennelId || auth?.kennel?.public_id;
+
+			if (!idToUse || !token) {
+				setError("Missing kennel ID or token.");
+				setLoadingDogs(false);
+				return;
+			}
+
+			const url =
+				process.env.REACT_APP_NEO_PROJECT_BASE_URL +
+				`api/kennels/${idToUse}/dogs/`;
 
 			try {
 				const response = await fetch(url, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
 					},
+					credentials: "include",
 				});
 
 				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
+					const errorData = await response.json();
+					throw new Error(
+						`HTTP error! status: ${
+							response.status
+						}, message: ${JSON.stringify(errorData)}`
+					);
 				}
 
 				const data = await response.json();
-				setDogData(data.results);
-			} catch (error) {
-				console.error("Error fetching groups:", error.message);
+				setDogData(data);
+				setError(null);
+			} catch (err) {
+				setError("Error fetching dogs: " + err.message);
+			} finally {
+				setLoadingDogs(false);
 			}
 		};
 
 		fetchDogs();
-	}, []);
+	}, [kennelId, dogAdded, showProfile]);
 
 	const handleDeleteDog = async (dogId) => {
 		const confirmDelete = window.confirm(
@@ -93,7 +125,7 @@ const KennelAccount = () => {
 
 		try {
 			const response = await fetch(
-				`${process.env.REACT_APP_NEO_PROJECT_BASE_URL}api/dog/${dogId}/`,
+				`${process.env.REACT_APP_NEO_PROJECT_BASE_URL}api/dogs/${dogId}`,
 				{
 					method: "DELETE",
 					headers: {
@@ -104,7 +136,6 @@ const KennelAccount = () => {
 			);
 
 			if (response.status === 204) {
-				// Remove the deleted dog from state
 				setDogData((prevDogs) =>
 					prevDogs.filter((dog) => dog.id !== dogId)
 				);
@@ -120,7 +151,7 @@ const KennelAccount = () => {
 		<div id="kennelAdmin" className="w-screen overflow-hidden h-auto mt-4">
 			<div className="flex justify-center items-center mx-auto">
 				<p className="text-xl md:text-2xl font-poppins font-semibold text-oxfordBlue mb-2">
-					{kennelData.name}
+					{loadingKennel ? "Loading kennel..." : kennelData.name}
 				</p>
 			</div>
 			<div className="text-white py-4 flex justify-center">
@@ -145,14 +176,19 @@ const KennelAccount = () => {
 					Profile
 				</button>
 			</div>
+
+			{error && (
+				<p className="text-red-600 text-center font-semibold mb-4">
+					{error}
+				</p>
+			)}
+
 			{showProfile && (
 				<div className="w-5/6 mx-auto p-6 bg-honeydew rounded-xl shadow-lg my-4 flex flex-col justify-between">
-					<div>
-						<ProfileCard
-							kennelData={kennelData}
-							setProfileEdited={setProfileEdited}
-						/>
-					</div>
+					<ProfileCard
+						kennelData={kennelData}
+						setProfileEdited={setProfileEdited}
+					/>
 				</div>
 			)}
 			{!showProfile && (
@@ -176,58 +212,57 @@ const KennelAccount = () => {
 					)}
 					{!showDogUploadForm && (
 						<div className="w-5/6 mx-auto p-6 bg-honeydew rounded-xl shadow-lg my-4 flex flex-col justify-between">
-							<div>
-								{" "}
-								{dogData && (
-									<ul className="flex flex-wrap justify-center mt-2">
-										{dogData.map((dog, index) => (
-											<li className="m-2" key={index}>
-												<div className="flex flex-col font-mono text-base text-oxfordBlue p-2 border rounded-lg">
-													<div>Name: {dog.name}</div>
-													<div>
-														Gender: {dog.gender}
-													</div>
-													<div>
-														Breed: {dog.breed}
-													</div>
-													<div>Age: {dog.age}</div>
-													<div>
-														Weight: {dog.weight}kg
-													</div>
-													<div className="flex flex-row justify-center space-x-4 mt-4">
-														<button
-															type="button"
-															className="bg-oxfordBlue text-honeydew px-4 py-2 rounded-md shadow-md font-monoTwo"
-															onClick={() => {
-																setShowDogUploadForm(
-																	true
-																);
-																setDogToEdit(
-																	dog
-																);
-															}}
-														>
-															Edit
-														</button>
-
-														<button
-															type="button"
-															onClick={() =>
-																handleDeleteDog(
-																	dog.id
-																)
-															}
-															className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md font-monoTwo hover:bg-red-600"
-														>
-															Delete
-														</button>
-													</div>
+							{loadingDogs ? (
+								<p className="text-center font-semibold text-oxfordBlue">
+									Loading dogs...
+								</p>
+							) : dogData.length === 0 ? (
+								<p className="text-center font-semibold text-oxfordBlue">
+									No dogs found.
+								</p>
+							) : (
+								<ul className="flex flex-wrap justify-center mt-2">
+									{dogData.map((dog) => (
+										<li className="m-2" key={dog.id}>
+											<div className="flex flex-col font-mono text-base text-oxfordBlue p-2 border rounded-lg">
+												<div>Name: {dog.name}</div>
+												<div>Gender: {dog.gender}</div>
+												<div>Breed: {dog.breed}</div>
+												<div>Age: {dog.age}</div>
+												<div>
+													Weight: {dog.weight}kg
 												</div>
-											</li>
-										))}
-									</ul>
-								)}
-							</div>
+												<div className="flex flex-row justify-center space-x-4 mt-4">
+													<button
+														type="button"
+														className="bg-oxfordBlue text-honeydew px-4 py-2 rounded-md shadow-md font-monoTwo"
+														onClick={() => {
+															setShowDogUploadForm(
+																true
+															);
+															setDogToEdit(dog);
+														}}
+													>
+														Edit
+													</button>
+
+													<button
+														type="button"
+														onClick={() =>
+															handleDeleteDog(
+																dog.id
+															)
+														}
+														className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md font-monoTwo hover:bg-red-600"
+													>
+														Delete
+													</button>
+												</div>
+											</div>
+										</li>
+									))}
+								</ul>
+							)}
 						</div>
 					)}
 				</div>

@@ -34,9 +34,17 @@ const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }) => {
 
 		try {
 			if (dogToEdit?.id) {
-				await axiosService.put(`/api/dog/${dogToEdit.id}/`, data);
+				// Update existing dog (PUT) with kennel_pk and dog_pk
+				await axiosService.put(
+					`/api/kennels/${kennelData.id}/dogs/${dogToEdit.public_id}/`,
+					data
+				);
 			} else {
-				await axiosService.post("/api/dog/", data);
+				// Create new dog (POST) for kennel_pk
+				await axiosService.post(
+					`/api/kennels/${kennelData.id}/dogs/`,
+					data
+				);
 			}
 			setDogAdded(true);
 		} catch (err) {

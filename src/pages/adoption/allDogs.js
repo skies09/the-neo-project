@@ -5,7 +5,7 @@ export default function AllDogs() {
 	const [dogData, setDogData] = useState([]);
 	useEffect(() => {
 		const fetchDogs = async () => {
-			let url = process.env.REACT_APP_NEO_PROJECT_BASE_URL + "api/dog/";
+			let url = process.env.REACT_APP_NEO_PROJECT_BASE_URL + "api/dogs/";
 
 			try {
 				const response = await fetch(url, {
