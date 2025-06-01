@@ -56,7 +56,7 @@ const Home = () => {
 							</p>
 							<div className="my-3">
 								<Link
-									to="/adopt"
+									to="/allDogs"
 									className="text-skyBlue hover:text-sunset font-poppins font-semibold border border-skyBlue px-4 py-2 rounded-xl"
 								>
 									Adopt a dog

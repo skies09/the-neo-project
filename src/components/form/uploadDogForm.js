@@ -11,6 +11,7 @@ const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }) => {
 			gender: values.gender,
 			age: values.age,
 			weight: values.weight,
+			size: values.size,
 			good_with_dogs:
 				values.goodWithDogs === "unknown"
 					? null
@@ -62,6 +63,7 @@ const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }) => {
 					gender: dogToEdit?.gender || "",
 					age: dogToEdit?.age || "",
 					weight: dogToEdit?.weight || "",
+					size: dogToEdit?.size || "",
 					goodWithDogs: dogToEdit?.good_with_dogs?.toString() || "",
 					goodWithCats: dogToEdit?.good_with_cats?.toString() || "",
 					goodWithChildren:
@@ -77,6 +79,7 @@ const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }) => {
 					gender: Yup.string().required("Gender is required"),
 					age: Yup.number(),
 					weight: Yup.string().required("Weight is required"),
+					size: Yup.string().required("Size is required"),
 					goodWithDogs: Yup.string(),
 					goodWithCats: Yup.string(),
 					goodWithChildren: Yup.string(),
@@ -266,6 +269,31 @@ const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }) => {
 										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
 									/>
 								</div>
+								<div>
+									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
+										Size
+									</p>
+									<Field
+										as="select"
+										name="size"
+										className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
+									>
+										<option value="" disabled hidden>
+											Select size
+										</option>
+										<option value="XS">Extra Small</option>
+										<option value="S">Small</option>
+										<option value="M">Medium</option>
+										<option value="L">Large</option>
+										<option value="XL">Extra Large</option>
+									</Field>
+									<ErrorMessage
+										name="size"
+										component="div"
+										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
+									/>
+								</div>
+
 								<div>
 									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
 										Good with other dogs
