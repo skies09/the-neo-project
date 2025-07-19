@@ -1,7 +1,14 @@
 import { motion } from "framer-motion";
 
-export default function Button({ text, className, active = true, action }) {
-	const handleClick = (page) => {
+interface ButtonProps {
+	text: string;
+	className?: string;
+	active?: boolean;
+	action?: string;
+}
+
+export default function Button({ text, className, active = true, action }: ButtonProps) {
+	const handleClick = (page: string | undefined) => {
 		window.location.href = "#" + page;
 	};
 

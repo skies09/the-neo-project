@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../AuthContext.tsx";
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const { isLoggedIn, logout } = useAuth();
+	const auth = useAuth();
+	const isLoggedIn = auth?.isLoggedIn ?? false;
+	const logout = auth?.logout ?? (() => {});
 
 	return (
 		<div className="w-full h-16 bg-oxfordBlue fixed top-0 z-50">

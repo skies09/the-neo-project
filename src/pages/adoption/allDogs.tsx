@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AdoptionCard from "../../components/cards/adoptCard";
+import AdoptCard from "../../components/cards/adoptCard.tsx";
 
 export default function AllDogs() {
 	const [dogData, setDogData] = useState([]);
@@ -22,7 +22,10 @@ export default function AllDogs() {
 				const data = await response.json();
 				setDogData(data.results);
 			} catch (error) {
-				console.error("Error fetching groups:", error.message);
+				console.error(
+					"Error fetching groups:",
+					error instanceof Error ? error.message : String(error)
+				);
 			}
 		};
 
@@ -40,7 +43,7 @@ export default function AllDogs() {
 					<ul className="flex flex-wrap justify-center mt-2">
 						{dogData.map((dog, index) => (
 							<li className="m-2" key={index}>
-								<AdoptionCard dog={dog} />
+								<AdoptCard dog={dog} />
 							</li>
 						))}
 					</ul>

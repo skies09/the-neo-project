@@ -5,7 +5,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useKennelActions } from "../../hooks/kennel.actions";
+import { useKennelActions } from "../../hooks/kennel.actions.tsx";
+
+interface EmailValues {
+	name: string;
+	email: string;
+	number: string;
+	addressLine1: string;
+	town: string;
+	city: string;
+	postcode: string;
+	from?: string;
+}
+
+interface LoginValues {
+	username: string;
+	password: string;
+}
 
 const KennelAdmin = () => {
 	const [loggingIn, setIsLoggingIn] = useState(false);
@@ -17,28 +33,22 @@ const KennelAdmin = () => {
 
 	const kennelActions = useKennelActions();
 
-	function sendEmail(values) {
-		emailjs
-			.send(
-				process.env.REACT_APP_EMAIL_SERVICE_KEY,
-				process.env.REACT_APP_EMAIL_TEMPLATE_KEY,
-				values,
-				process.env.REACT_APP_EMAIL_KEY
-			)
-			.then(
-				(result) => {
-					console.log(result.text);
-					setFormSubmitted(true);
-					setLoading(false);
-				},
-				(error) => {
-					console.log(error.text);
-					setLoading(false);
-				}
+	function sendEmail(values: EmailValues) {
+		const serviceKey = process.env.REACT_APP_EMAIL_SERVICE_KEY;
+		const templateKey = process.env.REACT_APP_EMAIL_TEMPLATE_KEY;
+		const emailKey = process.env.REACT_APP_EMAIL_KEY;
+
+		if (serviceKey && templateKey && emailKey) {
+			emailjs.send(
+				serviceKey,
+				templateKey,
+				values as unknown as Record<string, unknown>,
+				emailKey
 			);
+		}
 	}
 
-	const login = (values) => {
+	const login = (values: LoginValues) => {
 		const data = {
 			username: values.username,
 			password: values.password,
@@ -74,7 +84,12 @@ const KennelAdmin = () => {
 					city: Yup.string(),
 					postcode: Yup.string(),
 				})}
-				onSubmit={(values, { setSubmitting }) => {
+				onSubmit={(
+					values: EmailValues,
+					{
+						setSubmitting,
+					}: { setSubmitting: (isSubmitting: boolean) => void }
+				) => {
 					setLoading(true);
 					values.from = "Neo project";
 

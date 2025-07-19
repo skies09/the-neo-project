@@ -1,10 +1,34 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 
-const AdoptionCard = ({ dog }) => {
+interface Kennel {
+  name: string;
+  address_line_1: string;
+  town: string;
+  city: string;
+  postcode: string;
+  email: string;
+  contact_number: string;
+}
+
+interface Dog {
+  name: string;
+  image?: string;
+  gender?: string;
+  age?: number;
+  breed?: string;
+  size?: string;
+  kennel: Kennel;
+}
+
+interface AdoptionCardProps {
+  dog: Dog;
+}
+
+const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 	const [isFlipped, setIsFlipped] = useState(false);
 
-	const getDogName = (string) => {
+	const getDogName = (string: string) => {
 		if (!string) return "";
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	};

@@ -4,7 +4,8 @@ import {
 	getAccessToken,
 	getRefreshToken,
 	getKennel,
-} from "../hooks/kennel.actions";
+} from "../hooks/kennel.actions.tsx";
+import { AxiosRequestConfig } from "axios";
 
 const axiosService = axios.create({
 	baseURL: process.env.REACT_APP_NEO_PROJECT_BASE_URL,
@@ -13,22 +14,35 @@ const axiosService = axios.create({
 	},
 });
 
+function safeGetAccessToken(): string {
+	const token = getAccessToken();
+	return typeof token === "string" ? token : "";
+}
+
+function safeGetRefreshToken(): string {
+	const token = getRefreshToken();
+	return typeof token === "string" ? token : "";
+}
+
 axiosService.interceptors.request.use(async (config) => {
 	/**
 	 * Retrieving the access token from local storage
 	 */
-	const token = getAccessToken();
+	const token = safeGetAccessToken();
 
 	// Skip adding Authorization header for login and refresh endpoints
 	if (
-		config.url.includes("/api/auth/login") ||
-		config.url.includes("/auth/refresh") ||
+		(config.url &&
+			(config.url.includes("/api/auth/login") ||
+				config.url.includes("/auth/refresh"))) ||
 		!token
 	) {
 		return config;
 	}
 
-	config.headers.Authorization = `Bearer ${token}`;
+	if (config.headers && typeof token === "string") {
+		config.headers.Authorization = `Bearer ${token}`;
+	}
 	return config;
 });
 
@@ -37,18 +51,19 @@ axiosService.interceptors.response.use(
 	(err) => Promise.reject(err)
 );
 
-const refreshAuthLogic = async (failedRequest) => {
+const refreshAuthLogic = async (failedRequest: any) => {
 	return axios
 		.post(
 			"/auth/refresh/",
-			{ refresh: getRefreshToken() },
+			{ refresh: safeGetRefreshToken() },
 			{ baseURL: process.env.REACT_APP_NEO_PROJECT_BASE_URL }
 		)
 		.then((resp) => {
 			const { access } = resp.data;
 
 			// IMPORTANT: update the localStorage with new access token and keep refresh & kennel data intact
-			const oldAuth = JSON.parse(localStorage.getItem("auth")) || {};
+			const authData = localStorage.getItem("auth");
+			const oldAuth = authData ? JSON.parse(authData) : {};
 			localStorage.setItem(
 				"auth",
 				JSON.stringify({
@@ -58,17 +73,22 @@ const refreshAuthLogic = async (failedRequest) => {
 				})
 			);
 
-			failedRequest.response.config.headers["Authorization"] =
-				"Bearer " + access;
+			if (typeof access === "string") {
+				failedRequest.response.config.headers["Authorization"] =
+					"Bearer " + access;
+			}
 		})
 		.catch(() => {
 			localStorage.removeItem("auth");
+			// Redirect to login page if refresh fails
+			window.location.href = "/kennelAdmin"; // or your login route
 		});
 };
 
 createAuthRefreshInterceptor(axiosService, refreshAuthLogic);
 
-export function fetcher(url) {
+export function fetcher(url: string) {
+	if (typeof url !== "string") throw new Error("URL must be a string");
 	return axiosService.get(url).then((res) => res.data);
 }
 

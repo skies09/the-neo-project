@@ -4,31 +4,48 @@ import { motion } from "framer-motion";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-const Contact = (form) => {
+interface ContactProps {
+	form?: any;
+}
+
+interface FormValues {
+	user_name: string;
+	user_email: string;
+	message: string;
+	from?: string;
+}
+
+const Contact = (form: ContactProps) => {
 	const containerRef = useRef(null);
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const [loading, setLoading] = useState(false);
 
-	function sendEmail(values) {
+	function sendEmail(values: FormValues) {
 		values.from = "Neo Project";
-		emailjs
-			.send(
-				process.env.REACT_APP_EMAIL_SERVICE_KEY,
-				process.env.REACT_APP_EMAIL_TEMPLATE_KEY,
-				values,
-				process.env.REACT_APP_EMAIL_KEY
-			)
-			.then(
-				(result) => {
-					console.log(result.text);
-					setFormSubmitted(true);
-					setLoading(false);
-				},
-				(error) => {
-					console.log(error.text);
-					setLoading(false);
-				}
-			);
+		const serviceKey = process.env.REACT_APP_EMAIL_SERVICE_KEY;
+		const templateKey = process.env.REACT_APP_EMAIL_TEMPLATE_KEY;
+		const emailKey = process.env.REACT_APP_EMAIL_KEY;
+
+		if (serviceKey && templateKey && emailKey) {
+			emailjs
+				.send(
+					serviceKey,
+					templateKey,
+					values as unknown as Record<string, unknown>,
+					emailKey
+				)
+				.then(
+					(result: any) => {
+						console.log(result.text);
+						setFormSubmitted(true);
+						setLoading(false);
+					},
+					(error: any) => {
+						console.log(error.text);
+						setLoading(false);
+					}
+				);
+		}
 	}
 
 	const validationSchema = Yup.object({
@@ -46,7 +63,12 @@ const Contact = (form) => {
 			message: "",
 		};
 
-		const handleSubmit = (values, { setSubmitting }) => {
+		const handleSubmit = (
+			values: FormValues,
+			{
+				setSubmitting,
+			}: { setSubmitting: (isSubmitting: boolean) => void }
+		) => {
 			setLoading(true);
 
 			sendEmail(values);

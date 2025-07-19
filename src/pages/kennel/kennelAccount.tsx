@@ -1,20 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import ProfileCard from "../../components/cards/ProfileCard";
-import UploadDogForm from "../../components/form/uploadDogForm";
+import ProfileCard from "../../components/cards/ProfileCard.tsx";
+import UploadDogForm from "../../components/form/uploadDogForm.tsx";
+import { RootState } from "../../store/store";
+
+interface KennelData {
+	id: string | number;
+	name: string;
+	email: string;
+	username: string;
+	address_line_1: string;
+	city: string;
+	town: string;
+	postcode: string;
+	contact_number: string;
+}
+
+interface Dog {
+	id: string | number;
+	name: string;
+	[key: string]: any;
+}
 
 const KennelAccount = () => {
-	const { kennel: kennelId } = useSelector((state) => state.kennel);
+	const { kennel: kennelId } = useSelector(
+		(state: RootState) => state.kennel
+	);
 	const [showProfile, setShowProfile] = useState(false);
 	const [profileEdited, setProfileEdited] = useState(false);
 	const [showDogUploadForm, setShowDogUploadForm] = useState(false);
 	const [dogAdded, setDogAdded] = useState(false);
-	const [kennelData, setKennelData] = useState({});
-	const [dogData, setDogData] = useState([]);
-	const [dogToEdit, setDogToEdit] = useState(null);
+	const [kennelData, setKennelData] = useState<KennelData | null>(null);
+	const [dogData, setDogData] = useState<Dog[]>([]);
+	const [dogToEdit, setDogToEdit] = useState<Dog | null>(null);
 	const [loadingDogs, setLoadingDogs] = useState(false);
 	const [loadingKennel, setLoadingKennel] = useState(false);
-	const [error, setError] = useState(null);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		if (dogAdded) {
@@ -27,7 +48,8 @@ const KennelAccount = () => {
 	useEffect(() => {
 		const fetchKennelDetails = async () => {
 			setLoadingKennel(true);
-			const auth = JSON.parse(localStorage.getItem("auth"));
+			const authData = localStorage.getItem("auth");
+			const auth = authData ? JSON.parse(authData) : null;
 			const idToUse = kennelId || auth?.kennel?.id;
 
 			if (!idToUse) {
@@ -57,7 +79,10 @@ const KennelAccount = () => {
 				setProfileEdited(false);
 				setError(null);
 			} catch (err) {
-				setError("Error fetching kennel details: " + err.message);
+				setError(
+					"Error fetching kennel details: " +
+						(err instanceof Error ? err.message : String(err))
+				);
 			} finally {
 				setLoadingKennel(false);
 			}
@@ -69,7 +94,8 @@ const KennelAccount = () => {
 	useEffect(() => {
 		const fetchDogs = async () => {
 			setLoadingDogs(true);
-			const auth = JSON.parse(localStorage.getItem("auth"));
+			const authData = localStorage.getItem("auth");
+			const auth = authData ? JSON.parse(authData) : null;
 			const token = auth?.access;
 			const idToUse = kennelId || auth?.kennel?.public_id;
 
@@ -106,7 +132,10 @@ const KennelAccount = () => {
 				setDogData(data);
 				setError(null);
 			} catch (err) {
-				setError("Error fetching dogs: " + err.message);
+				setError(
+					"Error fetching dogs: " +
+						(err instanceof Error ? err.message : String(err))
+				);
 			} finally {
 				setLoadingDogs(false);
 			}
@@ -115,13 +144,14 @@ const KennelAccount = () => {
 		fetchDogs();
 	}, [kennelId, dogAdded, showProfile]);
 
-	const handleDeleteDog = async (dogId) => {
+	const handleDeleteDog = async (dogId: string | number) => {
 		const confirmDelete = window.confirm(
 			"Are you sure you want to delete this dog?"
 		);
 		if (!confirmDelete) return;
 
-		const auth = JSON.parse(localStorage.getItem("auth"));
+		const authData = localStorage.getItem("auth");
+		const auth = authData ? JSON.parse(authData) : null;
 		const token = auth?.access;
 		const idToUse = kennelId || auth?.kennel?.public_id;
 
@@ -152,7 +182,10 @@ const KennelAccount = () => {
 				throw new Error(`Delete failed with status ${response.status}`);
 			}
 		} catch (error) {
-			console.error("Error deleting dog:", error.message);
+			console.error(
+				"Error deleting dog:",
+				error instanceof Error ? error.message : String(error)
+			);
 		}
 	};
 
@@ -160,7 +193,7 @@ const KennelAccount = () => {
 		<div id="kennelAdmin" className="w-screen overflow-hidden h-auto mt-4">
 			<div className="flex justify-center items-center mx-auto">
 				<p className="text-xl md:text-2xl font-poppins font-semibold text-oxfordBlue mb-2">
-					{loadingKennel ? "Loading kennel..." : kennelData.name}
+					{loadingKennel ? "Loading kennel..." : kennelData?.name}
 				</p>
 			</div>
 			<div className="text-white py-4 flex justify-center">
@@ -192,7 +225,7 @@ const KennelAccount = () => {
 				</p>
 			)}
 
-			{showProfile && (
+			{showProfile && kennelData && (
 				<div className="w-5/6 mx-auto p-6 bg-honeydew rounded-xl shadow-lg my-4 flex flex-col justify-between">
 					<ProfileCard
 						kennelData={kennelData}
@@ -212,11 +245,11 @@ const KennelAccount = () => {
 					>
 						Add Dogs
 					</button>
-					{showDogUploadForm && (
+					{showDogUploadForm && kennelData && (
 						<UploadDogForm
 							kennelData={kennelData}
 							setDogAdded={setDogAdded}
-							dogToEdit={dogToEdit}
+							dogToEdit={dogToEdit || undefined}
 						/>
 					)}
 					{!showDogUploadForm && (

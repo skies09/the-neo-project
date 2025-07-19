@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+interface Dog {
+	name: string;
+	gender: string;
+	good_with_dogs: boolean;
+	good_with_cats: boolean;
+	good_with_children: boolean;
+}
+
 export default function Adoption() {
 	const [gender, setGender] = useState("");
 	const [goodWithDogs, setGoodWithDogs] = useState(false);
 	const [goodWithCats, setGoodWithCats] = useState(false);
 	const [goodWithChildren, setGoodWithChildren] = useState(false);
-	const [dog, setDog] = useState(null);
+	const [dog, setDog] = useState<Dog | null>(null);
 	const [error, setError] = useState("");
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		const url =

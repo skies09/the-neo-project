@@ -1,37 +1,47 @@
 import React, { useEffect, useState } from "react";
 
+interface Breed {
+	id: string | number;
+	breed: string;
+}
+
 export default function Breeds() {
-	const [groups, setGroups] = useState([]);
-	const [breeds, setBreeds] = useState([]);
-	const [selectedGroup, setSelectedGroup] = useState(null);
+	const [groups, setGroups] = useState<string[]>([]);
+	const [breeds, setBreeds] = useState<Breed[]>([]);
+	const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
 	useEffect(() => {
-	const fetchGroups = async () => {
-		const url = process.env.REACT_APP_NEO_PROJECT_BASE_URL + 'api/breeds/groups/'
+		const fetchGroups = async () => {
+			const url =
+				process.env.REACT_APP_NEO_PROJECT_BASE_URL +
+				"api/breeds/groups/";
 
-		try {
-			const response = await fetch(url, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
+			try {
+				const response = await fetch(url, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
 
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+
+				const groupsData = await response.json();
+				setGroups(groupsData);
+			} catch (error) {
+				console.error(
+					"Error fetching groups:",
+					error instanceof Error ? error.message : String(error)
+				);
 			}
+		};
 
-			const groupsData = await response.json();
-			setGroups(groupsData);
-		} catch (error) {
-			console.error("Error fetching groups:", error.message);
-		}
-	};
-
-	fetchGroups();
+		fetchGroups();
 	}, []);
 
-	const fetchBreedsOfGroup = async (group) => {
+	const fetchBreedsOfGroup = async (group: string) => {
 		setSelectedGroup(group);
 		const url = `${process.env.REACT_APP_NEO_PROJECT_BASE_URL}api/breeds/groups/${group}`;
 
@@ -44,13 +54,16 @@ export default function Breeds() {
 			const breedsData = await response.json();
 			setBreeds(breedsData);
 		} catch (error) {
-			console.error("Error fetching breeds:", error.message);
+			console.error(
+				"Error fetching breeds:",
+				error instanceof Error ? error.message : String(error)
+			);
 		}
 	};
 
 	const fetchAll = async () => {
-
-		const url = process.env.REACT_APP_NEO_PROJECT_BASE_URL + 'api/breeds/list_all'
+		const url =
+			process.env.REACT_APP_NEO_PROJECT_BASE_URL + "api/breeds/list_all";
 
 		try {
 			const response = await fetch(url, {
@@ -67,7 +80,10 @@ export default function Breeds() {
 			const breedsData = await response.json();
 			setBreeds(breedsData);
 		} catch (error) {
-			console.error("Error fetching breeds:", error.message);
+			console.error(
+				"Error fetching breeds:",
+				error instanceof Error ? error.message : String(error)
+			);
 		}
 	};
 
@@ -101,9 +117,9 @@ export default function Breeds() {
 				</div>
 				{breeds.length > 0 && (
 					<div className="mt-4">
-					{selectedGroup && (
-						<h3 className="text-xl font-bold text-center">{`${selectedGroup} Breeds:`}</h3>
-					)}
+						{selectedGroup && (
+							<h3 className="text-xl font-bold text-center">{`${selectedGroup} Breeds:`}</h3>
+						)}
 						<ul className="flex flex-wrap justify-center mt-2">
 							{breeds.map((breed, index) => (
 								<li className="m-2" key={breed.id}>

@@ -1,11 +1,37 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axiosService from "../../helpers/axios";
+import axiosService from "../../helpers/axios.tsx";
 
-const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }) => {
+interface KennelData {
+  id: string | number;
+}
+
+interface DogToEdit {
+  id?: string | number;
+  public_id?: string;
+  name?: string;
+  breed?: string;
+  is_crossbreed?: boolean;
+  gender?: string;
+  age?: number | string;
+  weight?: string;
+  size?: string;
+  good_with_dogs?: boolean;
+  good_with_cats?: boolean;
+  good_with_children?: boolean;
+  extra_information?: string;
+}
+
+interface UploadDogFormProps {
+  kennelData: KennelData;
+  setDogAdded: (added: boolean) => void;
+  dogToEdit?: DogToEdit;
+}
+
+const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }: UploadDogFormProps) => {
 	// Upload/Edit dogs
-	const handleSave = async (values) => {
+	const handleSave = async (values: any) => {
 		const data = {
 			name: values.name,
 			gender: values.gender,

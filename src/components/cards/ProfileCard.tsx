@@ -1,14 +1,31 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useKennelActions } from "../../hooks/kennel.actions";
+import { useKennelActions } from "../../hooks/kennel.actions.tsx";
 
-const ProfileCard = ({ kennelData, setProfileEdited }) => {
+interface KennelData {
+	id: string | number;
+	email: string;
+	username: string;
+	name: string;
+	address_line_1: string;
+	city: string;
+	town: string;
+	postcode: string;
+	contact_number: string;
+}
+
+interface ProfileCardProps {
+	kennelData: KennelData;
+	setProfileEdited: (edited: boolean) => void;
+}
+
+const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const kennelActions = useKennelActions();
 
 	// Handle the form submission to save the changes
-	const handleSave = (values) => {
+	const handleSave = (values: Partial<KennelData>) => {
 		console.log("Saved kennel details:", values);
 		kennelActions.edit(values, kennelData.id).catch((err) => {
 			if (err.message) {

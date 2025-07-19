@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import AdoptionCard from "../components/cards/adoptCard";
+import AdoptCard from "../components/cards/adoptCard.tsx";
 // import { motion } from "framer-motion";
 
+interface DogOfTheDay {
+	name: string;
+	kennel: any;
+	[key: string]: any;
+}
+
 const Home = () => {
-	const [dogOfTheDay, setDogOfTheDay] = useState({});
+	const [dogOfTheDay, setDogOfTheDay] = useState<DogOfTheDay | null>(null);
 
 	useEffect(() => {
 		const fetchGroups = async () => {
@@ -27,7 +33,10 @@ const Home = () => {
 				const dogOfTheDayData = await response.json();
 				setDogOfTheDay(dogOfTheDayData);
 			} catch (error) {
-				console.error("Error fetching dog of the day:", error.message);
+				console.error(
+					"Error fetching dog of the day:",
+					error instanceof Error ? error.message : String(error)
+				);
 			}
 		};
 
@@ -95,13 +104,13 @@ const Home = () => {
 				</div>
 
 				{/* Right side (Signup) */}
-				{Object.keys(dogOfTheDay).length !== 0 && (
+				{dogOfTheDay && Object.keys(dogOfTheDay).length !== 0 && (
 					<div className="flex flex-col items-stretch justify-start flex-1 bg-gray-100 mt-4 lg:mt-0">
 						<p className="text-oxfordBlue text-2xl font-bold font-poppins text-center">
 							Dog of the day
 						</p>
 						<div className="flex flex-col justify-center items-center w-full my-24">
-							<AdoptionCard dog={dogOfTheDay} />
+							<AdoptCard dog={dogOfTheDay} />
 						</div>
 					</div>
 				)}
