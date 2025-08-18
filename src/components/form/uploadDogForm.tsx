@@ -23,12 +23,14 @@ interface UploadDogFormProps {
 	kennelData: Kennel;
 	setDogAdded: (added: boolean) => void;
 	dogToEdit?: DogToEdit;
+	setDogToEdit?: (dog: DogToEdit | null) => void;
 }
 
 const UploadDogForm = ({
 	kennelData,
 	setDogAdded,
 	dogToEdit,
+	setDogToEdit,
 }: UploadDogFormProps) => {
 	// Upload/Edit dogs
 	const handleSave = async (values: any) => {
@@ -39,22 +41,30 @@ const UploadDogForm = ({
 			weight: values.weight,
 			size: values.size,
 			good_with_dogs:
-				values.goodWithDogs === "unknown"
-					? null
-					: values.goodWithDogs === "true",
+				values.goodWithDogs === "yes"
+					? true
+					: values.goodWithDogs === "no"
+					? false
+					: null,
 			good_with_cats:
-				values.goodWithCats === "unknown"
-					? null
-					: values.goodWithCats === "true",
+				values.goodWithCats === "yes"
+					? true
+					: values.goodWithCats === "no"
+					? false
+					: null,
 			good_with_children:
-				values.goodWithChildren === "unknown"
-					? null
-					: values.goodWithChildren === "true",
+				values.goodWithChildren === "yes"
+					? true
+					: values.goodWithChildren === "no"
+					? false
+					: null,
 			breed: values.breed,
 			is_crossbreed:
-				values.isCrossbreed === "unknown"
-					? null
-					: values.isCrossbreed === "true",
+				values.isCrossbreed === "yes"
+					? true
+					: values.isCrossbreed === "no"
+					? false
+					: null,
 			extra_information: values.additionalInformation,
 		};
 
@@ -67,6 +77,8 @@ const UploadDogForm = ({
 				await dogAPI.createDog(data);
 			}
 			setDogAdded(true);
+			// Reset the form state
+			setDogToEdit && setDogToEdit(null);
 		} catch (err) {
 			console.error("Error saving dog:", err);
 			alert("Error saving dog. Please try again.");
@@ -74,22 +86,53 @@ const UploadDogForm = ({
 	};
 
 	return (
-		<div className="relative w-11/12 flex items-center justify-center h-full mb-20">
+		<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8">
+			<div className="text-center mb-8">
+				<h2 className="text-3xl font-bold text-oxfordBlue mb-2">
+					{dogToEdit ? "Edit Dog" : "Add New Dog"}
+				</h2>
+				<p className="text-oxfordBlue/70">
+					{dogToEdit
+						? "Update dog information"
+						: "Add a new dog to your kennel"}
+				</p>
+			</div>
+
 			<Formik
 				initialValues={{
 					name: dogToEdit?.name || "",
 					breed: dogToEdit?.breed || "",
-					isCrossbreed: dogToEdit?.is_crossbreed?.toString() || "",
+					isCrossbreed:
+						dogToEdit?.is_crossbreed === true
+							? "yes"
+							: dogToEdit?.is_crossbreed === false
+							? "no"
+							: "",
 					gender: dogToEdit?.gender || "",
 					age: dogToEdit?.age || "",
 					weight: dogToEdit?.weight || "",
 					size: dogToEdit?.size || "",
-					goodWithDogs: dogToEdit?.good_with_dogs?.toString() || "",
-					goodWithCats: dogToEdit?.good_with_cats?.toString() || "",
+					goodWithDogs:
+						dogToEdit?.good_with_dogs === true
+							? "yes"
+							: dogToEdit?.good_with_dogs === false
+							? "no"
+							: "",
+					goodWithCats:
+						dogToEdit?.good_with_cats === true
+							? "yes"
+							: dogToEdit?.good_with_cats === false
+							? "no"
+							: "",
 					goodWithChildren:
-						dogToEdit?.good_with_children?.toString() || "",
+						dogToEdit?.good_with_children === true
+							? "yes"
+							: dogToEdit?.good_with_children === false
+							? "no"
+							: "",
 					additionalInformation: dogToEdit?.extra_information || "",
 				}}
+				enableReinitialize={true}
 				validationSchema={Yup.object({
 					name: Yup.string().required("Name is required"),
 					breed: Yup.string().required("Breed is required"),
@@ -108,35 +151,36 @@ const UploadDogForm = ({
 				onSubmit={handleSave}
 			>
 				{({ values, handleChange, handleBlur }) => (
-					<Form className="flex flex-col items-start w-full">
-						<div className="flex flex-col justify-center items-center mx-auto py-8 w-1/2">
-							<div className="w-1/2">
-								<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-									Name
-								</p>
-								<Field
-									className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-									type="text"
-									id="name"
-									name="name"
-								/>
-								<ErrorMessage
-									name="name"
-									component="div"
-									className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-								/>
-							</div>
-						</div>
-						<div className="flex flex-col lg:flex-row lg:space-x-4 w-full">
-							{/* Left Column */}
-							<div className="flex flex-col w-full lg:w-1/2 space-y-4">
+					<Form className="space-y-8">
+						{/* Basic Information */}
+						<div className="bg-gray-50 rounded-2xl p-6">
+							<h3 className="text-xl font-semibold text-oxfordBlue mb-6">
+								Basic Information
+							</h3>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 								<div>
-									{/* Turn this into dropdown with breed options */}
-									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Breed
-									</p>
+									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+										Name *
+									</label>
 									<Field
-										className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
+										className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
+										type="text"
+										id="name"
+										name="name"
+									/>
+									<ErrorMessage
+										name="name"
+										component="div"
+										className="text-red-500 text-sm mt-1"
+									/>
+								</div>
+
+								<div>
+									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+										Breed *
+									</label>
+									<Field
+										className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
 										type="text"
 										id="breed"
 										name="breed"
@@ -144,139 +188,45 @@ const UploadDogForm = ({
 									<ErrorMessage
 										name="breed"
 										component="div"
-										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
+										className="text-red-500 text-sm mt-1"
 									/>
 								</div>
-								<div>
-									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Age{" "}
-										<span className="text-sm lg:text-base font-normal opacity-70">
-											(if unknown leave blank)
-										</span>
-									</p>
 
+								<div>
+									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+										Age (years)
+									</label>
 									<Field
-										className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
+										className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
 										as="select"
 										id="age"
 										name="age"
 									>
-										<option
-											value=""
-											disabled
-											selected
-											hidden
-										>
-											Select age
-										</option>
+										<option value="">Select age</option>
 										{[...Array(20)].map((_, i) => (
 											<option key={i + 1} value={i + 1}>
 												{i + 1}
 											</option>
 										))}
 									</Field>
-
 									<ErrorMessage
 										name="age"
 										component="div"
-										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-									/>
-								</div>
-								<div>
-									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Is crossbreed
-									</p>
-									<div
-										role="group"
-										aria-labelledby="isCrossbreed-group"
-										className="flex justify-center space-x-6 mt-1"
-									>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="isCrossbreed"
-												value="true"
-											/>
-											<span>Yes</span>
-										</label>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="isCrossbreed"
-												value="false"
-											/>
-											<span>No</span>
-										</label>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="isCrossbreed"
-												value="dontknow"
-											/>
-											<span>Don't know</span>
-										</label>
-									</div>
-									<ErrorMessage
-										name="isCrossbreed"
-										component="div"
-										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
+										className="text-red-500 text-sm mt-1"
 									/>
 								</div>
 
 								<div>
-									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Gender
-									</p>
-									<div
-										role="group"
-										aria-labelledby="gender-group"
-										className="flex justify-center space-x-6 mt-1"
-									>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="gender"
-												value="Male"
-											/>
-											<span>Male</span>
-										</label>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="gender"
-												value="Female"
-											/>
-											<span>Female</span>
-										</label>
-									</div>
-									<ErrorMessage
-										name="gender"
-										component="div"
-										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-									/>
-								</div>
-							</div>
-
-							{/* Right Column */}
-							<div className="flex flex-col w-full lg:w-1/2 space-y-4">
-								<div>
-									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Weight
-									</p>
+									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+										Weight (kg) *
+									</label>
 									<Field
-										className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
+										className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
 										as="select"
 										id="weight"
 										name="weight"
 									>
-										<option
-											value=""
-											disabled
-											selected
-											hidden
-										>
-											Select weight
-										</option>
+										<option value="">Select weight</option>
 										{[...Array(100)].map((_, i) => (
 											<option key={i + 1} value={i + 1}>
 												{i + 1} kg
@@ -286,21 +236,20 @@ const UploadDogForm = ({
 									<ErrorMessage
 										name="weight"
 										component="div"
-										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
+										className="text-red-500 text-sm mt-1"
 									/>
 								</div>
+
 								<div>
-									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Size
-									</p>
+									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+										Size *
+									</label>
 									<Field
 										as="select"
 										name="size"
-										className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
+										className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
 									>
-										<option value="" disabled hidden>
-											Select size
-										</option>
+										<option value="">Select size</option>
 										<option value="XS">Extra Small</option>
 										<option value="S">Small</option>
 										<option value="M">Medium</option>
@@ -310,165 +259,270 @@ const UploadDogForm = ({
 									<ErrorMessage
 										name="size"
 										component="div"
-										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-									/>
-								</div>
-
-								<div>
-									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Good with other dogs
-									</p>
-									<div
-										role="group"
-										aria-labelledby="goodWithDogs-group"
-										className="flex justify-center space-x-6 mt-1"
-									>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="goodWithDogs"
-												value="true"
-											/>
-											<span>Yes</span>
-										</label>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="goodWithDogs"
-												value="false"
-											/>
-											<span>No</span>
-										</label>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="goodWithDogs"
-												value="unknown"
-											/>
-											<span>Don't know</span>
-										</label>
-									</div>
-									<ErrorMessage
-										name="goodWithDogs"
-										component="div"
-										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-									/>
-								</div>
-
-								<div>
-									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Good with cats
-									</p>
-									<div
-										role="group"
-										aria-labelledby="goodWithCats-group"
-										className="flex justify-center space-x-6 mt-1"
-									>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="goodWithCats"
-												value="true"
-											/>
-											<span>Yes</span>
-										</label>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="goodWithCats"
-												value="false"
-											/>
-											<span>No</span>
-										</label>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="goodWithCats"
-												value="unknown"
-											/>
-											<span>Don't know</span>
-										</label>
-									</div>
-									<ErrorMessage
-										name="goodWithCats"
-										component="div"
-										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-									/>
-								</div>
-
-								<div>
-									<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-										Good with children
-									</p>
-									<div
-										role="group"
-										aria-labelledby="goodWithChildren-group"
-										className="flex justify-center space-x-6 mt-1"
-									>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="goodWithChildren"
-												value="true"
-											/>
-											<span>Yes</span>
-										</label>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="goodWithChildren"
-												value="false"
-											/>
-											<span>No</span>
-										</label>
-										<label className="inline-flex items-center space-x-2 font-monoTwo">
-											<Field
-												type="radio"
-												name="goodWithChildren"
-												value="unknown"
-											/>
-											<span>Don't know</span>
-										</label>
-									</div>
-									<ErrorMessage
-										name="goodWithChildren"
-										component="div"
-										className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
+										className="text-red-500 text-sm mt-1"
 									/>
 								</div>
 							</div>
 						</div>
-						<div className="mt-4 w-full">
-							<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-								Additional Notes
-							</p>
-							<Field
-								as="textarea"
-								className="w-full h-24 rounded-xl my-1 p-2 font-monoTwo border border-oxfordBlue"
-								id="additionalInformation"
-								name="additionalInformation"
-								placeholder="Enter any additional notes here..."
-							/>
-							<ErrorMessage
-								name="additionalInformation"
-								component="div"
-								className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-							/>
+
+						{/* Characteristics */}
+						<div className="bg-gray-50 rounded-2xl p-6">
+							<h3 className="text-xl font-semibold text-oxfordBlue mb-6">
+								Characteristics
+							</h3>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+								<div className="space-y-6">
+									<div>
+										<label className="block text-sm font-semibold text-oxfordBlue mb-3">
+											Gender *
+										</label>
+										<div className="flex space-x-6">
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="gender"
+													value="Male"
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													Male
+												</span>
+											</label>
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="gender"
+													value="Female"
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													Female
+												</span>
+											</label>
+										</div>
+										<ErrorMessage
+											name="gender"
+											component="div"
+											className="text-red-500 text-sm mt-1"
+										/>
+									</div>
+
+									<div>
+										<label className="block text-sm font-semibold text-oxfordBlue mb-3">
+											Is Crossbreed *
+										</label>
+										<div className="flex space-x-6">
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="isCrossbreed"
+													value="yes"
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													Yes
+												</span>
+											</label>
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="isCrossbreed"
+													value="no"
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													No
+												</span>
+											</label>
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="isCrossbreed"
+													value=""
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													Don't know
+												</span>
+											</label>
+										</div>
+										<ErrorMessage
+											name="isCrossbreed"
+											component="div"
+											className="text-red-500 text-sm mt-1"
+										/>
+									</div>
+								</div>
+
+								<div className="space-y-6">
+									<div>
+										<label className="block text-sm font-semibold text-oxfordBlue mb-3">
+											Good with other dogs
+										</label>
+										<div className="flex space-x-6">
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="goodWithDogs"
+													value="yes"
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													Yes
+												</span>
+											</label>
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="goodWithDogs"
+													value="no"
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													No
+												</span>
+											</label>
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="goodWithDogs"
+													value=""
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													Don't know
+												</span>
+											</label>
+										</div>
+									</div>
+
+									<div>
+										<label className="block text-sm font-semibold text-oxfordBlue mb-3">
+											Good with cats
+										</label>
+										<div className="flex space-x-6">
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="goodWithCats"
+													value="yes"
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													Yes
+												</span>
+											</label>
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="goodWithCats"
+													value="no"
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													No
+												</span>
+											</label>
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="goodWithCats"
+													value=""
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													Don't know
+												</span>
+											</label>
+										</div>
+									</div>
+
+									<div>
+										<label className="block text-sm font-semibold text-oxfordBlue mb-3">
+											Good with children
+										</label>
+										<div className="flex space-x-6">
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="goodWithChildren"
+													value="yes"
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													Yes
+												</span>
+											</label>
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="goodWithChildren"
+													value="no"
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													No
+												</span>
+											</label>
+											<label className="flex items-center space-x-2">
+												<Field
+													type="radio"
+													name="goodWithChildren"
+													value=""
+													className="w-4 h-4 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
+												/>
+												<span className="text-sm font-medium">
+													Don't know
+												</span>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						{/* Buttons */}
-						<div className="flex flex-row justify-center space-x-4 mt-4">
-							<button
-								type="submit"
-								className="bg-oxfordBlue text-honeydew px-4 py-2 rounded-md shadow-md font-monoTwo"
-							>
-								Save
-							</button>
+
+						{/* Additional Information */}
+						<div className="bg-gray-50 rounded-2xl p-6">
+							<h3 className="text-xl font-semibold text-oxfordBlue mb-6">
+								Additional Information
+							</h3>
+							<div>
+								<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+									Extra Information
+								</label>
+								<Field
+									as="textarea"
+									className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200 resize-none"
+									id="additionalInformation"
+									name="additionalInformation"
+									rows="4"
+									placeholder="Any additional information about the dog..."
+								/>
+								<ErrorMessage
+									name="additionalInformation"
+									component="div"
+									className="text-red-500 text-sm mt-1"
+								/>
+							</div>
+						</div>
+
+						{/* Submit Button */}
+						<div className="flex justify-center space-x-4 pt-6">
 							<button
 								type="button"
-								onClick={() => setDogAdded(true)}
-								className="bg-honeydew text-oxfordBlue px-4 py-2 rounded-md shadow-md font-monoTwo"
+								onClick={() => {
+									setDogToEdit && setDogToEdit(null);
+									setDogAdded(true);
+								}}
+								className="px-8 py-3 bg-gray-500 hover:bg-gray-600 text-oxfordBlue rounded-xl font-semibold transition-all duration-200"
 							>
 								Cancel
+							</button>
+							<button
+								type="submit"
+								className="px-8 py-3 bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+							>
+								{dogToEdit ? "Update Dog" : "Add Dog"}
 							</button>
 						</div>
 					</Form>

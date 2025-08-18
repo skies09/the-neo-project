@@ -6,6 +6,22 @@ import { RootState } from "../../store/store";
 import { kennelAPI, dogAPI, Kennel, Dog } from "../../services/api.ts";
 import { getKennel } from "../../hooks/kennel.actions.tsx";
 
+interface DogToEdit {
+	id?: string;
+	public_id?: string;
+	name?: string;
+	breed?: string;
+	is_crossbreed?: boolean;
+	gender?: string;
+	age?: number | string;
+	weight?: string;
+	size?: string;
+	good_with_dogs?: boolean;
+	good_with_cats?: boolean;
+	good_with_children?: boolean;
+	extra_information?: string;
+}
+
 const KennelAccount = () => {
 	const { kennel: kennelId } = useSelector(
 		(state: RootState) => state.kennel
@@ -16,10 +32,11 @@ const KennelAccount = () => {
 	const [dogAdded, setDogAdded] = useState(false);
 	const [kennelData, setKennelData] = useState<Kennel | null>(null);
 	const [dogData, setDogData] = useState<Dog[]>([]);
-	const [dogToEdit, setDogToEdit] = useState<Dog | null>(null);
+	const [dogToEdit, setDogToEdit] = useState<DogToEdit | null>(null);
 	const [loadingDogs, setLoadingDogs] = useState(false);
 	const [loadingKennel, setLoadingKennel] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+	const [profileError, setProfileError] = useState<string | null>(null);
+	const [dogsError, setDogsError] = useState<string | null>(null);
 
 	useEffect(() => {
 		if (dogAdded) {
@@ -32,24 +49,47 @@ const KennelAccount = () => {
 	useEffect(() => {
 		const fetchKennelDetails = async () => {
 			setLoadingKennel(true);
-			setError(null);
+			setProfileError(null);
 
 			try {
 				const authData = localStorage.getItem("auth");
 				const auth = authData ? JSON.parse(authData) : null;
 				const kennelFromStorage = getKennel();
-				const kennelPublicId =
-					kennelFromStorage?.public_id || auth?.kennel?.public_id;
 
-				if (!kennelPublicId) {
-					throw new Error("Kennel ID not found.");
+				console.log("Auth data:", auth);
+				console.log("Kennel from storage:", kennelFromStorage);
+
+				// The kennel data should be directly available from localStorage
+				if (kennelFromStorage) {
+					console.log(
+						"Using kennel data from storage:",
+						kennelFromStorage
+					);
+					setKennelData(kennelFromStorage);
+					setProfileEdited(false);
+				} else {
+					// Fallback: try to get kennel profile by public_id if available
+					const kennelPublicId = auth?.kennel?.public_id;
+					console.log("Kennel public ID:", kennelPublicId);
+
+					if (!kennelPublicId) {
+						throw new Error(
+							"Kennel data not found in localStorage."
+						);
+					}
+
+					console.log(
+						"Fetching kennel profile for ID:",
+						kennelPublicId
+					);
+					const data = await kennelAPI.getProfile(kennelPublicId);
+					console.log("Kennel profile data:", data);
+					setKennelData(data);
+					setProfileEdited(false);
 				}
-
-				const data = await kennelAPI.getProfile(kennelPublicId);
-				setKennelData(data);
-				setProfileEdited(false);
 			} catch (err) {
-				setError(
+				console.error("Error fetching kennel details:", err);
+				setProfileError(
 					"Error fetching kennel details: " +
 						(err instanceof Error ? err.message : String(err))
 				);
@@ -63,17 +103,27 @@ const KennelAccount = () => {
 
 	useEffect(() => {
 		const fetchDogs = async () => {
+			// Only fetch dogs when the dogs tab is active (showProfile is false)
+			if (showProfile) {
+				return;
+			}
+
 			setLoadingDogs(true);
-			setError(null);
+			setDogsError(null);
 
 			try {
+				console.log("Fetching dogs from /api/kennel-dogs/");
 				const data = await dogAPI.getMyDogs();
-				setDogData(data);
+				// Ensure data is always an array
+				setDogData(Array.isArray(data) ? data : []);
 			} catch (err) {
-				setError(
+				console.error("Error fetching dogs:", err);
+				setDogsError(
 					"Error fetching dogs: " +
 						(err instanceof Error ? err.message : String(err))
 				);
+				// Set empty array on error to prevent map errors
+				setDogData([]);
 			} finally {
 				setLoadingDogs(false);
 			}
@@ -98,109 +148,222 @@ const KennelAccount = () => {
 				"Error deleting dog:",
 				error instanceof Error ? error.message : String(error)
 			);
-			setError("Error deleting dog. Please try again.");
+			setDogsError("Error deleting dog. Please try again.");
 		}
 	};
 
 	return (
-		<div id="kennelAdmin" className="w-screen overflow-hidden h-auto mt-4">
-			<div className="flex justify-center items-center mx-auto">
-				<p className="text-xl md:text-2xl font-poppins font-semibold text-oxfordBlue mb-2">
-					{loadingKennel ? "Loading kennel..." : kennelData?.name}
-				</p>
-			</div>
-			<div className="text-white py-4 flex justify-center">
-				<button
-					onClick={() => setShowProfile(false)}
-					className={`px-6 py-2 mx-2 ${
-						!showProfile
-							? "bg-oxfordBlue text-honeydew"
-							: "bg-honeydew text-oxfordBlue"
-					} rounded-lg transition-all shadow-md font-poppins font-semibold`}
-				>
-					Dogs
-				</button>
-				<button
-					onClick={() => setShowProfile(true)}
-					className={`px-6 py-2 mx-2 ${
-						showProfile
-							? "bg-oxfordBlue text-honeydew"
-							: "bg-honeydew text-oxfordBlue "
-					} rounded-lg transition-all shadow-md font-poppins font-semibold`}
-				>
-					Profile
-				</button>
-			</div>
-
-			{error && (
-				<p className="text-red-600 text-center font-semibold mb-4">
-					{error}
-				</p>
-			)}
-
-			{showProfile && kennelData && (
-				<div className="w-5/6 mx-auto p-6 bg-honeydew rounded-xl shadow-lg my-4 flex flex-col justify-between">
-					<ProfileCard
-						kennelData={kennelData}
-						setProfileEdited={setProfileEdited}
-					/>
+		<div className="min-h-screen  py-8">
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				{/* Header */}
+				<div className="text-center mb-8">
+					<h1 className="text-4xl font-bold text-oxfordBlue mb-2">
+						{loadingKennel
+							? "Loading..."
+							: kennelData?.name || "Kennel Account"}
+					</h1>
+					<p className="text-lg text-oxfordBlue/80">
+						Manage your kennel profile and dogs
+					</p>
 				</div>
-			)}
-			{!showProfile && (
-				<div className="flex flex-col justify-center items-center mx-auto mt-3">
-					<button
-						onClick={() => setShowDogUploadForm(true)}
-						className={`px-6 py-2 mx-2 ${
-							showDogUploadForm
-								? "bg-oxfordBlue text-honeydew"
-								: "bg-honeydew text-oxfordBlue "
-						} rounded-lg transition-all shadow-md font-poppins font-semibold`}
-					>
-						Add Dogs
-					</button>
-					{showDogUploadForm && kennelData && (
-						<UploadDogForm
+
+				{/* Tab Navigation */}
+				<div className="flex justify-center mb-8">
+					<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-2xl p-2 shadow-lg">
+						<button
+							onClick={() => setShowProfile(false)}
+							className={`px-8 py-3 mx-1 rounded-xl font-semibold transition-all duration-200 ${
+								!showProfile
+									? "bg-oxfordBlue text-honeydew shadow-md transform scale-105"
+									: "text-oxfordBlue hover:bg-oxfordBlue/10"
+							}`}
+						>
+							<i className="fas fa-dog mr-2"></i>Dogs
+						</button>
+						<button
+							onClick={() => setShowProfile(true)}
+							className={`px-8 py-3 mx-1 rounded-xl font-semibold transition-all duration-200 ${
+								showProfile
+									? "bg-oxfordBlue text-honeydew shadow-md transform scale-105"
+									: "text-oxfordBlue hover:bg-oxfordBlue/10"
+							}`}
+						>
+							<i className="fas fa-user mr-2"></i>Profile
+						</button>
+					</div>
+				</div>
+
+				{/* Error Messages */}
+				{showProfile && profileError && (
+					<div className="max-w-2xl mx-auto mb-6">
+						<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
+							{profileError}
+						</div>
+					</div>
+				)}
+				{!showProfile && dogsError && (
+					<div className="max-w-2xl mx-auto mb-6">
+						<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
+							{dogsError}
+						</div>
+					</div>
+				)}
+
+				{/* Content */}
+				{showProfile && kennelData && (
+					<div className="max-w-4xl mx-auto">
+						<ProfileCard
 							kennelData={kennelData}
-							setDogAdded={setDogAdded}
-							dogToEdit={dogToEdit || undefined}
+							setProfileEdited={setProfileEdited}
 						/>
-					)}
-					{!showDogUploadForm && (
-						<div className="w-5/6 mx-auto p-6 bg-honeydew rounded-xl shadow-lg my-4 flex flex-col justify-between">
-							{loadingDogs ? (
-								<p className="text-center font-semibold text-oxfordBlue">
-									Loading dogs...
-								</p>
-							) : dogData.length === 0 ? (
-								<p className="text-center font-semibold text-oxfordBlue">
-									No dogs found.
-								</p>
-							) : (
-								<ul className="flex flex-wrap justify-center mt-2">
-									{dogData.map((dog) => (
-										<li className="m-2" key={dog.id}>
-											<div className="flex flex-col font-mono text-base text-oxfordBlue p-2 border rounded-lg">
-												<div>Name: {dog.name}</div>
-												<div>Gender: {dog.gender}</div>
-												<div>Breed: {dog.breed}</div>
-												<div>Age: {dog.age}</div>
-												<div>
-													Weight: {dog.weight}kg
+					</div>
+				)}
+				{!showProfile && (
+					<div className="max-w-6xl mx-auto">
+						{/* Add Dog Button */}
+						<div className="text-center mb-8">
+							<button
+								onClick={() => setShowDogUploadForm(true)}
+								className="bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew px-8 py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+							>
+								<i className="fas fa-plus mr-2"></i>Add New Dog
+							</button>
+						</div>
+
+						{/* Dog Upload Form */}
+						{showDogUploadForm && kennelData && (
+							<div className="mb-8">
+								<UploadDogForm
+									kennelData={kennelData}
+									setDogAdded={setDogAdded}
+									dogToEdit={dogToEdit || undefined}
+									setDogToEdit={setDogToEdit}
+								/>
+							</div>
+						)}
+
+						{/* Dogs List */}
+						{!showDogUploadForm && (
+							<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl p-8 shadow-xl">
+								{loadingDogs ? (
+									<div className="text-center py-12">
+										<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-oxfordBlue mx-auto mb-4"></div>
+										<p className="text-lg text-oxfordBlue font-semibold">
+											Loading dogs...
+										</p>
+									</div>
+								) : dogData.length === 0 ? (
+									<div className="text-center py-12">
+										<div className="text-6xl mb-4">
+											<i className="fas fa-dog text-oxfordBlue"></i>
+										</div>
+										<h3 className="text-2xl font-bold text-oxfordBlue mb-2">
+											No dogs found
+										</h3>
+										<p className="text-oxfordBlue/70">
+											Add your first dog to get started!
+										</p>
+									</div>
+								) : (
+									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+										{dogData.map((dog) => (
+											<div
+												key={dog.id}
+												className="bg-gradient-to-br from-skyBlue to-aquamarine rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100 "
+											>
+												<div className="text-center mb-4">
+													<div className="w-16 h-16 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center mx-auto mb-3">
+														<i className="fas fa-dog text-2xl text-honeydew"></i>
+													</div>
+													<h3 className="text-xl font-bold text-oxfordBlue">
+														{dog.name}
+													</h3>
+													<p className="text-sm text-oxfordBlue/70">
+														{dog.breed}
+													</p>
 												</div>
-												<div className="flex flex-row justify-center space-x-4 mt-4">
+
+												<div className="space-y-2 mb-6">
+													<div className="flex justify-between">
+														<span className="text-sm text-gray-600">
+															Gender:
+														</span>
+														<span className="font-medium">
+															{dog.gender}
+														</span>
+													</div>
+													<div className="flex justify-between">
+														<span className="text-sm text-gray-600">
+															Age:
+														</span>
+														<span className="font-medium">
+															{dog.age} years
+														</span>
+													</div>
+													<div className="flex justify-between">
+														<span className="text-sm text-gray-600">
+															Weight:
+														</span>
+														<span className="font-medium">
+															{dog.weight}kg
+														</span>
+													</div>
+													<div className="flex justify-between">
+														<span className="text-sm text-gray-600">
+															Size:
+														</span>
+														<span className="font-medium">
+															{dog.size}
+														</span>
+													</div>
+												</div>
+
+												<div className="flex space-x-3">
 													<button
 														type="button"
-														className="bg-oxfordBlue text-honeydew px-4 py-2 rounded-md shadow-md font-monoTwo"
+														className="flex-1 bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew px-4 py-2 rounded-xl font-medium transition-all duration-200"
 														onClick={() => {
 															setShowDogUploadForm(
 																true
 															);
-															setDogToEdit(dog);
+															setDogToEdit({
+																id: dog.id,
+																public_id:
+																	dog.public_id,
+																name: dog.name,
+																breed: dog.breed,
+																is_crossbreed:
+																	dog.is_crossbreed ===
+																	null
+																		? undefined
+																		: dog.is_crossbreed,
+																gender: dog.gender,
+																age: dog.age,
+																weight: dog.weight?.toString(),
+																size: dog.size,
+																good_with_dogs:
+																	dog.good_with_dogs ===
+																	null
+																		? undefined
+																		: dog.good_with_dogs,
+																good_with_cats:
+																	dog.good_with_cats ===
+																	null
+																		? undefined
+																		: dog.good_with_cats,
+																good_with_children:
+																	dog.good_with_children ===
+																	null
+																		? undefined
+																		: dog.good_with_children,
+																extra_information:
+																	dog.extra_information,
+															});
 														}}
 													>
+														<i className="fas fa-edit mr-1"></i>
 														Edit
 													</button>
-
 													<button
 														type="button"
 														onClick={() =>
@@ -208,20 +371,21 @@ const KennelAccount = () => {
 																dog.id
 															)
 														}
-														className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md font-monoTwo hover:bg-red-600"
+														className="flex-1 bg-red-500 hover:bg-red-600 text-oxfordBlue px-4 py-2 rounded-xl font-medium transition-all duration-200"
 													>
+														<i className="fas fa-trash mr-1"></i>
 														Delete
 													</button>
 												</div>
 											</div>
-										</li>
-									))}
-								</ul>
-							)}
-						</div>
-					)}
-				</div>
-			)}
+										))}
+									</div>
+								)}
+							</div>
+						)}
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

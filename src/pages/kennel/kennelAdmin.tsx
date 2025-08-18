@@ -209,7 +209,7 @@ const KennelAdmin = () => {
 
 	return (
 		<div id="kennelAdmin" className="w-screen overflow-hidden h-auto mt-4">
-			<div className="text-white py-4 flex justify-center">
+			<div className="text-honeydew py-4 flex justify-center">
 				<button
 					onClick={() => setIsLoginForm(true)}
 					className={`px-6 py-2 mx-2 ${

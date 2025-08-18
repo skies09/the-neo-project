@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Dog } from "../../services/api";
 
 interface AdoptionCardProps {
-  dog: Dog;
+	dog: Dog;
 }
 
 const AdoptionCard = ({ dog }: AdoptionCardProps) => {
@@ -74,7 +74,7 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 										{dog.size}
 									</span>
 								</p>
-								<button className="w-full px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-700 font-poppins font-bold">
+								<button className="w-full px-6 py-3 bg-blue-500 text-honeydew rounded hover:bg-blue-700 font-poppins font-bold">
 									Adopt Me
 								</button>
 							</div>

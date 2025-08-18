@@ -22,241 +22,331 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 			setProfileEdited(true);
 			setIsEditing(false);
 		} catch (err) {
-			setError(err instanceof Error ? err.message : "An error occurred while saving");
+			setError(
+				err instanceof Error
+					? err.message
+					: "An error occurred while saving"
+			);
 		}
 	};
 
 	return (
-		<div className="relative w-full flex items-center justify-center">
+		<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20">
 			{error && (
-				<div className="absolute top-0 left-0 right-0 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+				<div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-t-3xl">
 					{error}
 				</div>
 			)}
-			
+
 			{isEditing ? (
-				<Formik
-					initialValues={{
-						email: kennelData.email || "",
-						username: kennelData.username || "",
-						name: kennelData.name || "",
-						address_line_1: kennelData.address_line_1 || "",
-						city: kennelData.city || "",
-						town: kennelData.town || "",
-						postcode: kennelData.postcode || "",
-						contact_number: kennelData.contact_number || "",
-					}}
-					validationSchema={Yup.object({
-						email: Yup.string()
-							.email("Invalid email")
-							.required("Email is required"),
-						username: Yup.string().required("Username is required"),
-						name: Yup.string().required("Name is required"),
-						address_line_1: Yup.string().required(
-							"Address Line 1 is required"
-						),
-						city: Yup.string().required("City is required"),
-						town: Yup.string().required("Town is required"),
-						postcode: Yup.string().required("Postcode is required"),
-						contact_number: Yup.string()
-							.matches(/^\d+$/, "Contact Number must be numeric")
-							.required("Contact Number is required"),
-					})}
-					onSubmit={handleSave}
-				>
-					{({ values, handleChange, handleBlur }) => (
-						<Form className="flex flex-col items-start w-full">
-							<div className="flex flex-col lg:flex-row lg:space-x-4 w-full">
-								{/* Left Column */}
-								<div className="flex flex-col w-full lg:w-1/2 space-y-4">
-									<div>
-										<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-											Email:
-										</p>
-										<Field
-											className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-											type="email"
-											id="email"
-											name="email"
-										/>
-										<ErrorMessage
-											name="email"
-											component="div"
-											className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-										/>
+				<div className="p-8">
+					<div className="text-center mb-8">
+						<h2 className="text-3xl font-bold text-oxfordBlue mb-2">
+							Edit Profile
+						</h2>
+						<p className="text-oxfordBlue/70">
+							Update your kennel information
+						</p>
+					</div>
+
+					<Formik
+						initialValues={{
+							email: kennelData.email || "",
+							username: kennelData.username || "",
+							name: kennelData.name || "",
+							address_line_1: kennelData.address_line_1 || "",
+							city: kennelData.city || "",
+							town: kennelData.town || "",
+							postcode: kennelData.postcode || "",
+							contact_number: kennelData.contact_number || "",
+						}}
+						validationSchema={Yup.object({
+							email: Yup.string()
+								.email("Invalid email")
+								.required("Email is required"),
+							username: Yup.string().required(
+								"Username is required"
+							),
+							name: Yup.string().required("Name is required"),
+							address_line_1: Yup.string().required(
+								"Address Line 1 is required"
+							),
+							city: Yup.string().required("City is required"),
+							town: Yup.string().required("Town is required"),
+							postcode: Yup.string().required(
+								"Postcode is required"
+							),
+							contact_number: Yup.string()
+								.matches(
+									/^\d+$/,
+									"Contact Number must be numeric"
+								)
+								.required("Contact Number is required"),
+						})}
+						onSubmit={handleSave}
+					>
+						{({ values, handleChange, handleBlur }) => (
+							<Form className="space-y-6">
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+									{/* Left Column */}
+									<div className="space-y-6">
+										<div>
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+												Email
+											</label>
+											<Field
+												className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
+												type="email"
+												id="email"
+												name="email"
+											/>
+											<ErrorMessage
+												name="email"
+												component="div"
+												className="text-red-500 text-sm mt-1"
+											/>
+										</div>
+
+										<div>
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+												Username
+											</label>
+											<Field
+												className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
+												type="text"
+												id="username"
+												name="username"
+											/>
+											<ErrorMessage
+												name="username"
+												component="div"
+												className="text-red-500 text-sm mt-1"
+											/>
+										</div>
+
+										<div>
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+												Kennel Name
+											</label>
+											<Field
+												className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
+												type="text"
+												id="name"
+												name="name"
+											/>
+											<ErrorMessage
+												name="name"
+												component="div"
+												className="text-red-500 text-sm mt-1"
+											/>
+										</div>
+
+										<div>
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+												Address Line 1
+											</label>
+											<Field
+												className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
+												type="text"
+												id="address_line_1"
+												name="address_line_1"
+											/>
+											<ErrorMessage
+												name="address_line_1"
+												component="div"
+												className="text-red-500 text-sm mt-1"
+											/>
+										</div>
 									</div>
-									<div>
-										<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-											Username:
-										</p>
-										<Field
-											className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-											type="text"
-											id="username"
-											name="username"
-										/>
-										<ErrorMessage
-											name="username"
-											component="div"
-											className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-										/>
-									</div>
-									<div>
-										<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-											Name:
-										</p>
-										<Field
-											className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-											type="text"
-											id="name"
-											name="name"
-										/>
-										<ErrorMessage
-											name="name"
-											component="div"
-											className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-										/>
-									</div>
-									<div>
-										<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-											Contact Number:
-										</p>
-										<Field
-											className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-											type="text"
-											id="contact_number"
-											name="contact_number"
-										/>
-										<ErrorMessage
-											name="contact_number"
-											component="div"
-											className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-										/>
+
+									{/* Right Column */}
+									<div className="space-y-6">
+										<div className="grid grid-cols-2 gap-4">
+											<div>
+												<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+													Town
+												</label>
+												<Field
+													className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
+													type="text"
+													id="town"
+													name="town"
+												/>
+												<ErrorMessage
+													name="town"
+													component="div"
+													className="text-red-500 text-sm mt-1"
+												/>
+											</div>
+											<div>
+												<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+													City
+												</label>
+												<Field
+													className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
+													type="text"
+													id="city"
+													name="city"
+												/>
+												<ErrorMessage
+													name="city"
+													component="div"
+													className="text-red-500 text-sm mt-1"
+												/>
+											</div>
+										</div>
+
+										<div>
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+												Postcode
+											</label>
+											<Field
+												className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
+												type="text"
+												id="postcode"
+												name="postcode"
+											/>
+											<ErrorMessage
+												name="postcode"
+												component="div"
+												className="text-red-500 text-sm mt-1"
+											/>
+										</div>
+
+										<div>
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+												Contact Number
+											</label>
+											<Field
+												className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
+												type="text"
+												id="contact_number"
+												name="contact_number"
+											/>
+											<ErrorMessage
+												name="contact_number"
+												component="div"
+												className="text-red-500 text-sm mt-1"
+											/>
+										</div>
 									</div>
 								</div>
 
-								{/* Right Column */}
-								<div className="flex flex-col w-full lg:w-1/2 space-y-4">
-									<div>
-										<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-											Address Line 1:
-										</p>
-										<Field
-											className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-											type="text"
-											id="address_line_1"
-											name="address_line_1"
-										/>
-										<ErrorMessage
-											name="address_line_1"
-											component="div"
-											className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-										/>
-									</div>
-									<div>
-										<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-											City:
-										</p>
-										<Field
-											className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-											type="text"
-											id="city"
-											name="city"
-										/>
-										<ErrorMessage
-											name="city"
-											component="div"
-											className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-										/>
-									</div>
-									<div>
-										<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-											Town:
-										</p>
-										<Field
-											className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-											type="text"
-											id="town"
-											name="town"
-										/>
-										<ErrorMessage
-											name="town"
-											component="div"
-											className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-										/>
-									</div>
-									<div>
-										<p className="text-lg lg:text-xl text-colorFive font-bold text-center font-monoTwo opacity-90">
-											Postcode:
-										</p>
-										<Field
-											className="w-full h-8 rounded-xl my-1 pl-2 font-monoTwo border border-oxfordBlue"
-											type="text"
-											id="postcode"
-											name="postcode"
-										/>
-										<ErrorMessage
-											name="postcode"
-											component="div"
-											className="text-sm text-colorOne font-bold text-center font-monoTwo opacity-90 -mt-2"
-										/>
-									</div>
+								<div className="flex justify-center space-x-4 pt-6">
+									<button
+										type="button"
+										onClick={() => setIsEditing(false)}
+										className="px-8 py-3 bg-gray-500 hover:bg-gray-600 text-oxfordBlue rounded-xl font-semibold transition-all duration-200"
+									>
+										Cancel
+									</button>
+									<button
+										type="submit"
+										className="px-8 py-3 bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+									>
+										Save Changes
+									</button>
 								</div>
-							</div>
-
-							{/* Buttons */}
-							<div className="flex flex-row justify-center space-x-4 mt-4">
-								<button
-									type="submit"
-									className="bg-oxfordBlue text-honeydew px-4 py-2 rounded-md shadow-md font-monoTwo"
-								>
-									Save
-								</button>
-								<button
-									type="button"
-									onClick={() => setIsEditing(false)}
-									className="bg-honeydew text-oxfordBlue px-4 py-2 rounded-md shadow-md font-monoTwo"
-								>
-									Cancel
-								</button>
-							</div>
-						</Form>
-					)}
-				</Formik>
+							</Form>
+						)}
+					</Formik>
+				</div>
 			) : (
-				<div className="flex flex-col w-full items-start">
-					<p className="text:lg font-poppins font-normal text-oxfordBlue mb-2">
-						<strong>Email:</strong> {kennelData.email}
-					</p>
-					<p className="text:lg font-poppins font-normal text-oxfordBlue mb-2">
-						<strong>Username:</strong> {kennelData.username}
-					</p>
-					<p className="text:lg font-poppins font-normal text-oxfordBlue mb-2">
-						<strong>Name:</strong> {kennelData.name}
-					</p>
-					<p className="text:lg font-poppins font-normal text-oxfordBlue mb-2">
-						<strong>Address Line 1:</strong>{" "}
-						{kennelData.address_line_1}
-					</p>
-					<p className="text:lg font-poppins font-normal text-oxfordBlue mb-2">
-						<strong>City:</strong> {kennelData.city}
-					</p>
-					<p className="text:lg font-poppins font-normal text-oxfordBlue mb-2">
-						<strong>Town:</strong> {kennelData.town}
-					</p>
-					<p className="text:lg font-poppins font-normal text-oxfordBlue mb-2">
-						<strong>Postcode:</strong> {kennelData.postcode}
-					</p>
-					<p className="text:lg font-poppins font-normal text-oxfordBlue mb-2">
-						<strong>Contact Number:</strong>{" "}
-						{kennelData.contact_number}
-					</p>
-					<div className="flex justify-start items-start pt-4">
+				<div className="p-8">
+					<div className="text-center mb-8">
+						<div className="w-20 h-20 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center mx-auto mb-4">
+							<i className="fas fa-home text-3xl text-honeydew"></i>
+						</div>
+						<h2 className="text-3xl font-bold text-oxfordBlue mb-2">
+							{kennelData.name}
+						</h2>
+						<p className="text-oxfordBlue/70">Kennel Profile</p>
+					</div>
+
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+						<div className="space-y-4">
+							<div className="bg-gray-50 rounded-xl p-4">
+								<h3 className="text-lg font-semibold text-oxfordBlue mb-3">
+									Contact Information
+								</h3>
+								<div className="space-y-2">
+									<div className="flex justify-between">
+										<span className="text-gray-600">
+											Email:
+										</span>
+										<span className="font-medium">
+											{kennelData.email}
+										</span>
+									</div>
+									<div className="flex justify-between">
+										<span className="text-gray-600">
+											Username:
+										</span>
+										<span className="font-medium">
+											{kennelData.username}
+										</span>
+									</div>
+									<div className="flex justify-between">
+										<span className="text-gray-600">
+											Phone:
+										</span>
+										<span className="font-medium">
+											{kennelData.contact_number}
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div className="space-y-4">
+							<div className="bg-gray-50 rounded-xl p-4">
+								<h3 className="text-lg font-semibold text-oxfordBlue mb-3">
+									Address
+								</h3>
+								<div className="space-y-2">
+									<div className="flex justify-between">
+										<span className="text-gray-600">
+											Address:
+										</span>
+										<span className="font-medium">
+											{kennelData.address_line_1}
+										</span>
+									</div>
+									<div className="flex justify-between">
+										<span className="text-gray-600">
+											Town:
+										</span>
+										<span className="font-medium">
+											{kennelData.town}
+										</span>
+									</div>
+									<div className="flex justify-between">
+										<span className="text-gray-600">
+											City:
+										</span>
+										<span className="font-medium">
+											{kennelData.city}
+										</span>
+									</div>
+									<div className="flex justify-between">
+										<span className="text-gray-600">
+											Postcode:
+										</span>
+										<span className="font-medium">
+											{kennelData.postcode}
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div className="text-center mt-8">
 						<button
 							onClick={() => setIsEditing(true)}
-							className="px-6 py-2 mx-2 bg-oxfordBlue text-honeydew rounded-lg transition-all shadow-md font-poppins font-normal"
+							className="px-8 py-3 bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
 						>
-							Edit
+							<i className="fas fa-edit mr-2"></i>Edit Profile
 						</button>
 					</div>
 				</div>

@@ -84,27 +84,30 @@ export const dogAPI = {
 
   // Get kennel's own dogs
   getMyDogs: (): Promise<Dog[]> => {
-    return axiosService.get(`/api/my-dogs/`);
+    return axiosService.get(`/api/kennel-dogs/`).then(response => {
+      // Handle both paginated and non-paginated responses
+      return response.data.results || response.data;
+    });
   },
 
   // Create new dog
   createDog: (dogData: Partial<Dog>): Promise<Dog> => {
-    return axiosService.post(`/api/my-dogs/`, dogData);
+    return axiosService.post(`/api/kennel-dogs/`, dogData);
   },
 
   // Get specific dog
   getDog: (dogId: string): Promise<Dog> => {
-    return axiosService.get(`/api/my-dogs/${dogId}/`);
+    return axiosService.get(`/api/kennel-dogs/${dogId}/`);
   },
 
   // Update dog
   updateDog: (dogId: string, dogData: Partial<Dog>): Promise<Dog> => {
-    return axiosService.patch(`/api/my-dogs/${dogId}/`, dogData);
+    return axiosService.patch(`/api/kennel-dogs/${dogId}/`, dogData);
   },
 
   // Delete dog
   deleteDog: (dogId: string): Promise<void> => {
-    return axiosService.delete(`/api/my-dogs/${dogId}/`);
+    return axiosService.delete(`/api/kennel-dogs/${dogId}/`);
   },
 };
 
