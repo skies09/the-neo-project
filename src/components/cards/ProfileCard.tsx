@@ -2,44 +2,38 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useKennelActions } from "../../hooks/kennel.actions.tsx";
-
-interface KennelData {
-	id: string | number;
-	email: string;
-	username: string;
-	name: string;
-	address_line_1: string;
-	city: string;
-	town: string;
-	postcode: string;
-	contact_number: string;
-}
+import { Kennel } from "../../services/api.ts";
 
 interface ProfileCardProps {
-	kennelData: KennelData;
+	kennelData: Kennel;
 	setProfileEdited: (edited: boolean) => void;
 }
 
 const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 	const [isEditing, setIsEditing] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 	const kennelActions = useKennelActions();
 
 	// Handle the form submission to save the changes
-	const handleSave = (values: Partial<KennelData>) => {
-		console.log("Saved kennel details:", values);
-		kennelActions.edit(values, kennelData.id).catch((err) => {
-			if (err.message) {
-				console.log(err.message, "Error msg");
-				// Toasty
-				// setErrorMessage(err.request.response);
-			}
-		});
-		setProfileEdited(true);
-		setIsEditing(false);
+	const handleSave = async (values: Partial<Kennel>) => {
+		setError(null);
+		try {
+			await kennelActions.edit(values, kennelData.public_id);
+			setProfileEdited(true);
+			setIsEditing(false);
+		} catch (err) {
+			setError(err instanceof Error ? err.message : "An error occurred while saving");
+		}
 	};
 
 	return (
 		<div className="relative w-full flex items-center justify-center">
+			{error && (
+				<div className="absolute top-0 left-0 right-0 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+					{error}
+				</div>
+			)}
+			
 			{isEditing ? (
 				<Formik
 					initialValues={{

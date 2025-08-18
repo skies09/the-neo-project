@@ -8,6 +8,7 @@ interface LoginData {
 	user: any;
 	access: string;
 	refresh: string;
+	requires_password_reset?: boolean;
 }
 
 interface EditData {
@@ -24,7 +25,6 @@ interface KennelData {
 function useKennelActions() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const baseURL = process.env.REACT_APP_NEO_PROJECT_BASE_URL;
 	const auth = useAuth();
 	const loginToContext = auth?.login ?? (() => {});
 
@@ -32,17 +32,25 @@ function useKennelActions() {
 		login,
 		logout,
 		edit,
+		resetPassword,
 	};
 
 	// Login the kennel
 	function login(data: any) {
 		return axiosService
-			.post(`${baseURL}api/auth/login/`, data)
+			.post(`/api/auth/login/`, data)
 			.then((res) => {
-				setKennelData(res.data);
-				dispatch(setKennel(res.data.user.id));
-				loginToContext(res.data.user);
-				navigate("/KennelAccount");
+				const responseData = res.data;
+				setKennelData(responseData);
+				dispatch(setKennel(responseData.user.id));
+				loginToContext(responseData.user);
+				
+				// Check if password reset is required
+				if (responseData.requires_password_reset) {
+					navigate("/password-reset");
+				} else {
+					navigate("/KennelAccount");
+				}
 			})
 			.catch((err) => {
 				console.error("Login error:", err);
@@ -50,12 +58,25 @@ function useKennelActions() {
 			});
 	}
 
-	// Edit kennel details
-	function edit(data: EditData, kennelId: string | number) {
+	// Reset password for first-time login
+	function resetPassword(data: { new_password: string; confirm_password: string }) {
 		return axiosService
-			.patch(`${baseURL}api/kennel/${kennelId}/`, data, {
-				headers: { "Content-Type": "application/json" },
+			.post(`/api/auth/first-time-password-reset/`, data)
+			.then((res) => {
+				// After successful password reset, navigate to kennel account
+				navigate("/KennelAccount");
+				return res.data;
 			})
+			.catch((err) => {
+				console.error("Password reset error:", err);
+				throw err;
+			});
+	}
+
+	// Edit kennel details
+	function edit(data: EditData, kennelPublicId: string) {
+		return axiosService
+			.patch(`/api/kennels/${kennelPublicId}/`, data)
 			.then((res) => {
 				const accessToken = getAccessToken();
 				const refreshToken = getRefreshToken();
@@ -69,7 +90,12 @@ function useKennelActions() {
 						})
 					);
 				}
-				loginToContext(res.data); // <-- Update AuthContext state here
+				loginToContext(res.data);
+				return res.data;
+			})
+			.catch((err) => {
+				console.error("Edit kennel error:", err);
+				throw err;
 			});
 	}
 
@@ -79,11 +105,11 @@ function useKennelActions() {
 		if (!refresh) {
 			localStorage.removeItem("auth");
 			navigate("/kennelAdmin");
-			return;
+			return Promise.resolve();
 		}
 
 		return axiosService
-			.post(`${baseURL}auth/logout/`, { refresh })
+			.post(`/api/auth/logout/`, { refresh })
 			.then(() => {
 				localStorage.removeItem("auth");
 				navigate("/kennelAdmin");

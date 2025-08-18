@@ -1,30 +1,26 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axiosService from "../../helpers/axios.tsx";
-
-interface KennelData {
-  id: string | number;
-}
+import { dogAPI, Kennel, Dog } from "../../services/api.ts";
 
 interface DogToEdit {
-  id?: string | number;
+  id?: string;
   public_id?: string;
   name?: string;
   breed?: string;
-  is_crossbreed?: boolean;
+  is_crossbreed?: boolean | null;
   gender?: string;
   age?: number | string;
   weight?: string;
   size?: string;
-  good_with_dogs?: boolean;
-  good_with_cats?: boolean;
-  good_with_children?: boolean;
+  good_with_dogs?: boolean | null;
+  good_with_cats?: boolean | null;
+  good_with_children?: boolean | null;
   extra_information?: string;
 }
 
 interface UploadDogFormProps {
-  kennelData: KennelData;
+  kennelData: Kennel;
   setDogAdded: (added: boolean) => void;
   dogToEdit?: DogToEdit;
 }
@@ -56,26 +52,20 @@ const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }: UploadDogFormProp
 					? null
 					: values.isCrossbreed === "true",
 			extra_information: values.additionalInformation,
-			kennel: kennelData.id,
 		};
 
 		try {
 			if (dogToEdit?.id) {
-				// Update existing dog (PUT) with kennel_pk and dog_pk
-				await axiosService.put(
-					`/api/kennels/${kennelData.id}/dogs/${dogToEdit.public_id}/`,
-					data
-				);
+				// Update existing dog
+				await dogAPI.updateDog(dogToEdit.id, data);
 			} else {
-				// Create new dog (POST) for kennel_pk
-				await axiosService.post(
-					`/api/kennels/${kennelData.id}/dogs/`,
-					data
-				);
+				// Create new dog
+				await dogAPI.createDog(data);
 			}
 			setDogAdded(true);
 		} catch (err) {
 			console.error("Error saving dog:", err);
+			alert("Error saving dog. Please try again.");
 		}
 	};
 
@@ -351,7 +341,7 @@ const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }: UploadDogFormProp
 												name="goodWithDogs"
 												value="unknown"
 											/>
-											<span>Don’t know</span>
+											<span>Don't know</span>
 										</label>
 									</div>
 									<ErrorMessage
@@ -392,7 +382,7 @@ const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }: UploadDogFormProp
 												name="goodWithCats"
 												value="unknown"
 											/>
-											<span>Don’t know</span>
+											<span>Don't know</span>
 										</label>
 									</div>
 									<ErrorMessage
@@ -433,7 +423,7 @@ const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }: UploadDogFormProp
 												name="goodWithChildren"
 												value="unknown"
 											/>
-											<span>Don’t know</span>
+											<span>Don't know</span>
 										</label>
 									</div>
 									<ErrorMessage

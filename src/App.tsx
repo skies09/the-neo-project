@@ -9,6 +9,7 @@ import Breeds from "./pages/breeds/breedsHome.tsx";
 import Contact from "./pages/contact.tsx";
 import KennelAccount from "./pages/kennel/kennelAccount.tsx";
 import KennelAdmin from "./pages/kennel/kennelAdmin.tsx";
+import PasswordReset from "./pages/kennel/passwordReset.tsx";
 import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 import Header from "./components/header.tsx";
 
@@ -31,6 +32,14 @@ const App: React.FC = () => (
 				}
 			/>
 			<Route path="/kennelAdmin" element={<KennelAdmin />} />
+			<Route
+				path="/password-reset"
+				element={
+					<ProtectedRoute>
+						<PasswordReset />
+					</ProtectedRoute>
+				}
+			/>
 		</Routes>
 	</Router>
 );

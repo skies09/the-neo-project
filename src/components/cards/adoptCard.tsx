@@ -1,25 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-
-interface Kennel {
-  name: string;
-  address_line_1: string;
-  town: string;
-  city: string;
-  postcode: string;
-  email: string;
-  contact_number: string;
-}
-
-interface Dog {
-  name: string;
-  image?: string;
-  gender?: string;
-  age?: number;
-  breed?: string;
-  size?: string;
-  kennel: Kennel;
-}
+import { Dog } from "../../services/api.ts";
 
 interface AdoptionCardProps {
   dog: Dog;
@@ -58,9 +39,7 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 							{dog.image && (
 								<img
 									className="w-full h-36 object-cover rounded-t-xl"
-									src={
-										process.env.REACT_APP_LOCAL + dog.image
-									}
+									src={dog.image}
 									alt={dog.name}
 								/>
 							)}
@@ -68,39 +47,31 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 								<p className="font-poppins font-bold text-xl mb-2 text-oxfordBlue text-center">
 									{getDogName(dog.name)}
 								</p>
-								{dog.gender && (
-									<p className="text-oxfordBlue font-mono">
-										Gender:{" "}
-										<span className="font-semibold font-poppins">
-											{dog.gender}
-										</span>
-									</p>
-								)}
-								{dog.age && (
-									<p className="text-oxfordBlue font-mono">
-										Age:{" "}
-										<span className="font-semibold font-poppins">
-											{dog.age}{" "}
-										</span>
-										years
-									</p>
-								)}
-								{dog.breed && (
-									<p className="text-oxfordBlue font-mono">
-										Breed:{" "}
-										<span className="font-semibold font-poppins">
-											{dog.breed}
-										</span>
-									</p>
-								)}
-								{dog.size && (
-									<p className="text-oxfordBlue font-mono">
-										Size:{" "}
-										<span className="font-semibold font-poppins">
-											{dog.size}
-										</span>
-									</p>
-								)}
+								<p className="text-oxfordBlue font-mono">
+									Gender:{" "}
+									<span className="font-semibold font-poppins">
+										{dog.gender}
+									</span>
+								</p>
+								<p className="text-oxfordBlue font-mono">
+									Age:{" "}
+									<span className="font-semibold font-poppins">
+										{dog.age}{" "}
+									</span>
+									years
+								</p>
+								<p className="text-oxfordBlue font-mono">
+									Breed:{" "}
+									<span className="font-semibold font-poppins">
+										{dog.breed}
+									</span>
+								</p>
+								<p className="text-oxfordBlue font-mono">
+									Size:{" "}
+									<span className="font-semibold font-poppins">
+										{dog.size}
+									</span>
+								</p>
 								<button className="w-full px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-700 font-poppins font-bold">
 									Adopt Me
 								</button>
@@ -122,9 +93,7 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 							{dog.image && (
 								<img
 									className="w-full h-36 object-cover rounded-t-xl"
-									src={
-										process.env.REACT_APP_LOCAL + dog.image
-									}
+									src={dog.image}
 									alt={dog.name}
 								/>
 							)}
@@ -133,28 +102,15 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 									{dog.kennel.name}
 								</p>
 								<p className="text-oxfordBlue font-mono">
-									Address:{" "}
-									<span className="font-semibold font-poppins">
-										{dog.kennel.address_line_1}
-										<br />
-										{dog.kennel.town}
-										<br />
-										{dog.kennel.city}
-										<br />
-										{dog.kennel.postcode}
-									</span>
-								</p>
-								<p className="text-oxfordBlue font-mono">
 									Email:{" "}
 									<span className="font-semibold font-poppins">
 										{dog.kennel.email}
 									</span>
 								</p>
-
 								<p className="text-oxfordBlue font-mono">
-									Contact number:{" "}
+									Username:{" "}
 									<span className="font-semibold font-poppins">
-										{dog.kennel.contact_number}
+										{dog.kennel.username}
 									</span>
 								</p>
 							</div>

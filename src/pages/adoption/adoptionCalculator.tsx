@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
-
-interface Dog {
-	name: string;
-	gender: string;
-	good_with_dogs: boolean;
-	good_with_cats: boolean;
-	good_with_children: boolean;
-}
+import { dogAPI, Dog } from "../../services/api.ts";
 
 export default function Adoption() {
 	const [gender, setGender] = useState("");
@@ -16,24 +8,28 @@ export default function Adoption() {
 	const [goodWithChildren, setGoodWithChildren] = useState(false);
 	const [dog, setDog] = useState<Dog | null>(null);
 	const [error, setError] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setLoading(true);
+		setError("");
 
-		const url =
-			process.env.REACT_APP_NEO_PROJECT_BASE_URL + `api/dogs/filter/`;
 		try {
-			const response = await axios.post(url, {
-				gender,
-				goodWithDogs,
-				goodWithCats,
-				goodWithChildren,
-			});
-			setDog(response.data);
-			setError("");
+			const filters = {
+				gender: gender || undefined,
+				goodWithDogs: goodWithDogs || undefined,
+				goodWithCats: goodWithCats || undefined,
+				goodWithChildren: goodWithChildren || undefined,
+			};
+
+			const matchedDog = await dogAPI.filterDogs(filters);
+			setDog(matchedDog);
 		} catch (err) {
 			setDog(null);
 			setError("No matching dog found.");
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -54,9 +50,9 @@ export default function Adoption() {
 							<input
 								type="radio"
 								name="gender"
-								value="male"
-								checked={gender === "male"}
-								onChange={() => setGender("male")}
+								value="Male"
+								checked={gender === "Male"}
+								onChange={() => setGender("Male")}
 							/>
 							<span className="ml-1">Male</span>
 						</label>
@@ -64,9 +60,9 @@ export default function Adoption() {
 							<input
 								type="radio"
 								name="gender"
-								value="female"
-								checked={gender === "female"}
-								onChange={() => setGender("female")}
+								value="Female"
+								checked={gender === "Female"}
+								onChange={() => setGender("Female")}
 							/>
 							<span className="ml-1">Female</span>
 						</label>
@@ -104,9 +100,10 @@ export default function Adoption() {
 
 				<button
 					type="submit"
-					className="w-full mt-4 bg-oxfordBlue text-mintCream py-2 px-4 rounded-lg hover:bg-blue-900 transition"
+					disabled={loading}
+					className="w-full mt-4 bg-oxfordBlue text-mintCream py-2 px-4 rounded-lg hover:bg-blue-900 transition disabled:opacity-50"
 				>
-					Search
+					{loading ? "Searching..." : "Search"}
 				</button>
 			</form>
 
@@ -115,15 +112,26 @@ export default function Adoption() {
 					<div className="p-4 bg-gray-100 rounded-md shadow">
 						<h3 className="text-lg font-semibold">{dog.name}</h3>
 						<p>Gender: {dog.gender}</p>
+						<p>Breed: {dog.breed}</p>
+						<p>Age: {dog.age} years</p>
+						<p>Size: {dog.size}</p>
 						<p>
-							Good with Dogs: {dog.good_with_dogs ? "Yes" : "No"}
+							Good with Dogs: {dog.good_with_dogs ? "Yes" : dog.good_with_dogs === null ? "Unknown" : "No"}
 						</p>
 						<p>
-							Good with Cats: {dog.good_with_cats ? "Yes" : "No"}
+							Good with Cats: {dog.good_with_cats ? "Yes" : dog.good_with_cats === null ? "Unknown" : "No"}
 						</p>
 						<p>
 							Good with Children:{" "}
-							{dog.good_with_children ? "Yes" : "No"}
+							{dog.good_with_children ? "Yes" : dog.good_with_children === null ? "Unknown" : "No"}
+						</p>
+						{dog.extra_information && (
+							<p className="mt-2 text-sm text-gray-600">
+								<strong>Additional Info:</strong> {dog.extra_information}
+							</p>
+						)}
+						<p className="mt-2 text-sm text-gray-500">
+							<strong>Kennel:</strong> {dog.kennel.name}
 						</p>
 					</div>
 				)}

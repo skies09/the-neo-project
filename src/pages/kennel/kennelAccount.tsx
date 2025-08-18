@@ -3,24 +3,8 @@ import { useSelector } from "react-redux";
 import ProfileCard from "../../components/cards/ProfileCard.tsx";
 import UploadDogForm from "../../components/form/uploadDogForm.tsx";
 import { RootState } from "../../store/store";
-
-interface KennelData {
-	id: string | number;
-	name: string;
-	email: string;
-	username: string;
-	address_line_1: string;
-	city: string;
-	town: string;
-	postcode: string;
-	contact_number: string;
-}
-
-interface Dog {
-	id: string | number;
-	name: string;
-	[key: string]: any;
-}
+import { kennelAPI, dogAPI, Kennel, Dog } from "../../services/api.ts";
+import { getKennel } from "../../hooks/kennel.actions.tsx";
 
 const KennelAccount = () => {
 	const { kennel: kennelId } = useSelector(
@@ -30,7 +14,7 @@ const KennelAccount = () => {
 	const [profileEdited, setProfileEdited] = useState(false);
 	const [showDogUploadForm, setShowDogUploadForm] = useState(false);
 	const [dogAdded, setDogAdded] = useState(false);
-	const [kennelData, setKennelData] = useState<KennelData | null>(null);
+	const [kennelData, setKennelData] = useState<Kennel | null>(null);
 	const [dogData, setDogData] = useState<Dog[]>([]);
 	const [dogToEdit, setDogToEdit] = useState<Dog | null>(null);
 	const [loadingDogs, setLoadingDogs] = useState(false);
@@ -48,36 +32,21 @@ const KennelAccount = () => {
 	useEffect(() => {
 		const fetchKennelDetails = async () => {
 			setLoadingKennel(true);
-			const authData = localStorage.getItem("auth");
-			const auth = authData ? JSON.parse(authData) : null;
-			const idToUse = kennelId || auth?.kennel?.id;
-
-			if (!idToUse) {
-				setLoadingKennel(false);
-				setError("Kennel ID not found.");
-				return;
-			}
-
-			const url =
-				process.env.REACT_APP_NEO_PROJECT_BASE_URL +
-				`api/kennels/${idToUse}/`;
-
+			setError(null);
+			
 			try {
-				const response = await fetch(url, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				});
+				const authData = localStorage.getItem("auth");
+				const auth = authData ? JSON.parse(authData) : null;
+				const kennelFromStorage = getKennel();
+				const kennelPublicId = kennelFromStorage?.public_id || auth?.kennel?.public_id;
 
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
+				if (!kennelPublicId) {
+					throw new Error("Kennel ID not found.");
 				}
 
-				const data = await response.json();
+				const data = await kennelAPI.getProfile(kennelPublicId);
 				setKennelData(data);
 				setProfileEdited(false);
-				setError(null);
 			} catch (err) {
 				setError(
 					"Error fetching kennel details: " +
@@ -94,43 +63,11 @@ const KennelAccount = () => {
 	useEffect(() => {
 		const fetchDogs = async () => {
 			setLoadingDogs(true);
-			const authData = localStorage.getItem("auth");
-			const auth = authData ? JSON.parse(authData) : null;
-			const token = auth?.access;
-			const idToUse = kennelId || auth?.kennel?.public_id;
-
-			if (!idToUse || !token) {
-				setError("Missing kennel ID or token.");
-				setLoadingDogs(false);
-				return;
-			}
-
-			const url =
-				process.env.REACT_APP_NEO_PROJECT_BASE_URL +
-				`api/kennels/${idToUse}/dogs/`;
-
+			setError(null);
+			
 			try {
-				const response = await fetch(url, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-					credentials: "include",
-				});
-
-				if (!response.ok) {
-					const errorData = await response.json();
-					throw new Error(
-						`HTTP error! status: ${
-							response.status
-						}, message: ${JSON.stringify(errorData)}`
-					);
-				}
-
-				const data = await response.json();
+				const data = await dogAPI.getMyDogs();
 				setDogData(data);
-				setError(null);
 			} catch (err) {
 				setError(
 					"Error fetching dogs: " +
@@ -144,48 +81,23 @@ const KennelAccount = () => {
 		fetchDogs();
 	}, [kennelId, dogAdded, showProfile]);
 
-	const handleDeleteDog = async (dogId: string | number) => {
+	const handleDeleteDog = async (dogId: string) => {
 		const confirmDelete = window.confirm(
 			"Are you sure you want to delete this dog?"
 		);
 		if (!confirmDelete) return;
 
-		const authData = localStorage.getItem("auth");
-		const auth = authData ? JSON.parse(authData) : null;
-		const token = auth?.access;
-		const idToUse = kennelId || auth?.kennel?.public_id;
-
-		if (!idToUse || !token) {
-			setError("Missing kennel ID or token.");
-			setLoadingDogs(false);
-			return;
-		}
 		try {
-			const url =
-				process.env.REACT_APP_NEO_PROJECT_BASE_URL +
-				`api/kennels/${idToUse}/dogs/${dogId}/`;
-
-			const response = await fetch(url, {
-				method: "DELETE",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				credentials: "include",
-			});
-
-			if (response.status === 204) {
-				setDogData((prevDogs) =>
-					prevDogs.filter((dog) => dog.id !== dogId)
-				);
-			} else {
-				throw new Error(`Delete failed with status ${response.status}`);
-			}
+			await dogAPI.deleteDog(dogId);
+			setDogData((prevDogs) =>
+				prevDogs.filter((dog) => dog.id !== dogId)
+			);
 		} catch (error) {
 			console.error(
 				"Error deleting dog:",
 				error instanceof Error ? error.message : String(error)
 			);
+			setError("Error deleting dog. Please try again.");
 		}
 	};
 
