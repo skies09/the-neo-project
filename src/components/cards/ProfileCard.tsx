@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useKennelActions } from "../../hooks/kennel.actions.tsx";
-import { Kennel } from "../../services/api.ts";
+import { Kennel } from "../../services/api";
 
 interface ProfileCardProps {
 	kennelData: Kennel;

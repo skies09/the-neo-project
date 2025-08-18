@@ -33,12 +33,13 @@ const KennelAccount = () => {
 		const fetchKennelDetails = async () => {
 			setLoadingKennel(true);
 			setError(null);
-			
+
 			try {
 				const authData = localStorage.getItem("auth");
 				const auth = authData ? JSON.parse(authData) : null;
 				const kennelFromStorage = getKennel();
-				const kennelPublicId = kennelFromStorage?.public_id || auth?.kennel?.public_id;
+				const kennelPublicId =
+					kennelFromStorage?.public_id || auth?.kennel?.public_id;
 
 				if (!kennelPublicId) {
 					throw new Error("Kennel ID not found.");
@@ -64,7 +65,7 @@ const KennelAccount = () => {
 		const fetchDogs = async () => {
 			setLoadingDogs(true);
 			setError(null);
-			
+
 			try {
 				const data = await dogAPI.getMyDogs();
 				setDogData(data);

@@ -74,7 +74,7 @@ export const kennelAPI = {
 export const dogAPI = {
   // Get all dogs (public)
   getAllDogs: (): Promise<Dog[]> => {
-    return axiosService.get(`/api/dogs/`);
+    return axiosService.get(`/api/dogs/`).then(response => response.data.results);
   },
 
   // Filter dogs to find a match

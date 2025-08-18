@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { breedsAPI, Breed } from "../../services/api.ts";
+import { breedsAPI } from "../../services/api.ts";
 
 export default function Breeds() {
 	const [groups, setGroups] = useState<string[]>([]);

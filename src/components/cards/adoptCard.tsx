@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Dog } from "../../services/api.ts";
+import { Dog } from "../../services/api";
 
 interface AdoptionCardProps {
   dog: Dog;
@@ -39,7 +39,9 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 							{dog.image && (
 								<img
 									className="w-full h-36 object-cover rounded-t-xl"
-									src={dog.image}
+									src={
+										process.env.REACT_APP_LOCAL + dog.image
+									}
 									alt={dog.name}
 								/>
 							)}
@@ -93,7 +95,9 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 							{dog.image && (
 								<img
 									className="w-full h-36 object-cover rounded-t-xl"
-									src={dog.image}
+									src={
+										process.env.REACT_APP_LOCAL + dog.image
+									}
 									alt={dog.name}
 								/>
 							)}

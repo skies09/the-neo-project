@@ -4,28 +4,32 @@ import * as Yup from "yup";
 import { dogAPI, Kennel, Dog } from "../../services/api.ts";
 
 interface DogToEdit {
-  id?: string;
-  public_id?: string;
-  name?: string;
-  breed?: string;
-  is_crossbreed?: boolean | null;
-  gender?: string;
-  age?: number | string;
-  weight?: string;
-  size?: string;
-  good_with_dogs?: boolean | null;
-  good_with_cats?: boolean | null;
-  good_with_children?: boolean | null;
-  extra_information?: string;
+	id?: string;
+	public_id?: string;
+	name?: string;
+	breed?: string;
+	is_crossbreed?: boolean;
+	gender?: string;
+	age?: number | string;
+	weight?: string;
+	size?: string;
+	good_with_dogs?: boolean;
+	good_with_cats?: boolean;
+	good_with_children?: boolean;
+	extra_information?: string;
 }
 
 interface UploadDogFormProps {
-  kennelData: Kennel;
-  setDogAdded: (added: boolean) => void;
-  dogToEdit?: DogToEdit;
+	kennelData: Kennel;
+	setDogAdded: (added: boolean) => void;
+	dogToEdit?: DogToEdit;
 }
 
-const UploadDogForm = ({ kennelData, setDogAdded, dogToEdit }: UploadDogFormProps) => {
+const UploadDogForm = ({
+	kennelData,
+	setDogAdded,
+	dogToEdit,
+}: UploadDogFormProps) => {
 	// Upload/Edit dogs
 	const handleSave = async (values: any) => {
 		const data = {

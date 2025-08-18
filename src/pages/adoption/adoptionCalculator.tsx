@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { dogAPI, Dog } from "../../services/api.ts";
+import { dogAPI } from "../../services/api.ts";
 
 export default function Adoption() {
 	const [gender, setGender] = useState("");
 	const [goodWithDogs, setGoodWithDogs] = useState(false);
 	const [goodWithCats, setGoodWithCats] = useState(false);
 	const [goodWithChildren, setGoodWithChildren] = useState(false);
-	const [dog, setDog] = useState<Dog | null>(null);
+	const [dog, setDog] = useState<dogAPI.Dog | null>(null);
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 
