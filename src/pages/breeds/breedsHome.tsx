@@ -33,7 +33,7 @@ export default function Breeds() {
 					"Error fetching initial data:",
 					error instanceof Error ? error.message : String(error)
 				);
-				setError("Error fetching breed data. Please try again.");
+				setError("No breeds found");
 			} finally {
 				setLoading(false);
 			}
@@ -89,13 +89,13 @@ export default function Breeds() {
 
 	if (loading && groups.length === 0 && breeds.length === 0) {
 		return (
-			<motion.div 
+			<motion.div
 				className="min-h-screen pt-4 pb-8 px-4"
 				initial={{ opacity: 0 }}
 				animate={{ opacity: 1 }}
 				transition={{ duration: 0.8, ease: "easeOut" }}
 			>
-				<motion.div 
+				<motion.div
 					className="flex justify-center items-center font-poppins text-2xl lg:text-3xl font-bold text-oxfordBlue tracking-wider drop-shadow-md"
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -108,14 +108,14 @@ export default function Breeds() {
 	}
 
 	return (
-		<motion.div 
+		<motion.div
 			className="min-h-screen pt-4 pb-8 px-4"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
 		>
 			{/* Header Section */}
-			<motion.div 
+			<motion.div
 				className="text-center mb-8"
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
@@ -126,11 +126,15 @@ export default function Breeds() {
 				</h1>
 
 				{error && (
-					<motion.div 
+					<motion.div
 						className="flex justify-center items-center mt-4"
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.5, delay: 0.8, ease: "easeOut" }}
+						transition={{
+							duration: 0.5,
+							delay: 0.8,
+							ease: "easeOut",
+						}}
 					>
 						<p className="text-red-600 font-semibold">{error}</p>
 					</motion.div>
@@ -138,7 +142,7 @@ export default function Breeds() {
 			</motion.div>
 
 			{/* Filter Buttons Section */}
-			<motion.div 
+			<motion.div
 				className="mb-8"
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
@@ -193,7 +197,7 @@ export default function Breeds() {
 			</motion.div>
 
 			{/* Content Section */}
-			<motion.div 
+			<motion.div
 				className="max-w-7xl mx-auto"
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
@@ -205,39 +209,35 @@ export default function Breeds() {
 							Loading breeds...
 						</p>
 					</div>
-				) : breeds.length > 0 ? (
-					<div>
-						{selectedGroup && (
-							<h2 className="text-2xl font-bold text-center mb-8 text-oxfordBlue">
-								{selectedGroup} Breeds
-							</h2>
-						)}
-						{!selectedGroup && (
-							<h2 className="text-2xl font-bold text-center mb-8 text-oxfordBlue">
-								All Breeds
-							</h2>
-						)}
-						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-12 justify-items-center">
-							{breeds.map((breed) => (
-								<BreedCard
-									key={breed.id}
-									breed={breed}
-									onClick={handleBreedClick}
-								/>
-							))}
-						</div>
-					</div>
 				) : (
-					<div className="flex justify-center items-center py-12">
-						<p className="text-lg text-oxfordBlue">
-							No breeds found.
-						</p>
-					</div>
+					breeds.length > 0 && (
+						<div>
+							{selectedGroup && (
+								<h2 className="text-2xl font-bold text-center mb-8 text-oxfordBlue">
+									{selectedGroup} Breeds
+								</h2>
+							)}
+							{!selectedGroup && (
+								<h2 className="text-2xl font-bold text-center mb-8 text-oxfordBlue">
+									All Breeds
+								</h2>
+							)}
+							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-12 justify-items-center">
+								{breeds.map((breed) => (
+									<BreedCard
+										key={breed.id}
+										breed={breed}
+										onClick={handleBreedClick}
+									/>
+								))}
+							</div>
+						</div>
+					)
 				)}
 			</motion.div>
 
 			{/* Breed Detail Modal */}
-			<BreedDetailModal 
+			<BreedDetailModal
 				selectedBreed={selectedBreed}
 				onClose={() => setSelectedBreed(null)}
 			/>
