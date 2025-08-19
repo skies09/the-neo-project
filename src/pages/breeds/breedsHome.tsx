@@ -87,31 +87,61 @@ export default function Breeds() {
 
 	if (loading && groups.length === 0 && breeds.length === 0) {
 		return (
-			<div className="min-h-screen pt-4 pb-8 px-4">
-				<div className="flex justify-center items-center font-poppins text-2xl lg:text-3xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+			<motion.div 
+				className="min-h-screen pt-4 pb-8 px-4"
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				transition={{ duration: 0.8, ease: "easeOut" }}
+			>
+				<motion.div 
+					className="flex justify-center items-center font-poppins text-2xl lg:text-3xl font-bold text-oxfordBlue tracking-wider drop-shadow-md"
+					initial={{ opacity: 0, y: -20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+				>
 					Loading breeds...
-				</div>
-			</div>
+				</motion.div>
+			</motion.div>
 		);
 	}
 
 	return (
-		<div className="min-h-screen pt-4 pb-8 px-4">
+		<motion.div 
+			className="min-h-screen pt-4 pb-8 px-4"
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ duration: 0.8, ease: "easeOut" }}
+		>
 			{/* Header Section */}
-			<div className="text-center mb-8">
+			<motion.div 
+				className="text-center mb-8"
+				initial={{ opacity: 0, y: -20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+			>
 				<h1 className="font-poppins text-3xl lg:text-4xl font-bold text-oxfordBlue tracking-wider drop-shadow-md mb-4">
 					Breeds
 				</h1>
 
 				{error && (
-					<div className="flex justify-center items-center mt-4">
+					<motion.div 
+						className="flex justify-center items-center mt-4"
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.5, delay: 0.8, ease: "easeOut" }}
+					>
 						<p className="text-red-600 font-semibold">{error}</p>
-					</div>
+					</motion.div>
 				)}
-			</div>
+			</motion.div>
 
 			{/* Filter Buttons Section */}
-			<div className="mb-8">
+			<motion.div 
+				className="mb-8"
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+			>
 				{groups && groups.length > 0 && (
 					<div className="flex justify-center items-center flex-wrap gap-4 mb-6">
 						{groups.map((group, index) => {
@@ -158,10 +188,15 @@ export default function Breeds() {
 						<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-oxfordBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 					</motion.button>
 				</div>
-			</div>
+			</motion.div>
 
 			{/* Content Section */}
-			<div className="max-w-7xl mx-auto">
+			<motion.div 
+				className="max-w-7xl mx-auto"
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+			>
 				{loading && breeds.length === 0 ? (
 					<div className="flex justify-center items-center py-12">
 						<p className="text-lg text-oxfordBlue">
@@ -197,7 +232,7 @@ export default function Breeds() {
 						</p>
 					</div>
 				)}
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	);
 }

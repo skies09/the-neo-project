@@ -6,15 +6,13 @@ import { RootState } from "../../store/store";
 import { kennelAPI, dogAPI, Kennel, Dog } from "../../services/api.ts";
 import { getKennel } from "../../hooks/kennel.actions.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { motion } from "framer-motion";
 import {
 	faPlus,
 	faDog,
 	faEdit,
 	faTrash,
 	faUser,
-	faPaw,
-	faSpinner,
-	faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface DogToEdit {
@@ -164,10 +162,20 @@ const KennelAccount = () => {
 	};
 
 	return (
-		<div className="min-h-screen  py-8">
+		<motion.div
+			className="min-h-screen py-8"
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ duration: 0.8, ease: "easeOut" }}
+		>
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				{/* Header */}
-				<div className="text-center mb-8">
+				<motion.div
+					className="text-center mb-8"
+					initial={{ opacity: 0, y: -20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+				>
 					<h1 className="text-4xl font-bold text-oxfordBlue mb-2">
 						{loadingKennel
 							? "Loading..."
@@ -176,10 +184,15 @@ const KennelAccount = () => {
 					<p className="text-lg text-oxfordBlue/80">
 						Manage your kennel profile and dogs
 					</p>
-				</div>
+				</motion.div>
 
 				{/* Tab Navigation */}
-				<div className="flex justify-center mb-8">
+				<motion.div
+					className="flex justify-center mb-8"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+				>
 					<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-2xl p-2 shadow-lg">
 						<button
 							onClick={() => {
@@ -211,23 +224,29 @@ const KennelAccount = () => {
 							Profile
 						</button>
 					</div>
-				</div>
+				</motion.div>
 
 				{/* Error Messages */}
-				{showProfile && profileError && (
-					<div className="max-w-2xl mx-auto mb-6">
-						<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
-							{profileError}
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+				>
+					{showProfile && profileError && (
+						<div className="max-w-2xl mx-auto mb-6">
+							<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
+								{profileError}
+							</div>
 						</div>
-					</div>
-				)}
-				{!showProfile && dogsError && (
-					<div className="max-w-2xl mx-auto mb-6">
-						<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
-							{dogsError}
+					)}
+					{!showProfile && dogsError && (
+						<div className="max-w-2xl mx-auto mb-6">
+							<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
+								{dogsError}
+							</div>
 						</div>
-					</div>
-				)}
+					)}
+				</motion.div>
 
 				{/* Content */}
 				{showProfile && kennelData && (
@@ -423,7 +442,7 @@ const KennelAccount = () => {
 					</div>
 				)}
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { dogAPI, Dog } from "../../services/api.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { motion } from "framer-motion";
 import {
 	faSearch,
 	faVenusMars,
@@ -67,13 +68,21 @@ export default function Adoption() {
 	};
 
 	return (
-		<div
+		<motion.div
 			id="adopt"
 			className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-20 pb-8 px-4"
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ duration: 0.8, ease: "easeOut" }}
 		>
 			<div className="max-w-4xl mx-auto">
 				{/* Header */}
-				<div className="text-center mb-8">
+				<motion.div 
+					className="text-center mb-8"
+					initial={{ opacity: 0, y: -20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+				>
 					<div className="flex justify-center items-center mb-4">
 						<FontAwesomeIcon
 							icon={faSearch}
@@ -91,10 +100,15 @@ export default function Adoption() {
 						Tell us what you're looking for and we'll find your
 						ideal companion
 					</p>
-				</div>
+				</motion.div>
 
 				{/* Search Form */}
-				<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 mb-8">
+				<motion.div 
+					className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 mb-8"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+				>
 					<div className="text-center mb-6">
 						<div className="w-16 h-16 bg-gradient-to-br from-oxfordBlue to-skyBlue rounded-full flex items-center justify-center mx-auto mb-3">
 							<FontAwesomeIcon
@@ -243,12 +257,23 @@ export default function Adoption() {
 							</button>
 						</div>
 					</form>
-				</div>
+				</motion.div>
 
 				{/* Results Section */}
-				<div ref={resultsRef} className="max-w-3xl mx-auto">
+				<motion.div 
+					ref={resultsRef} 
+					className="max-w-3xl mx-auto"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+				>
 					{dog && (
-						<div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-xl border border-skyBlue/20 p-8">
+						<motion.div 
+							className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-xl border border-skyBlue/20 p-8"
+							initial={{ opacity: 0, scale: 0.95 }}
+							animate={{ opacity: 1, scale: 1 }}
+							transition={{ duration: 0.5, delay: 0.8, ease: "easeOut" }}
+						>
 							<div className="text-center mb-6">
 								<div className="w-20 h-20 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center mx-auto mb-4">
 									<FontAwesomeIcon
@@ -448,11 +473,16 @@ export default function Adoption() {
 									</p>
 								</div>
 							)}
-						</div>
+						</motion.div>
 					)}
 
 					{error && (
-						<div className="text-center p-6 bg-red-50 border border-red-200 rounded-2xl">
+						<motion.div 
+							className="text-center p-6 bg-red-50 border border-red-200 rounded-2xl"
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5, delay: 0.8, ease: "easeOut" }}
+						>
 							<FontAwesomeIcon
 								icon={faSearch}
 								className="text-3xl text-red-500 mb-3"
@@ -463,10 +493,10 @@ export default function Adoption() {
 							<p className="text-red-500 mt-2">
 								Try adjusting your search criteria
 							</p>
-						</div>
+						</motion.div>
 					)}
-				</div>
+				</motion.div>
 			</div>
-		</div>
+		</motion.div>
 	);
 }

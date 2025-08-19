@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AdoptCard from "../../components/cards/adoptCard.tsx";
 import { dogAPI, Dog } from "../../services/api.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { motion } from "framer-motion";
 import { 
 	faHeart, 
 	faPaw, 
@@ -39,30 +40,60 @@ export default function AllDogs() {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen pt-2 pb-16 px-4">
-				<div className="flex flex-col justify-center items-center font-poppins text-2xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+			<motion.div 
+				className="min-h-screen pt-2 pb-16 px-4"
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				transition={{ duration: 0.8, ease: "easeOut" }}
+			>
+				<motion.div 
+					className="flex flex-col justify-center items-center font-poppins text-2xl font-bold text-oxfordBlue tracking-wider drop-shadow-md"
+					initial={{ opacity: 0, y: -20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+				>
 					<FontAwesomeIcon icon={faSpinner} className="animate-spin text-4xl mb-4 text-skyBlue" />
 					Loading dogs...
-				</div>
-			</div>
+				</motion.div>
+			</motion.div>
 		);
 	}
 
 	if (error) {
 		return (
-			<div className="min-h-screen pt-2 pb-16 px-4">
-				<div className="flex flex-col justify-center items-center font-poppins text-2xl font-bold text-red-600 tracking-wider drop-shadow-md">
+			<motion.div 
+				className="min-h-screen pt-2 pb-16 px-4"
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				transition={{ duration: 0.8, ease: "easeOut" }}
+			>
+				<motion.div 
+					className="flex flex-col justify-center items-center font-poppins text-2xl font-bold text-red-600 tracking-wider drop-shadow-md"
+					initial={{ opacity: 0, y: -20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+				>
 					<FontAwesomeIcon icon={faPaw} className="text-4xl mb-4 text-red-500" />
 					{error}
-				</div>
-			</div>
+				</motion.div>
+			</motion.div>
 		);
 	}
 
 	return (
-		<div className="min-h-screen pt-2 pb-20 px-4">
+		<motion.div 
+			className="min-h-screen pt-2 pb-20 px-4"
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ duration: 0.8, ease: "easeOut" }}
+		>
 			{/* Header Section */}
-			<div className="text-center mb-8">
+			<motion.div 
+				className="text-center mb-8"
+				initial={{ opacity: 0, y: -20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+			>
 				<div className="flex justify-center items-center mb-4">
 					<FontAwesomeIcon icon={faHeart} className="text-4xl text-skyBlue mr-4" />
 					<h1 className="font-poppins text-3xl lg:text-4xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
@@ -74,10 +105,15 @@ export default function AllDogs() {
 					<FontAwesomeIcon icon={faSearch} className="mr-2" />
 					Find your perfect companion
 				</p>
-			</div>
+			</motion.div>
 
 			{/* Content Section */}
-			<div className="max-w-7xl mx-auto pt-12">
+			<motion.div 
+				className="max-w-7xl mx-auto pt-12"
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+			>
 				{dogData && dogData.length > 0 ? (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-28 justify-items-center">
 						{dogData.map((dog) => (
@@ -95,7 +131,7 @@ export default function AllDogs() {
 						</p>
 					</div>
 				)}
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	);
 }

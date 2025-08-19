@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { breedsAPI, Breed } from "../../services/api.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { motion } from "framer-motion";
 import { useToast } from "../../components/ToastContainer.tsx";
 import {
 	faSearch,
@@ -95,13 +96,21 @@ export default function BreedCalculator() {
 	};
 
 	return (
-		<div
+		<motion.div
 			id="breedCalculator"
 			className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-20 pb-8 px-4"
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ duration: 0.8, ease: "easeOut" }}
 		>
 			<div className="max-w-4xl mx-auto">
 				{/* Header */}
-				<div className="text-center mb-8">
+				<motion.div 
+					className="text-center mb-8"
+					initial={{ opacity: 0, y: -20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+				>
 					<div className="flex justify-center items-center mb-4">
 						<FontAwesomeIcon
 							icon={faSearch}
@@ -119,10 +128,15 @@ export default function BreedCalculator() {
 						Tell us about your lifestyle and we'll recommend the
 						perfect breeds for you
 					</p>
-				</div>
+				</motion.div>
 
 				{/* Search Form */}
-				<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 mb-8">
+				<motion.div 
+					className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 mb-8"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+				>
 					<div className="text-center mb-6">
 						<div className="w-16 h-16 bg-gradient-to-br from-oxfordBlue to-skyBlue rounded-full flex items-center justify-center mx-auto mb-3">
 							<FontAwesomeIcon
@@ -581,10 +595,16 @@ export default function BreedCalculator() {
 							</button>
 						</div>
 					</form>
-				</div>
+				</motion.div>
 
 				{/* Results Section */}
-				<div ref={resultsRef} className="max-w-4xl mx-auto">
+				<motion.div 
+					ref={resultsRef} 
+					className="max-w-4xl mx-auto"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+				>
 					{breeds.length > 0 && (
 						<div className="text-center mb-8">
 							<div className="flex justify-center items-center mb-4">
@@ -674,8 +694,8 @@ export default function BreedCalculator() {
 							</p>
 						</div>
 					)}
-				</div>
+				</motion.div>
 			</div>
-		</div>
+		</motion.div>
 	);
 }
