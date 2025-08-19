@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { breedsAPI } from "../../services/api.ts";
+import { breedsAPI, Breed } from "../../services/api.ts";
+import BreedCard from "../../components/cards/breedCard.tsx";
+import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaw, faList } from "@fortawesome/free-solid-svg-icons";
 
 export default function Breeds() {
 	const [groups, setGroups] = useState<string[]>([]);
@@ -9,34 +13,42 @@ export default function Breeds() {
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		const fetchGroups = async () => {
+		const fetchInitialData = async () => {
 			setLoading(true);
 			setError(null);
-			
+
 			try {
-				const groupsData = await breedsAPI.getBreedGroups();
+				// Fetch both groups and all breeds simultaneously
+				const [groupsData, breedsData] = await Promise.all([
+					breedsAPI.getBreedGroups(),
+					breedsAPI.getAllBreeds(),
+				]);
+
 				setGroups(groupsData);
+				setBreeds(breedsData);
 			} catch (error) {
 				console.error(
-					"Error fetching groups:",
+					"Error fetching initial data:",
 					error instanceof Error ? error.message : String(error)
 				);
-				setError("Error fetching breed groups. Please try again.");
+				setError("Error fetching breed data. Please try again.");
 			} finally {
 				setLoading(false);
 			}
 		};
 
-		fetchGroups();
+		fetchInitialData();
 	}, []);
 
 	const fetchBreedsOfGroup = async (group: string) => {
+		console.log("Fetching breeds for group:", group);
 		setSelectedGroup(group);
 		setLoading(true);
 		setError(null);
-		
+
 		try {
 			const breedsData = await breedsAPI.getBreedsByGroup(group);
+			console.log("Breeds data for group:", breedsData);
 			setBreeds(breedsData);
 		} catch (error) {
 			console.error(
@@ -53,7 +65,7 @@ export default function Breeds() {
 		setSelectedGroup(null);
 		setLoading(true);
 		setError(null);
-		
+
 		try {
 			const breedsData = await breedsAPI.getAllBreeds();
 			setBreeds(breedsData);
@@ -68,9 +80,14 @@ export default function Breeds() {
 		}
 	};
 
-	if (loading && groups.length === 0) {
+	const handleBreedClick = (breed: Breed) => {
+		console.log("Breed clicked:", breed);
+		// TODO: Add show single breed details
+	};
+
+	if (loading && groups.length === 0 && breeds.length === 0) {
 		return (
-			<div className="w-screen overflow-hidden h-[80vh] mt-4">
+			<div className="min-h-screen pt-4 pb-8 px-4">
 				<div className="flex justify-center items-center font-poppins text-2xl lg:text-3xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
 					Loading breeds...
 				</div>
@@ -79,62 +96,105 @@ export default function Breeds() {
 	}
 
 	return (
-		<div id="breeds" className="w-screen overflow-hidden h-[80vh] mt-4 ">
-			<div className="flex justify-center items-center font-poppins text-2xl lg:text-3xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
-				Breeds
-			</div>
-			
-			{error && (
-				<div className="flex justify-center items-center mt-4">
-					<p className="text-red-600 font-semibold">{error}</p>
-				</div>
-			)}
-			
-			<div className="mt-4">
-				{groups && groups.length > 0 && (
-					<ul className="flex justify-center items-center">
-						{groups.map((group, index) => (
-							<li className="m-2" key={index}>
-								<button
-									className="font-mono text-base text-oxfordBlue p-4 border rounded-lg hover:bg-sunset"
-									onClick={() => fetchBreedsOfGroup(group)}
-								>
-									{group}
-								</button>
-							</li>
-						))}
-					</ul>
+		<div className="min-h-screen pt-4 pb-8 px-4">
+			{/* Header Section */}
+			<div className="text-center mb-8">
+				<h1 className="font-poppins text-3xl lg:text-4xl font-bold text-oxfordBlue tracking-wider drop-shadow-md mb-4">
+					Breeds
+				</h1>
+
+				{error && (
+					<div className="flex justify-center items-center mt-4">
+						<p className="text-red-600 font-semibold">{error}</p>
+					</div>
 				)}
-				<div className="flex justify-center items-center mt-4">
-					<button
-						className="font-mono text-base text-oxfordBlue p-4 border rounded-lg hover:bg-sunset"
+			</div>
+
+			{/* Filter Buttons Section */}
+			<div className="mb-8">
+				{groups && groups.length > 0 && (
+					<div className="flex justify-center items-center flex-wrap gap-4 mb-6">
+						{groups.map((group, index) => {
+							console.log(
+								"Rendering group button:",
+								group,
+								index
+							);
+							return (
+								<motion.button
+									key={index}
+									className="group relative overflow-hidden bg-gradient-to-r from-skyBlue to-turquoise text-oxfordBlue px-6 py-4 rounded-xl font-poppins font-semibold text-base shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 border border-skyBlue/30"
+									onClick={() => fetchBreedsOfGroup(group)}
+									whileHover={{ scale: 1.05 }}
+									whileTap={{ scale: 0.95 }}
+								>
+									<div className="flex items-center space-x-3 relative z-10">
+										<FontAwesomeIcon
+											icon={faPaw}
+											className="text-lg"
+										/>
+										<span>{group}</span>
+									</div>
+									<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+								</motion.button>
+							);
+						})}
+					</div>
+				)}
+				<div className="flex justify-center items-center">
+					<motion.button
+						className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold text-base shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 border border-oxfordBlue/30"
 						onClick={() => fetchAll()}
+						whileHover={{ scale: 1.05 }}
+						whileTap={{ scale: 0.95 }}
 					>
-						All Breeds
-					</button>
+						<div className="flex items-center space-x-3 relative z-10">
+							<FontAwesomeIcon
+								icon={faList}
+								className="text-lg"
+							/>
+							<span>All Breeds</span>
+						</div>
+						<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-oxfordBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+					</motion.button>
 				</div>
+			</div>
+
+			{/* Content Section */}
+			<div className="max-w-7xl mx-auto">
 				{loading && breeds.length === 0 ? (
-					<div className="flex justify-center items-center mt-8">
-						<p className="text-lg text-oxfordBlue">Loading breeds...</p>
+					<div className="flex justify-center items-center py-12">
+						<p className="text-lg text-oxfordBlue">
+							Loading breeds...
+						</p>
 					</div>
 				) : breeds.length > 0 ? (
-					<div className="mt-4">
+					<div>
 						{selectedGroup && (
-							<h3 className="text-xl font-bold text-center">{`${selectedGroup} Breeds:`}</h3>
+							<h2 className="text-2xl font-bold text-center mb-8 text-oxfordBlue">
+								{selectedGroup} Breeds
+							</h2>
 						)}
-						<ul className="flex flex-wrap justify-center mt-2">
+						{!selectedGroup && (
+							<h2 className="text-2xl font-bold text-center mb-8 text-oxfordBlue">
+								All Breeds
+							</h2>
+						)}
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-12 justify-items-center">
 							{breeds.map((breed) => (
-								<li className="m-2" key={breed.id}>
-									<div className="font-mono text-base text-oxfordBlue p-2 border rounded-lg">
-										{breed.breed}
-									</div>
-								</li>
+								<BreedCard
+									key={breed.id}
+									breed={breed}
+									onClick={handleBreedClick}
+								/>
 							))}
-						</ul>
+						</div>
 					</div>
 				) : (
-					<div className="flex justify-center items-center mt-8">
-						<p className="text-lg text-oxfordBlue">No breeds found.</p>
+					<div className="flex justify-center items-center py-12">
+						<p className="text-lg text-oxfordBlue">
+							No breeds found.
+						</p>
 					</div>
 				)}
 			</div>

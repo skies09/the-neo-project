@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/home.tsx";
 import AllDogs from "./pages/adoption/allDogs.tsx";
 import Adoption from "./pages/adoption/adoptionCalculator.tsx";
+import BreedCalculator from "./pages/breedCalculator/breedCalculator.tsx";
 import Breeds from "./pages/breeds/breedsHome.tsx";
 import Contact from "./pages/contact.tsx";
 import KennelAccount from "./pages/kennel/kennelAccount.tsx";
@@ -21,6 +22,7 @@ const App: React.FC = () => (
 			<Route path="/" element={<Home />} />
 			<Route path="/allDogs" element={<AllDogs />} />
 			<Route path="/adopt" element={<Adoption />} />
+			<Route path="/breedCalculator" element={<BreedCalculator />} />
 			<Route path="/breeds" element={<Breeds />} />
 			<Route path="/contact" element={<Contact />} />
 			<Route

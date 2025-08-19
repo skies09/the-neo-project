@@ -3,6 +3,20 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useKennelActions } from "../../hooks/kennel.actions.tsx";
 import { Kennel } from "../../services/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faHome,
+	faEdit,
+	faSave,
+	faTimes,
+	faEnvelope,
+	faUser,
+	faPhone,
+	faMapMarkerAlt,
+	faBuilding,
+	faCity,
+	faAddressCard,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface ProfileCardProps {
 	kennelData: Kennel;
@@ -91,7 +105,11 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 									{/* Left Column */}
 									<div className="space-y-6">
 										<div>
-											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+												<FontAwesomeIcon
+													icon={faEnvelope}
+													className="mr-2 text-oxfordBlue"
+												/>
 												Email
 											</label>
 											<Field
@@ -108,7 +126,11 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 										</div>
 
 										<div>
-											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+												<FontAwesomeIcon
+													icon={faUser}
+													className="mr-2 text-oxfordBlue"
+												/>
 												Username
 											</label>
 											<Field
@@ -125,7 +147,11 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 										</div>
 
 										<div>
-											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+												<FontAwesomeIcon
+													icon={faHome}
+													className="mr-2 text-oxfordBlue"
+												/>
 												Kennel Name
 											</label>
 											<Field
@@ -142,7 +168,11 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 										</div>
 
 										<div>
-											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+												<FontAwesomeIcon
+													icon={faMapMarkerAlt}
+													className="mr-2 text-oxfordBlue"
+												/>
 												Address Line 1
 											</label>
 											<Field
@@ -163,7 +193,11 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 									<div className="space-y-6">
 										<div className="grid grid-cols-2 gap-4">
 											<div>
-												<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+												<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+													<FontAwesomeIcon
+														icon={faBuilding}
+														className="mr-2 text-oxfordBlue"
+													/>
 													Town
 												</label>
 												<Field
@@ -179,7 +213,11 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 												/>
 											</div>
 											<div>
-												<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+												<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+													<FontAwesomeIcon
+														icon={faCity}
+														className="mr-2 text-oxfordBlue"
+													/>
 													City
 												</label>
 												<Field
@@ -197,7 +235,11 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 										</div>
 
 										<div>
-											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+												<FontAwesomeIcon
+													icon={faAddressCard}
+													className="mr-2 text-oxfordBlue"
+												/>
 												Postcode
 											</label>
 											<Field
@@ -214,7 +256,11 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 										</div>
 
 										<div>
-											<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+											<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+												<FontAwesomeIcon
+													icon={faPhone}
+													className="mr-2 text-oxfordBlue"
+												/>
 												Contact Number
 											</label>
 											<Field
@@ -238,12 +284,20 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 										onClick={() => setIsEditing(false)}
 										className="px-8 py-3 bg-gray-500 hover:bg-gray-600 text-oxfordBlue rounded-xl font-semibold transition-all duration-200"
 									>
+										<FontAwesomeIcon
+											icon={faTimes}
+											className="mr-2"
+										/>
 										Cancel
 									</button>
 									<button
 										type="submit"
 										className="px-8 py-3 bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
 									>
+										<FontAwesomeIcon
+											icon={faSave}
+											className="mr-2"
+										/>
 										Save Changes
 									</button>
 								</div>
@@ -255,7 +309,10 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 				<div className="p-8">
 					<div className="text-center mb-8">
 						<div className="w-20 h-20 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center mx-auto mb-4">
-							<i className="fas fa-home text-3xl text-honeydew"></i>
+							<FontAwesomeIcon
+								icon={faHome}
+								className="text-3xl text-honeydew"
+							/>
 						</div>
 						<h2 className="text-3xl font-bold text-oxfordBlue mb-2">
 							{kennelData.name}
@@ -266,28 +323,44 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 						<div className="space-y-4">
 							<div className="bg-gray-50 rounded-xl p-4">
-								<h3 className="text-lg font-semibold text-oxfordBlue mb-3">
+								<h3 className="text-lg font-semibold text-oxfordBlue mb-3 flex items-center">
+									<FontAwesomeIcon
+										icon={faAddressCard}
+										className="mr-2 text-oxfordBlue"
+									/>
 									Contact Information
 								</h3>
 								<div className="space-y-2">
-									<div className="flex justify-between">
-										<span className="text-gray-600">
+									<div className="flex justify-between items-center">
+										<span className="text-gray-600 flex items-center">
+											<FontAwesomeIcon
+												icon={faEnvelope}
+												className="mr-2 text-oxfordBlue"
+											/>
 											Email:
 										</span>
 										<span className="font-medium">
 											{kennelData.email}
 										</span>
 									</div>
-									<div className="flex justify-between">
-										<span className="text-gray-600">
+									<div className="flex justify-between items-center">
+										<span className="text-gray-600 flex items-center">
+											<FontAwesomeIcon
+												icon={faUser}
+												className="mr-2 text-oxfordBlue"
+											/>
 											Username:
 										</span>
 										<span className="font-medium">
 											{kennelData.username}
 										</span>
 									</div>
-									<div className="flex justify-between">
-										<span className="text-gray-600">
+									<div className="flex justify-between items-center">
+										<span className="text-gray-600 flex items-center">
+											<FontAwesomeIcon
+												icon={faPhone}
+												className="mr-2 text-oxfordBlue"
+											/>
 											Phone:
 										</span>
 										<span className="font-medium">
@@ -300,36 +373,56 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 
 						<div className="space-y-4">
 							<div className="bg-gray-50 rounded-xl p-4">
-								<h3 className="text-lg font-semibold text-oxfordBlue mb-3">
+								<h3 className="text-lg font-semibold text-oxfordBlue mb-3 flex items-center">
+									<FontAwesomeIcon
+										icon={faMapMarkerAlt}
+										className="mr-2 text-oxfordBlue"
+									/>
 									Address
 								</h3>
 								<div className="space-y-2">
-									<div className="flex justify-between">
-										<span className="text-gray-600">
+									<div className="flex justify-between items-center">
+										<span className="text-gray-600 flex items-center">
+											<FontAwesomeIcon
+												icon={faMapMarkerAlt}
+												className="mr-2 text-oxfordBlue"
+											/>
 											Address:
 										</span>
 										<span className="font-medium">
 											{kennelData.address_line_1}
 										</span>
 									</div>
-									<div className="flex justify-between">
-										<span className="text-gray-600">
+									<div className="flex justify-between items-center">
+										<span className="text-gray-600 flex items-center">
+											<FontAwesomeIcon
+												icon={faBuilding}
+												className="mr-2 text-oxfordBlue"
+											/>
 											Town:
 										</span>
 										<span className="font-medium">
 											{kennelData.town}
 										</span>
 									</div>
-									<div className="flex justify-between">
-										<span className="text-gray-600">
+									<div className="flex justify-between items-center">
+										<span className="text-gray-600 flex items-center">
+											<FontAwesomeIcon
+												icon={faCity}
+												className="mr-2 text-oxfordBlue"
+											/>
 											City:
 										</span>
 										<span className="font-medium">
 											{kennelData.city}
 										</span>
 									</div>
-									<div className="flex justify-between">
-										<span className="text-gray-600">
+									<div className="flex justify-between items-center">
+										<span className="text-gray-600 flex items-center">
+											<FontAwesomeIcon
+												icon={faAddressCard}
+												className="mr-2 text-oxfordBlue"
+											/>
 											Postcode:
 										</span>
 										<span className="font-medium">
@@ -346,7 +439,8 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 							onClick={() => setIsEditing(true)}
 							className="px-8 py-3 bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
 						>
-							<i className="fas fa-edit mr-2"></i>Edit Profile
+							<FontAwesomeIcon icon={faEdit} className="mr-2" />
+							Edit Profile
 						</button>
 					</div>
 				</div>

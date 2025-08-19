@@ -2,6 +2,25 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { dogAPI, Kennel, Dog } from "../../services/api.ts";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { 
+	faDog, 
+	faEdit, 
+	faSave, 
+	faTimes, 
+	faUser,
+	faPaw,
+	faBirthdayCake,
+	faWeightHanging,
+	faRuler,
+	faVenusMars,
+	faQuestionCircle,
+	faHeart,
+	faCat,
+	faBaby,
+	faFileAlt,
+	faPlus
+} from "@fortawesome/free-solid-svg-icons";
 
 interface DogToEdit {
 	id?: string;
@@ -88,6 +107,12 @@ const UploadDogForm = ({
 	return (
 		<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8">
 			<div className="text-center mb-8">
+				<div className="w-20 h-20 bg-gradient-to-br from-oxfordBlue to-skyBlue rounded-full flex items-center justify-center mx-auto mb-4">
+					<FontAwesomeIcon 
+						icon={dogToEdit ? faEdit : faPlus} 
+						className="text-3xl text-honeydew" 
+					/>
+				</div>
 				<h2 className="text-3xl font-bold text-oxfordBlue mb-2">
 					{dogToEdit ? "Edit Dog" : "Add New Dog"}
 				</h2>
@@ -107,32 +132,20 @@ const UploadDogForm = ({
 							? "yes"
 							: dogToEdit?.is_crossbreed === false
 							? "no"
-							: "",
+							: dogToEdit && (dogToEdit.is_crossbreed === null || dogToEdit.is_crossbreed === undefined)
+							? ""
+							: undefined,
 					gender: dogToEdit?.gender || "",
 					age: dogToEdit?.age || "",
 					weight: dogToEdit?.weight || "",
 					size: dogToEdit?.size || "",
-					goodWithDogs:
-						dogToEdit?.good_with_dogs === true
-							? "yes"
-							: dogToEdit?.good_with_dogs === false
-							? "no"
-							: "",
-					goodWithCats:
-						dogToEdit?.good_with_cats === true
-							? "yes"
-							: dogToEdit?.good_with_cats === false
-							? "no"
-							: "",
-					goodWithChildren:
-						dogToEdit?.good_with_children === true
-							? "yes"
-							: dogToEdit?.good_with_children === false
-							? "no"
-							: "",
+					goodWithDogs: dogToEdit?.good_with_dogs === true ? "yes" : dogToEdit?.good_with_dogs === false ? "no" : dogToEdit && (dogToEdit.good_with_dogs === null || dogToEdit.good_with_dogs === undefined) ? "" : undefined,
+					goodWithCats: dogToEdit?.good_with_cats === true ? "yes" : dogToEdit?.good_with_cats === false ? "no" : dogToEdit && (dogToEdit.good_with_cats === null || dogToEdit.good_with_cats === undefined) ? "" : undefined,
+					goodWithChildren: dogToEdit?.good_with_children === true ? "yes" : dogToEdit?.good_with_children === false ? "no" : dogToEdit && (dogToEdit.good_with_children === null || dogToEdit.good_with_children === undefined) ? "" : undefined,
 					additionalInformation: dogToEdit?.extra_information || "",
 				}}
 				enableReinitialize={true}
+				onSubmit={handleSave}
 				validationSchema={Yup.object({
 					name: Yup.string().required("Name is required"),
 					breed: Yup.string().required("Breed is required"),
@@ -148,18 +161,19 @@ const UploadDogForm = ({
 					goodWithChildren: Yup.string(),
 					additionalInformation: Yup.string(),
 				})}
-				onSubmit={handleSave}
 			>
 				{({ values, handleChange, handleBlur }) => (
 					<Form className="space-y-8">
 						{/* Basic Information */}
 						<div className="bg-gray-50 rounded-2xl p-6">
-							<h3 className="text-xl font-semibold text-oxfordBlue mb-6">
+							<h3 className="text-xl font-semibold text-oxfordBlue mb-6 flex items-center">
+								<FontAwesomeIcon icon={faDog} className="mr-3 text-oxfordBlue" />
 								Basic Information
 							</h3>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 								<div>
-									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+									<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+										<FontAwesomeIcon icon={faUser} className="mr-2 text-oxfordBlue" />
 										Name *
 									</label>
 									<Field
@@ -176,7 +190,8 @@ const UploadDogForm = ({
 								</div>
 
 								<div>
-									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+									<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+										<FontAwesomeIcon icon={faPaw} className="mr-2 text-oxfordBlue" />
 										Breed *
 									</label>
 									<Field
@@ -193,7 +208,8 @@ const UploadDogForm = ({
 								</div>
 
 								<div>
-									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+									<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+										<FontAwesomeIcon icon={faBirthdayCake} className="mr-2 text-oxfordBlue" />
 										Age (years)
 									</label>
 									<Field
@@ -217,7 +233,8 @@ const UploadDogForm = ({
 								</div>
 
 								<div>
-									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+									<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+										<FontAwesomeIcon icon={faWeightHanging} className="mr-2 text-oxfordBlue" />
 										Weight (kg) *
 									</label>
 									<Field
@@ -241,7 +258,8 @@ const UploadDogForm = ({
 								</div>
 
 								<div>
-									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+									<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+										<FontAwesomeIcon icon={faRuler} className="mr-2 text-oxfordBlue" />
 										Size *
 									</label>
 									<Field
@@ -267,13 +285,15 @@ const UploadDogForm = ({
 
 						{/* Characteristics */}
 						<div className="bg-gray-50 rounded-2xl p-6">
-							<h3 className="text-xl font-semibold text-oxfordBlue mb-6">
+							<h3 className="text-xl font-semibold text-oxfordBlue mb-6 flex items-center">
+								<FontAwesomeIcon icon={faQuestionCircle} className="mr-3 text-oxfordBlue" />
 								Characteristics
 							</h3>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 								<div className="space-y-6">
 									<div>
-										<label className="block text-sm font-semibold text-oxfordBlue mb-3">
+										<label className="block text-sm font-semibold text-oxfordBlue mb-3 flex items-center">
+											<FontAwesomeIcon icon={faVenusMars} className="mr-2 text-oxfordBlue" />
 											Gender *
 										</label>
 										<div className="flex space-x-6">
@@ -308,7 +328,8 @@ const UploadDogForm = ({
 									</div>
 
 									<div>
-										<label className="block text-sm font-semibold text-oxfordBlue mb-3">
+										<label className="block text-sm font-semibold text-oxfordBlue mb-3 flex items-center">
+											<FontAwesomeIcon icon={faPaw} className="mr-2 text-oxfordBlue" />
 											Is Crossbreed *
 										</label>
 										<div className="flex space-x-6">
@@ -356,7 +377,8 @@ const UploadDogForm = ({
 
 								<div className="space-y-6">
 									<div>
-										<label className="block text-sm font-semibold text-oxfordBlue mb-3">
+										<label className="block text-sm font-semibold text-oxfordBlue mb-3 flex items-center">
+											<FontAwesomeIcon icon={faHeart} className="mr-2 text-oxfordBlue" />
 											Good with other dogs
 										</label>
 										<div className="flex space-x-6">
@@ -397,7 +419,8 @@ const UploadDogForm = ({
 									</div>
 
 									<div>
-										<label className="block text-sm font-semibold text-oxfordBlue mb-3">
+										<label className="block text-sm font-semibold text-oxfordBlue mb-3 flex items-center">
+											<FontAwesomeIcon icon={faCat} className="mr-2 text-oxfordBlue" />
 											Good with cats
 										</label>
 										<div className="flex space-x-6">
@@ -438,7 +461,8 @@ const UploadDogForm = ({
 									</div>
 
 									<div>
-										<label className="block text-sm font-semibold text-oxfordBlue mb-3">
+										<label className="block text-sm font-semibold text-oxfordBlue mb-3 flex items-center">
+											<FontAwesomeIcon icon={faBaby} className="mr-2 text-oxfordBlue" />
 											Good with children
 										</label>
 										<div className="flex space-x-6">
@@ -483,11 +507,13 @@ const UploadDogForm = ({
 
 						{/* Additional Information */}
 						<div className="bg-gray-50 rounded-2xl p-6">
-							<h3 className="text-xl font-semibold text-oxfordBlue mb-6">
+							<h3 className="text-xl font-semibold text-oxfordBlue mb-6 flex items-center">
+								<FontAwesomeIcon icon={faFileAlt} className="mr-3 text-oxfordBlue" />
 								Additional Information
 							</h3>
 							<div>
-								<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+								<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+									<FontAwesomeIcon icon={faFileAlt} className="mr-2 text-oxfordBlue" />
 									Extra Information
 								</label>
 								<Field
@@ -516,12 +542,14 @@ const UploadDogForm = ({
 								}}
 								className="px-8 py-3 bg-gray-500 hover:bg-gray-600 text-oxfordBlue rounded-xl font-semibold transition-all duration-200"
 							>
+								<FontAwesomeIcon icon={faTimes} className="mr-2" />
 								Cancel
 							</button>
 							<button
 								type="submit"
 								className="px-8 py-3 bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
 							>
+								<FontAwesomeIcon icon={dogToEdit ? faSave : faPlus} className="mr-2" />
 								{dogToEdit ? "Update Dog" : "Add Dog"}
 							</button>
 						</div>

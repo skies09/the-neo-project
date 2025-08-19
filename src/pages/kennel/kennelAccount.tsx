@@ -5,6 +5,17 @@ import UploadDogForm from "../../components/form/uploadDogForm.tsx";
 import { RootState } from "../../store/store";
 import { kennelAPI, dogAPI, Kennel, Dog } from "../../services/api.ts";
 import { getKennel } from "../../hooks/kennel.actions.tsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faPlus,
+	faDog,
+	faEdit,
+	faTrash,
+	faUser,
+	faPaw,
+	faSpinner,
+	faHeart,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface DogToEdit {
 	id?: string;
@@ -178,7 +189,8 @@ const KennelAccount = () => {
 									: "text-oxfordBlue hover:bg-oxfordBlue/10"
 							}`}
 						>
-							<i className="fas fa-dog mr-2"></i>Dogs
+							<FontAwesomeIcon icon={faDog} className="mr-2" />
+							Dogs
 						</button>
 						<button
 							onClick={() => setShowProfile(true)}
@@ -188,7 +200,8 @@ const KennelAccount = () => {
 									: "text-oxfordBlue hover:bg-oxfordBlue/10"
 							}`}
 						>
-							<i className="fas fa-user mr-2"></i>Profile
+							<FontAwesomeIcon icon={faUser} className="mr-2" />
+							Profile
 						</button>
 					</div>
 				</div>
@@ -220,15 +233,20 @@ const KennelAccount = () => {
 				)}
 				{!showProfile && (
 					<div className="max-w-6xl mx-auto">
-						{/* Add Dog Button */}
-						<div className="text-center mb-8">
-							<button
-								onClick={() => setShowDogUploadForm(true)}
-								className="bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew px-8 py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-							>
-								<i className="fas fa-plus mr-2"></i>Add New Dog
-							</button>
-						</div>
+						{!showDogUploadForm && (
+							<div className="text-center mb-8">
+								<button
+									onClick={() => setShowDogUploadForm(true)}
+									className="bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew px-8 py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+								>
+									<FontAwesomeIcon
+										icon={faPlus}
+										className="mr-2"
+									/>
+									Add New Dog
+								</button>
+							</div>
+						)}
 
 						{/* Dog Upload Form */}
 						{showDogUploadForm && kennelData && (
@@ -255,7 +273,10 @@ const KennelAccount = () => {
 								) : dogData.length === 0 ? (
 									<div className="text-center py-12">
 										<div className="text-6xl mb-4">
-											<i className="fas fa-dog text-oxfordBlue"></i>
+											<FontAwesomeIcon
+												icon={faDog}
+												className="text-oxfordBlue"
+											/>
 										</div>
 										<h3 className="text-2xl font-bold text-oxfordBlue mb-2">
 											No dogs found
@@ -273,7 +294,10 @@ const KennelAccount = () => {
 											>
 												<div className="text-center mb-4">
 													<div className="w-16 h-16 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center mx-auto mb-3">
-														<i className="fas fa-dog text-2xl text-honeydew"></i>
+														<FontAwesomeIcon
+															icon={faDog}
+															className="text-2xl text-honeydew"
+														/>
 													</div>
 													<h3 className="text-xl font-bold text-oxfordBlue">
 														{dog.name}
@@ -361,7 +385,10 @@ const KennelAccount = () => {
 															});
 														}}
 													>
-														<i className="fas fa-edit mr-1"></i>
+														<FontAwesomeIcon
+															icon={faEdit}
+															className="mr-1"
+														/>
 														Edit
 													</button>
 													<button
@@ -373,7 +400,10 @@ const KennelAccount = () => {
 														}
 														className="flex-1 bg-red-500 hover:bg-red-600 text-oxfordBlue px-4 py-2 rounded-xl font-medium transition-all duration-200"
 													>
-														<i className="fas fa-trash mr-1"></i>
+														<FontAwesomeIcon
+															icon={faTrash}
+															className="mr-1"
+														/>
 														Delete
 													</button>
 												</div>
