@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { breedsAPI, Breed } from "../../services/api.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useToast } from "../../components/ToastContainer.tsx";
 import {
 	faSearch,
 	faHome,
@@ -40,12 +41,13 @@ export default function BreedCalculator() {
 	const [goodWithCats, setGoodWithCats] = useState(false);
 	const [goodWithChildren, setGoodWithChildren] = useState(false);
 	const [groomingNeeds, setGroomingNeeds] = useState("");
-	const [timeAvailable, setTimeAvailable] = useState("");
-
+		const [timeAvailable, setTimeAvailable] = useState("");
+	
 	const [breeds, setBreeds] = useState<Breed[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const resultsRef = useRef<HTMLDivElement>(null);
+	const { showToast } = useToast();
 
 	// Auto-scroll to results when breeds are found
 	useEffect(() => {
@@ -68,10 +70,25 @@ export default function BreedCalculator() {
 			console.log("All breeds:", allBreeds);
 			const filteredBreeds = allBreeds.slice(0, 5);
 			setBreeds(filteredBreeds);
+			
+			if (filteredBreeds.length > 0) {
+				showToast({
+					type: "success",
+					title: "Breeds Found!",
+					message: `Found ${filteredBreeds.length} breeds that match your criteria.`,
+					duration: 4000
+				});
+			}
 		} catch (err) {
 			console.error("Search error:", err);
 			setBreeds([]);
 			setError("No matching breeds found. Try adjusting your criteria.");
+			showToast({
+				type: "error",
+				title: "Search Failed",
+				message: "No matching breeds found. Try adjusting your criteria.",
+				duration: 5000
+			});
 		} finally {
 			setLoading(false);
 		}

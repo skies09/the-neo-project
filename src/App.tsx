@@ -13,37 +13,40 @@ import KennelAdmin from "./pages/kennel/kennelAdmin.tsx";
 import PasswordReset from "./pages/kennel/passwordReset.tsx";
 import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 import Header from "./components/header.tsx";
+import { ToastContainer } from "./components/ToastContainer.tsx";
 
 const App: React.FC = () => (
-	<Router>
-		<NavBar />
-		<Header />
-		<Routes>
-			<Route path="/" element={<Home />} />
-			<Route path="/allDogs" element={<AllDogs />} />
-			<Route path="/adopt" element={<Adoption />} />
-			<Route path="/breedCalculator" element={<BreedCalculator />} />
-			<Route path="/breeds" element={<Breeds />} />
-			<Route path="/contact" element={<Contact />} />
-			<Route
-				path="/kennelAccount"
-				element={
-					<ProtectedRoute>
-						<KennelAccount />
-					</ProtectedRoute>
-				}
-			/>
-			<Route path="/kennelAdmin" element={<KennelAdmin />} />
-			<Route
-				path="/password-reset"
-				element={
-					<ProtectedRoute>
-						<PasswordReset />
-					</ProtectedRoute>
-				}
-			/>
-		</Routes>
-	</Router>
+	<ToastContainer>
+		<Router>
+			<NavBar />
+			<Header />
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/allDogs" element={<AllDogs />} />
+				<Route path="/adopt" element={<Adoption />} />
+				<Route path="/breedCalculator" element={<BreedCalculator />} />
+				<Route path="/breeds" element={<Breeds />} />
+				<Route path="/contact" element={<Contact />} />
+				<Route
+					path="/kennelAccount"
+					element={
+						<ProtectedRoute>
+							<KennelAccount />
+						</ProtectedRoute>
+					}
+				/>
+				<Route path="/kennelAdmin" element={<KennelAdmin />} />
+				<Route
+					path="/password-reset"
+					element={
+						<ProtectedRoute>
+							<PasswordReset />
+						</ProtectedRoute>
+					}
+				/>
+			</Routes>
+		</Router>
+	</ToastContainer>
 );
 
 export default App;

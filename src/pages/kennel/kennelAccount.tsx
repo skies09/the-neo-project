@@ -182,7 +182,11 @@ const KennelAccount = () => {
 				<div className="flex justify-center mb-8">
 					<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-2xl p-2 shadow-lg">
 						<button
-							onClick={() => setShowProfile(false)}
+							onClick={() => {
+								setShowProfile(false);
+								setShowDogUploadForm(false);
+								setDogToEdit(null);
+							}}
 							className={`px-8 py-3 mx-1 rounded-xl font-semibold transition-all duration-200 ${
 								!showProfile
 									? "bg-oxfordBlue text-honeydew shadow-md transform scale-105"
@@ -193,7 +197,10 @@ const KennelAccount = () => {
 							Dogs
 						</button>
 						<button
-							onClick={() => setShowProfile(true)}
+							onClick={() => {
+								setShowProfile(true);
+								setProfileEdited(false);
+							}}
 							className={`px-8 py-3 mx-1 rounded-xl font-semibold transition-all duration-200 ${
 								showProfile
 									? "bg-oxfordBlue text-honeydew shadow-md transform scale-105"

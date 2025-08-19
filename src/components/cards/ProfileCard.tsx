@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { useKennelActions } from "../../hooks/kennel.actions.tsx";
 import { Kennel } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useToast } from "../ToastContainer.tsx";
 import {
 	faHome,
 	faEdit,
@@ -27,6 +28,7 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const kennelActions = useKennelActions();
+	const { showToast } = useToast();
 
 	// Handle the form submission to save the changes
 	const handleSave = async (values: Partial<Kennel>) => {
@@ -35,12 +37,21 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 			await kennelActions.edit(values, kennelData.public_id);
 			setProfileEdited(true);
 			setIsEditing(false);
+			showToast({
+				type: "success",
+				title: "Profile Updated!",
+				message: "Your kennel profile has been successfully updated.",
+				duration: 4000
+			});
 		} catch (err) {
-			setError(
-				err instanceof Error
-					? err.message
-					: "An error occurred while saving"
-			);
+			const errorMessage = err instanceof Error ? err.message : "An error occurred while saving";
+			setError(errorMessage);
+			showToast({
+				type: "error",
+				title: "Update Failed",
+				message: errorMessage,
+				duration: 5000
+			});
 		}
 	};
 
