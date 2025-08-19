@@ -8,7 +8,6 @@ import {
 	faPaw,
 	faSearch,
 	faUsers,
-	faHome,
 	faStar,
 	faArrowRight,
 	faDog,
@@ -49,7 +48,7 @@ const Home = () => {
 		const fetchGroups = async () => {
 			const url =
 				process.env.REACT_APP_NEO_PROJECT_BASE_URL +
-				"api/adoptionDogs/dod";
+				"api/dogs/dog-of-the-day/";
 
 			try {
 				const response = await fetch(url, {

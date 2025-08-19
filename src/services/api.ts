@@ -48,6 +48,7 @@ export interface Breed {
 	id: string;
 	breed: string;
 	group: string;
+	size: string;
 }
 
 export interface DogFilter {

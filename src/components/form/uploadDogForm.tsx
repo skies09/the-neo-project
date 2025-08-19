@@ -335,11 +335,11 @@ const UploadDogForm = ({
 										className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 transition-all duration-200"
 									>
 										<option value="">Select size</option>
-										<option value="XS">Extra Small</option>
+										<option value="XS">X-Small</option>
 										<option value="S">Small</option>
 										<option value="M">Medium</option>
 										<option value="L">Large</option>
-										<option value="XL">Extra Large</option>
+										<option value="XL">X-Large</option>
 									</Field>
 									<ErrorMessage
 										name="size"

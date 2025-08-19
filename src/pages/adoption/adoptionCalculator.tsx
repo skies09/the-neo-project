@@ -16,6 +16,7 @@ import {
 	faBuilding,
 	faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import { getSizeDisplayName } from "../../helpers/sizeUtils.ts";
 
 export default function Adoption() {
 	const [gender, setGender] = useState("");
@@ -350,7 +351,7 @@ export default function Adoption() {
 											Size:
 										</span>
 										<span className="text-oxfordBlue">
-											{dog.size || "Unknown"}
+											{getSizeDisplayName(dog.size)}
 										</span>
 									</div>
 								</div>

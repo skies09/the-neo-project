@@ -14,6 +14,7 @@ import {
 	faTrash,
 	faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { getSizeDisplayName } from "../../helpers/sizeUtils.ts";
 
 interface DogToEdit {
 	id?: string;
@@ -363,7 +364,7 @@ const KennelAccount = () => {
 															Size:
 														</span>
 														<span className="font-medium">
-															{dog.size}
+															{getSizeDisplayName(dog.size)}
 														</span>
 													</div>
 												</div>

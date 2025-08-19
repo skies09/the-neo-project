@@ -13,6 +13,7 @@ import {
 	faMapMarkerAlt,
 	faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
+import { getSizeDisplayName } from "../../helpers/sizeUtils.ts";
 
 interface AdoptionCardProps {
 	dog: Dog;
@@ -115,7 +116,7 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 											Size:
 										</span>
 										<span className="font-semibold font-poppins text-skyBlue">
-											{dog.size}
+											{getSizeDisplayName(dog.size)}
 										</span>
 									</div>
 								</div>

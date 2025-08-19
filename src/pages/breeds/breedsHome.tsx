@@ -4,6 +4,7 @@ import BreedCard from "../../components/cards/breedCard.tsx";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw, faList } from "@fortawesome/free-solid-svg-icons";
+import BreedDetailModal from "../../components/modals/BreedDetailModal.tsx";
 
 export default function Breeds() {
 	const [groups, setGroups] = useState<string[]>([]);
@@ -11,6 +12,7 @@ export default function Breeds() {
 	const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [selectedBreed, setSelectedBreed] = useState<Breed | null>(null);
 
 	useEffect(() => {
 		const fetchInitialData = async () => {
@@ -82,7 +84,7 @@ export default function Breeds() {
 
 	const handleBreedClick = (breed: Breed) => {
 		console.log("Breed clicked:", breed);
-		// TODO: Add show single breed details
+		setSelectedBreed(breed);
 	};
 
 	if (loading && groups.length === 0 && breeds.length === 0) {
@@ -233,6 +235,12 @@ export default function Breeds() {
 					</div>
 				)}
 			</motion.div>
+
+			{/* Breed Detail Modal */}
+			<BreedDetailModal 
+				selectedBreed={selectedBreed}
+				onClose={() => setSelectedBreed(null)}
+			/>
 		</motion.div>
 	);
 }
