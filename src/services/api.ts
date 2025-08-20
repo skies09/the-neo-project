@@ -45,10 +45,35 @@ export interface Kennel {
 }
 
 export interface Breed {
-	id: string;
+	id?: string;
 	breed: string;
 	group: string;
-	size: string;
+	size: string | null;
+	lifespan?: string | null;
+	height?: string | null;
+	weight?: string | null;
+	friendliness?: string | null;
+	family_friendly?: string | null;
+	child_friendly?: string | null;
+	pet_friendly?: string | null;
+	stranger_friendly?: string | null;
+	easy_to_groom?: string | null;
+	energy_levels?: string | null;
+	health?: string | null;
+	shedding_amount?: string | null;
+	barks_howls?: string | null;
+	easy_to_train?: string | null;
+	guard_dog?: string | null;
+	playfulness?: string | null;
+	apartment_dog?: string | null;
+	can_be_alone?: string | null;
+	good_for_busy_owners?: string | null;
+	good_for_new_owners?: string | null;
+	health_concerns?: string | null;
+	short_description?: string | null;
+	long_description?: string | null;
+	portrait_image?: string | null;
+	landscape_image?: string | null;
 }
 
 export interface DogFilter {
@@ -85,10 +110,11 @@ export const dogAPI = {
 
 	// Filter dogs to find a match
 	filterDogs: (filters: DogFilter): Promise<Dog> => {
-		return axiosService.post(`/api/dogs/filter/`, filters).then((response) => {
-			console.log("Filter API Response:", response);
-			return response.data;
-		});
+		return axiosService
+			.post(`/api/dogs/filter/`, filters)
+			.then((response) => {
+				return response.data;
+			});
 	},
 
 	// Get kennel's own dogs
@@ -118,14 +144,66 @@ export const dogAPI = {
 	deleteDog: (dogId: string): Promise<void> => {
 		return axiosService.delete(`/api/kennel-dogs/${dogId}/`);
 	},
+
+	// NEW: Kennel-dogs API endpoints
+	// List dogs for kennel
+	getKennelDogs: (kennelId: string): Promise<Dog[]> => {
+		return axiosService
+			.get(`/api/kennels/${kennelId}/dogs/`)
+			.then((response) => {
+				// Handle both paginated and non-paginated responses
+				return response.data.results || response.data;
+			});
+	},
+
+	// Create dog for kennel
+	createKennelDog: (
+		kennelId: string,
+		dogData: Partial<Dog>
+	): Promise<Dog> => {
+		return axiosService.post(`/api/kennels/${kennelId}/dogs/`, dogData);
+	},
+
+	// Get specific dog for kennel
+	getKennelDog: (kennelId: string, dogId: string): Promise<Dog> => {
+		return axiosService.get(`/api/kennels/${kennelId}/dogs/${dogId}/`);
+	},
+
+	// Update dog for kennel
+	updateKennelDog: (
+		kennelId: string,
+		dogId: string,
+		dogData: Partial<Dog>
+	): Promise<Dog> => {
+		return axiosService.put(
+			`/api/kennels/${kennelId}/dogs/${dogId}/`,
+			dogData
+		);
+	},
+
+	// Partially update dog for kennel
+	patchKennelDog: (
+		kennelId: string,
+		dogId: string,
+		dogData: Partial<Dog>
+	): Promise<Dog> => {
+		return axiosService.patch(
+			`/api/kennels/${kennelId}/dogs/${dogId}/`,
+			dogData
+		);
+	},
+
+	// Delete dog for kennel
+	deleteKennelDog: (kennelId: string, dogId: string): Promise<void> => {
+		return axiosService.delete(`/api/kennels/${kennelId}/dogs/${dogId}/`);
+	},
 };
 
 // Breeds API
 export const breedsAPI = {
 	// Get all breeds
 	getAllBreeds: (): Promise<Breed[]> => {
-		return axiosService.get(`/api/breeds/list_all/`).then((response) => {
-			console.log("API Response for getAllBreeds:", response);
+		return axiosService.get(`/api/breeds/`).then((response) => {
 			return response.data;
 		});
 	},
@@ -133,7 +211,6 @@ export const breedsAPI = {
 	// Get breed groups
 	getBreedGroups: (): Promise<string[]> => {
 		return axiosService.get(`/api/breeds/groups/`).then((response) => {
-			console.log("API Response for getBreedGroups:", response);
 			return response.data;
 		});
 	},
@@ -143,7 +220,6 @@ export const breedsAPI = {
 		return axiosService
 			.get(`/api/breeds/groups/${group}/`)
 			.then((response) => {
-				console.log("API Response for getBreedsByGroup:", response);
 				return response.data;
 			});
 	},

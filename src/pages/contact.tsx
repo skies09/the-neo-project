@@ -36,12 +36,10 @@ const Contact = (form: ContactProps) => {
 				)
 				.then(
 					(result: any) => {
-						console.log(result.text);
 						setFormSubmitted(true);
 						setLoading(false);
 					},
 					(error: any) => {
-						console.log(error.text);
 						setLoading(false);
 					}
 				);

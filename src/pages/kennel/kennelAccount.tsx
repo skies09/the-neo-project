@@ -66,34 +66,20 @@ const KennelAccount = () => {
 				const auth = authData ? JSON.parse(authData) : null;
 				const kennelFromStorage = getKennel();
 
-				console.log("Auth data:", auth);
-				console.log("Kennel from storage:", kennelFromStorage);
-
 				// The kennel data should be directly available from localStorage
 				if (kennelFromStorage) {
-					console.log(
-						"Using kennel data from storage:",
-						kennelFromStorage
-					);
 					setKennelData(kennelFromStorage);
 					setProfileEdited(false);
 				} else {
 					// Fallback: try to get kennel profile by public_id if available
 					const kennelPublicId = auth?.kennel?.public_id;
-					console.log("Kennel public ID:", kennelPublicId);
 
 					if (!kennelPublicId) {
 						throw new Error(
 							"Kennel data not found in localStorage."
 						);
 					}
-
-					console.log(
-						"Fetching kennel profile for ID:",
-						kennelPublicId
-					);
 					const data = await kennelAPI.getProfile(kennelPublicId);
-					console.log("Kennel profile data:", data);
 					setKennelData(data);
 					setProfileEdited(false);
 				}
@@ -122,16 +108,12 @@ const KennelAccount = () => {
 			setDogsError(null);
 
 			try {
-				console.log("Fetching dogs from /api/kennel-dogs/");
-				const data = await dogAPI.getMyDogs();
+				const data = await dogAPI.getKennelDogs(kennelId);
 				// Ensure data is always an array
 				setDogData(Array.isArray(data) ? data : []);
 			} catch (err) {
 				console.error("Error fetching dogs:", err);
-				setDogsError(
-					"Error fetching dogs: " +
-						(err instanceof Error ? err.message : String(err))
-				);
+				setDogsError("Error fetching dogs");
 				// Set empty array on error to prevent map errors
 				setDogData([]);
 			} finally {
@@ -149,7 +131,7 @@ const KennelAccount = () => {
 		if (!confirmDelete) return;
 
 		try {
-			await dogAPI.deleteDog(dogId);
+			await dogAPI.deleteKennelDog(kennelId, dogId);
 			setDogData((prevDogs) =>
 				prevDogs.filter((dog) => dog.id !== dogId)
 			);
@@ -280,6 +262,7 @@ const KennelAccount = () => {
 							<div className="mb-8">
 								<UploadDogForm
 									kennelData={kennelData}
+									kennelId={kennelId}
 									setDogAdded={setDogAdded}
 									dogToEdit={dogToEdit || undefined}
 									setDogToEdit={setDogToEdit}
@@ -364,7 +347,9 @@ const KennelAccount = () => {
 															Size:
 														</span>
 														<span className="font-medium">
-															{getSizeDisplayName(dog.size)}
+															{getSizeDisplayName(
+																dog.size
+															)}
 														</span>
 													</div>
 												</div>

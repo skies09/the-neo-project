@@ -41,6 +41,7 @@ interface DogToEdit {
 
 interface UploadDogFormProps {
 	kennelData: Kennel;
+	kennelId: string;
 	setDogAdded: (added: boolean) => void;
 	dogToEdit?: DogToEdit;
 	setDogToEdit?: (dog: DogToEdit | null) => void;
@@ -48,6 +49,7 @@ interface UploadDogFormProps {
 
 const UploadDogForm = ({
 	kennelData,
+	kennelId,
 	setDogAdded,
 	dogToEdit,
 	setDogToEdit,
@@ -93,7 +95,7 @@ const UploadDogForm = ({
 		try {
 			if (dogToEdit?.id) {
 				// Update existing dog
-				await dogAPI.updateDog(dogToEdit.id, data);
+				await dogAPI.updateKennelDog(kennelId, dogToEdit.id, data);
 				showToast({
 					type: "success",
 					title: "Dog Updated!",
@@ -102,7 +104,7 @@ const UploadDogForm = ({
 				});
 			} else {
 				// Create new dog
-				await dogAPI.createDog(data);
+				await dogAPI.createKennelDog(kennelId, data);
 				showToast({
 					type: "success",
 					title: "Dog Added!",

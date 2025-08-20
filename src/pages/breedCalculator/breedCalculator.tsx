@@ -42,8 +42,8 @@ export default function BreedCalculator() {
 	const [goodWithCats, setGoodWithCats] = useState(false);
 	const [goodWithChildren, setGoodWithChildren] = useState(false);
 	const [groomingNeeds, setGroomingNeeds] = useState("");
-		const [timeAvailable, setTimeAvailable] = useState("");
-	
+	const [timeAvailable, setTimeAvailable] = useState("");
+
 	const [breeds, setBreeds] = useState<Breed[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
@@ -68,16 +68,15 @@ export default function BreedCalculator() {
 		try {
 			//TODO: Move this to back end
 			const allBreeds = await breedsAPI.getAllBreeds();
-			console.log("All breeds:", allBreeds);
 			const filteredBreeds = allBreeds.slice(0, 5);
 			setBreeds(filteredBreeds);
-			
+
 			if (filteredBreeds.length > 0) {
 				showToast({
 					type: "success",
 					title: "Breeds Found!",
 					message: `Found ${filteredBreeds.length} breeds that match your criteria.`,
-					duration: 4000
+					duration: 4000,
 				});
 			}
 		} catch (err) {
@@ -87,8 +86,9 @@ export default function BreedCalculator() {
 			showToast({
 				type: "error",
 				title: "Search Failed",
-				message: "No matching breeds found. Try adjusting your criteria.",
-				duration: 5000
+				message:
+					"No matching breeds found. Try adjusting your criteria.",
+				duration: 5000,
 			});
 		} finally {
 			setLoading(false);
@@ -105,7 +105,7 @@ export default function BreedCalculator() {
 		>
 			<div className="max-w-4xl mx-auto">
 				{/* Header */}
-				<motion.div 
+				<motion.div
 					className="text-center mb-8"
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -131,7 +131,7 @@ export default function BreedCalculator() {
 				</motion.div>
 
 				{/* Search Form */}
-				<motion.div 
+				<motion.div
 					className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 mb-8"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -598,8 +598,8 @@ export default function BreedCalculator() {
 				</motion.div>
 
 				{/* Results Section */}
-				<motion.div 
-					ref={resultsRef} 
+				<motion.div
+					ref={resultsRef}
 					className="max-w-4xl mx-auto"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}

@@ -43,14 +43,12 @@ export default function Breeds() {
 	}, []);
 
 	const fetchBreedsOfGroup = async (group: string) => {
-		console.log("Fetching breeds for group:", group);
 		setSelectedGroup(group);
 		setLoading(true);
 		setError(null);
 
 		try {
 			const breedsData = await breedsAPI.getBreedsByGroup(group);
-			console.log("Breeds data for group:", breedsData);
 			setBreeds(breedsData);
 		} catch (error) {
 			console.error(
@@ -83,7 +81,6 @@ export default function Breeds() {
 	};
 
 	const handleBreedClick = (breed: Breed) => {
-		console.log("Breed clicked:", breed);
 		setSelectedBreed(breed);
 	};
 
@@ -151,11 +148,6 @@ export default function Breeds() {
 				{groups && groups.length > 0 && (
 					<div className="flex justify-center items-center flex-wrap gap-4 mb-6">
 						{groups.map((group, index) => {
-							console.log(
-								"Rendering group button:",
-								group,
-								index
-							);
 							return (
 								<motion.button
 									key={index}
