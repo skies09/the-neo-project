@@ -44,7 +44,7 @@ function useKennelActions() {
 				setKennelData(responseData);
 				dispatch(setKennel(responseData.user.id));
 				loginToContext(responseData.user);
-				
+
 				// Check if password reset is required
 				if (responseData.requires_password_reset) {
 					navigate("/password-reset");
@@ -53,13 +53,15 @@ function useKennelActions() {
 				}
 			})
 			.catch((err) => {
-				console.error("Login error:", err);
 				throw err;
 			});
 	}
 
 	// Reset password for first-time login
-	function resetPassword(data: { new_password: string; confirm_password: string }) {
+	function resetPassword(data: {
+		new_password: string;
+		confirm_password: string;
+	}) {
 		return axiosService
 			.post(`/api/auth/first-time-password-reset/`, data)
 			.then((res) => {

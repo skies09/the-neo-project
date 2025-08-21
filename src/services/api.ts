@@ -97,6 +97,15 @@ export const kennelAPI = {
 	): Promise<Kennel> => {
 		return axiosService.patch(`/api/kennels/${kennelPublicId}/`, data);
 	},
+
+	// Change kennel password
+	changePassword: (data: {
+		old_password: string;
+		new_password: string;
+		confirm_password: string;
+	}): Promise<any> => {
+		return axiosService.post(`/api/kennels/change-password/`, data);
+	},
 };
 
 // Dog API

@@ -17,14 +17,16 @@ import {
 	faBuilding,
 	faCity,
 	faAddressCard,
+	faLock,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface ProfileCardProps {
 	kennelData: Kennel;
 	setProfileEdited: (edited: boolean) => void;
+	onPasswordChange?: () => void;
 }
 
-const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
+const ProfileCard = ({ kennelData, setProfileEdited, onPasswordChange }: ProfileCardProps) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const kennelActions = useKennelActions();
@@ -446,13 +448,24 @@ const ProfileCard = ({ kennelData, setProfileEdited }: ProfileCardProps) => {
 					</div>
 
 					<div className="text-center mt-8">
-						<button
-							onClick={() => setIsEditing(true)}
-							className="px-8 py-3 bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-						>
-							<FontAwesomeIcon icon={faEdit} className="mr-2" />
-							Edit Profile
-						</button>
+						<div className="flex justify-center space-x-4">
+							{onPasswordChange && (
+								<button
+									onClick={onPasswordChange}
+									className="px-8 py-3 bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+								>
+									<FontAwesomeIcon icon={faLock} className="mr-2" />
+									Change Password
+								</button>
+							)}
+							<button
+								onClick={() => setIsEditing(true)}
+								className="px-8 py-3 bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+							>
+								<FontAwesomeIcon icon={faEdit} className="mr-2" />
+								Edit Profile
+							</button>
+						</div>
 					</div>
 				</div>
 			)}

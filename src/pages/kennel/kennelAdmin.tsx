@@ -3,7 +3,16 @@ import { Link } from "react-router-dom";
 import emailjs from "@emailjs/browser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
-import { faEye, faEyeSlash, faUser, faEnvelope, faPhone, faMapMarkerAlt, faBuilding, faCity } from "@fortawesome/free-solid-svg-icons";
+import {
+	faEye,
+	faEyeSlash,
+	faUser,
+	faEnvelope,
+	faPhone,
+	faMapMarkerAlt,
+	faBuilding,
+	faCity,
+} from "@fortawesome/free-solid-svg-icons";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useKennelActions } from "../../hooks/kennel.actions.tsx";
@@ -49,17 +58,75 @@ const KennelAdmin = () => {
 		}
 	}
 
-	const login = (values: LoginValues) => {
+	const login = async (
+		values: LoginValues,
+		setSubmitting?: (isSubmitting: boolean) => void
+	) => {
 		const data = {
 			username: values.username,
 			password: values.password,
 		};
 
-		kennelActions.login(data).catch((err) => {
-			if (err.message) {
-				setErrorMessage("Unable to log in");
+		try {
+			await kennelActions.login(data);
+			// Success - navigation will be handled by kennelActions
+			setIsLoggingIn(false);
+			if (setSubmitting) setSubmitting(false);
+		} catch (err: any) {
+			console.error("Login error caught:", err);
+			console.error("Error response:", err.response);
+			console.error("Error message:", err.message);
+
+			// Extract error message from different possible sources
+			let errorMsg = "Invalid username or password";
+
+			if (err.response?.data) {
+				console.log("Error response data:", err.response.data);
+				// API error response
+				if (err.response.data.detail) {
+					errorMsg = err.response.data.detail;
+				} else if (err.response.data.error) {
+					errorMsg = err.response.data.error;
+				} else if (err.response.data.message) {
+					errorMsg = err.response.data.message;
+				} else if (err.response.data.non_field_errors) {
+					// Django REST framework common error format
+					errorMsg = Array.isArray(err.response.data.non_field_errors)
+						? err.response.data.non_field_errors[0]
+						: err.response.data.non_field_errors;
+				} else if (typeof err.response.data === "string") {
+					errorMsg = err.response.data;
+				}
+			} else if (err.message) {
+				// Network or other error
+				if (err.message.includes("Network Error")) {
+					errorMsg = "Network error. Please check your connection.";
+				} else if (err.message.includes("timeout")) {
+					errorMsg = "Request timed out. Please try again.";
+				} else if (
+					err.message.includes("401") ||
+					err.message.includes("403")
+				) {
+					errorMsg = "Invalid username or password";
+				} else {
+					errorMsg = err.message;
+				}
 			}
-		});
+
+			// Clean up common error messages to be more user-friendly
+			if (
+				errorMsg.toLowerCase().includes("credentials") ||
+				errorMsg.toLowerCase().includes("invalid") ||
+				errorMsg.toLowerCase().includes("authentication")
+			) {
+				errorMsg = "Invalid username or password";
+			}
+
+			console.log("Setting error message to:", errorMsg);
+			setErrorMessage(errorMsg);
+			setIsLoggingIn(false);
+			if (setSubmitting) setSubmitting(false);
+		}
 	};
 
 	const renderContactForm = () => {
@@ -98,14 +165,17 @@ const KennelAdmin = () => {
 					setSubmitting(false);
 				}}
 			>
-				<Form className="my-4 flex flex-col justify-start items-start w-full lg:w-full space-y-4">
+				<Form className="my-4 flex flex-col justify-start items-start w-full lg:w-full space-y-6">
 					<div className="w-full">
-						<label className="block text-md text-oxfordBlue font-semibold mb-2 flex items-center">
-							<FontAwesomeIcon icon={faBuilding} className="mr-2 text-oxfordBlue" />
+						<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+							<FontAwesomeIcon
+								icon={faBuilding}
+								className="mr-2 text-oxfordBlue"
+							/>
 							Center name
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-skyBlue focus:ring-2 focus:ring-skyBlue/20 font-sans transition-all duration-200"
+							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
 							type="text"
 							id="name"
 							name="name"
@@ -113,30 +183,36 @@ const KennelAdmin = () => {
 						/>
 					</div>
 					<div className="w-full">
-						<label className="block text-md text-oxfordBlue font-semibold mb-2 flex items-center">
-							<FontAwesomeIcon icon={faEnvelope} className="mr-2 text-oxfordBlue" />
+						<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+							<FontAwesomeIcon
+								icon={faEnvelope}
+								className="mr-2 text-oxfordBlue"
+							/>
 							Email
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-skyBlue focus:ring-2 focus:ring-skyBlue/20 font-sans transition-all duration-200"
+							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
 							type="email"
 							id="email"
 							name="email"
 							placeholder="Enter email address"
 						/>
 						<ErrorMessage
-							className="text-red-500 text-sm mt-1 font-sans"
+							className="text-red-500 text-sm mt-1 font-poppins"
 							name="email"
 							component="div"
 						/>
 					</div>
 					<div className="w-full">
-						<label className="block text-md text-oxfordBlue font-semibold mb-2 flex items-center">
-							<FontAwesomeIcon icon={faPhone} className="mr-2 text-oxfordBlue" />
+						<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+							<FontAwesomeIcon
+								icon={faPhone}
+								className="mr-2 text-oxfordBlue"
+							/>
 							Contact number
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-skyBlue focus:ring-2 focus:ring-skyBlue/20 font-sans transition-all duration-200"
+							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
 							type="text"
 							id="number"
 							name="number"
@@ -144,39 +220,48 @@ const KennelAdmin = () => {
 						/>
 					</div>
 					<div className="w-full">
-						<label className="block text-md text-oxfordBlue font-semibold mb-2 flex items-center">
-							<FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-oxfordBlue" />
+						<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+							<FontAwesomeIcon
+								icon={faMapMarkerAlt}
+								className="mr-2 text-oxfordBlue"
+							/>
 							Address Line 1
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-skyBlue focus:ring-2 focus:ring-skyBlue/20 font-sans transition-all duration-200"
+							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
 							type="text"
 							id="addressLine1"
 							name="addressLine1"
 							placeholder="Enter address"
 						/>
 					</div>
-					<div className="flex flex-row w-full space-x-4">
-						<div className="w-1/2">
-							<label className="block text-md text-oxfordBlue font-semibold mb-2 flex items-center">
-								<FontAwesomeIcon icon={faBuilding} className="mr-2 text-oxfordBlue" />
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+						<div className="w-full">
+							<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+								<FontAwesomeIcon
+									icon={faBuilding}
+									className="mr-2 text-oxfordBlue"
+								/>
 								Town
 							</label>
 							<Field
-								className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-skyBlue focus:ring-2 focus:ring-skyBlue/20 font-sans transition-all duration-200"
+								className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
 								type="text"
 								id="town"
 								name="town"
 								placeholder="Enter town"
 							/>
 						</div>
-						<div className="w-1/2">
-							<label className="block text-md text-oxfordBlue font-semibold mb-2 flex items-center">
-								<FontAwesomeIcon icon={faCity} className="mr-2 text-oxfordBlue" />
+						<div className="w-full">
+							<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+								<FontAwesomeIcon
+									icon={faCity}
+									className="mr-2 text-oxfordBlue"
+								/>
 								City
 							</label>
 							<Field
-								className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-skyBlue focus:ring-2 focus:ring-skyBlue/20 font-sans transition-all duration-200"
+								className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
 								type="text"
 								id="city"
 								name="city"
@@ -185,12 +270,15 @@ const KennelAdmin = () => {
 						</div>
 					</div>
 					<div className="w-full">
-						<label className="block text-md text-oxfordBlue font-semibold mb-2 flex items-center">
-							<FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-oxfordBlue" />
+						<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+							<FontAwesomeIcon
+								icon={faMapMarkerAlt}
+								className="mr-2 text-oxfordBlue"
+							/>
 							Postcode
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-skyBlue focus:ring-2 focus:ring-skyBlue/20 font-sans transition-all duration-200"
+							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
 							type="text"
 							id="postcode"
 							name="postcode"
@@ -206,8 +294,15 @@ const KennelAdmin = () => {
 							whileTap={{ scale: 0.95 }}
 						>
 							<div className="flex items-center space-x-3 relative z-10">
-								<FontAwesomeIcon icon={faEnvelope} className="text-lg" />
-								<span>{loading ? "Sending..." : "Send Application"}</span>
+								<FontAwesomeIcon
+									icon={faEnvelope}
+									className="text-lg"
+								/>
+								<span>
+									{loading
+										? "Sending..."
+										: "Send Application"}
+								</span>
 							</div>
 							<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 						</motion.button>
@@ -219,21 +314,34 @@ const KennelAdmin = () => {
 
 	const renderThankYou = () => {
 		return (
-			<div className="flex flex-col bg-sunset rounded-xl w-5/6 lg:w-1/2 mx-auto p-4">
-				<p className="text-sm lg:text-lg text-center font-poppins font-medium">
-					Thank you!
-				</p>
-				<p className="mt-2 text-sm lg:text-lg text-center font-poppins font-medium">
-					We are working to create an account for your center and will
-					be in touch shortly
-				</p>
-			</div>
+			<motion.div 
+				className="flex flex-col bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 max-w-md mx-auto"
+				initial={{ opacity: 0, scale: 0.9 }}
+				animate={{ opacity: 1, scale: 1 }}
+				transition={{ duration: 0.5 }}
+			>
+				<div className="text-center">
+					<div className="w-16 h-16 bg-gradient-to-br from-oxfordBlue to-skyBlue rounded-full flex items-center justify-center mx-auto mb-4">
+						<FontAwesomeIcon
+							icon={faEnvelope}
+							className="text-2xl text-honeydew"
+						/>
+					</div>
+					<h3 className="text-2xl font-bold text-oxfordBlue mb-3">
+						Thank you!
+					</h3>
+					<p className="text-oxfordBlue/80 font-poppins">
+						We are working to create an account for your center and will
+						be in touch shortly
+					</p>
+				</div>
+			</motion.div>
 		);
 	};
 
 	return (
-		<motion.div 
-			id="kennelAdmin" 
+		<motion.div
+			id="kennelAdmin"
 			className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-20 pb-8 px-4"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
@@ -241,18 +349,24 @@ const KennelAdmin = () => {
 		>
 			<div className="max-w-4xl mx-auto">
 				{/* Header */}
-				<motion.div 
+				<motion.div
 					className="text-center mb-8"
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 				>
 					<div className="flex justify-center items-center mb-4">
-						<FontAwesomeIcon icon={faUser} className="text-4xl text-skyBlue mr-4" />
+						<FontAwesomeIcon
+							icon={faUser}
+							className="text-4xl text-skyBlue mr-4"
+						/>
 						<h1 className="font-poppins text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
 							Kennel Portal
 						</h1>
-						<FontAwesomeIcon icon={faUser} className="text-4xl text-skyBlue ml-4" />
+						<FontAwesomeIcon
+							icon={faUser}
+							className="text-4xl text-skyBlue ml-4"
+						/>
 					</div>
 					<p className="text-lg text-oxfordBlue/70 font-poppins">
 						Login to your account or register your rescue center
@@ -260,7 +374,7 @@ const KennelAdmin = () => {
 				</motion.div>
 
 				{/* Tab Navigation */}
-				<motion.div 
+				<motion.div
 					className="flex justify-center mb-8"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -290,20 +404,23 @@ const KennelAdmin = () => {
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
 						>
-							<FontAwesomeIcon icon={faEnvelope} className="mr-2" />
+							<FontAwesomeIcon
+								icon={faEnvelope}
+								className="mr-2"
+							/>
 							Signup
 						</motion.button>
 					</div>
 				</motion.div>
-			<motion.div 
-				className="w-full"
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-			>
-				{/* Login Form */}
-				{isLoginForm && (
-					<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 max-w-2xl mx-auto">
+				<motion.div
+					className="w-full"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+				>
+					{/* Login Form */}
+					{isLoginForm && (
+						<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 max-w-2xl mx-auto">
 							<div>
 								<p className="text-oxfordBlue text-2xl font-bold mb-4 font-poppins text-center">
 									Kennel Login
@@ -325,8 +442,7 @@ const KennelAdmin = () => {
 										setErrorMessage("");
 										setIsLoggingIn(true);
 
-										login(values);
-										setSubmitting(false);
+										login(values, setSubmitting);
 									}}
 								>
 									{({ values, isSubmitting }) => (
@@ -400,24 +516,34 @@ const KennelAdmin = () => {
 								</Formik>
 							</div>
 							{errorMessage && (
-								<div className="flex flex-col justify-center items-center mx-auto">
-									<div className="flex text-center mt-2 w-full justify-center items-center">
-										<p className="text-sm lg:text-lg text-center font-poppins font-medium text-[#FF0000]">
+								<motion.div
+									className="flex flex-col justify-center items-center mx-auto mt-6"
+									initial={{ opacity: 0, y: 10 }}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{ duration: 0.3 }}
+								>
+									<div className="flex text-center mt-2 w-full justify-center items-center mb-4">
+										<p className="text-sm lg:text-lg text-center font-poppins font-medium text-red-500 !text-red-500" style={{ color: '#ef4444' }}>
 											{errorMessage}
 										</p>
 									</div>
-									<p className="mt-2 text-sm lg:text-lg text-center font-poppins font-medium">
-										Trouble logging in?
-										<br />
-										Contact us
-									</p>
-									<Link
-										to="/Contact"
-										className="px-10 py-2 w-full mx-auto bg-oxfordBlue text-honeydew rounded-lg transition-all shadow-md font-poppins font-semibold hover:bg-skyBlue hover:text-oxfordBlue"
-									>
-										Contact us
-									</Link>
-								</div>
+									<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 w-full max-w-md">
+										<p className="text-sm lg:text-base text-center font-poppins font-medium text-oxfordBlue mb-4">
+											Trouble logging in?
+										</p>
+										<Link
+											to="/Contact"
+											className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-3 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-oxfordBlue/30 flex items-center justify-center space-x-2"
+										>
+											<FontAwesomeIcon
+												icon={faEnvelope}
+												className="text-lg"
+											/>
+											<span>Contact us</span>
+											<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 transition-opacity duration-300"></div>
+										</Link>
+									</div>
+								</motion.div>
 							)}
 						</div>
 					)}
@@ -438,7 +564,9 @@ const KennelAdmin = () => {
 											Register Your Center
 										</h2>
 										<p className="text-oxfordBlue/70">
-											Are you a re-homing or animal rescue center? Sign up here to upload dogs available for adoption.
+											Are you a re-homing or animal rescue
+											center? Sign up here to upload dogs
+											available for adoption.
 										</p>
 									</div>
 									{renderContactForm()}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ProfileCard from "../../components/cards/ProfileCard.tsx";
 import UploadDogForm from "../../components/form/uploadDogForm.tsx";
+import ChangePasswordModal from "../../components/modals/ChangePasswordModal.tsx";
 import { RootState } from "../../store/store";
 import { kennelAPI, dogAPI, Kennel, Dog } from "../../services/api.ts";
 import { getKennel } from "../../hooks/kennel.actions.tsx";
@@ -47,6 +48,7 @@ const KennelAccount = () => {
 	const [loadingKennel, setLoadingKennel] = useState(false);
 	const [profileError, setProfileError] = useState<string | null>(null);
 	const [dogsError, setDogsError] = useState<string | null>(null);
+	const [showPasswordModal, setShowPasswordModal] = useState(false);
 
 	useEffect(() => {
 		if (dogAdded) {
@@ -237,6 +239,7 @@ const KennelAccount = () => {
 						<ProfileCard
 							kennelData={kennelData}
 							setProfileEdited={setProfileEdited}
+							onPasswordChange={() => setShowPasswordModal(true)}
 						/>
 					</div>
 				)}
@@ -428,6 +431,11 @@ const KennelAccount = () => {
 					</div>
 				)}
 			</div>
+
+			<ChangePasswordModal
+				isOpen={showPasswordModal}
+				onClose={() => setShowPasswordModal(false)}
+			/>
 		</motion.div>
 	);
 };

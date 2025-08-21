@@ -48,10 +48,22 @@ axiosService.interceptors.request.use(async (config) => {
 
 axiosService.interceptors.response.use(
 	(res) => Promise.resolve(res),
-	(err) => Promise.reject(err)
+	(err) => {
+		// Don't redirect on login errors - let the component handle them
+		if (err.config?.url?.includes("/api/auth/login")) {
+			console.log("Login error in interceptor:", err);
+			return Promise.reject(err);
+		}
+		return Promise.reject(err);
+	}
 );
 
 const refreshAuthLogic = async (failedRequest: any) => {
+	// Don't try to refresh auth for login requests
+	if (failedRequest.config?.url?.includes("/api/auth/login")) {
+		return Promise.reject(failedRequest);
+	}
+
 	return axios
 		.post(
 			"/auth/refresh/",
