@@ -12,14 +12,14 @@ import KennelAccount from "./pages/kennel/kennelAccount";
 import KennelAdmin from "./pages/kennel/kennelAdmin";
 import PasswordReset from "./pages/kennel/passwordReset";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import Header from "./components/header";
+// import Header from "./components/header";
 import { ToastContainer } from "./components/ToastContainer";
 
 const App: React.FC = () => (
 	<ToastContainer>
 		<Router>
 			<NavBar />
-			<Header />
+			{/* <Header /> */}
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/allDogs" element={<AllDogs />} />

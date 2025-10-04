@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ProfileCard from "../../components/cards/ProfileCard";
-import UploadDogForm from "../../components/form/uploadDogForm";
+import UploadDogForm from "../../components/forms/uploadDogForm";
 import ChangePasswordModal from "../../components/modals/ChangePasswordModal";
 import { RootState } from "../../store/store";
 import { kennelAPI, dogAPI, Kennel, Dog } from "../../services/api";
