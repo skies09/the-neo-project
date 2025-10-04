@@ -1,4 +1,4 @@
-import axiosService from "../helpers/axios.tsx";
+import axiosService from "../helpers/axios";
 
 // Types
 export interface Dog {

@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import axiosService from "../helpers/axios.tsx";
-import { setKennel } from "../store/kennels/actions.tsx";
-import { useAuth } from "../AuthContext.tsx";
+import axiosService from "../helpers/axios";
+import { setKennel } from "../store/kennels/actions";
+import { useAuth } from "../AuthContext";
 
 interface LoginData {
 	user: any;

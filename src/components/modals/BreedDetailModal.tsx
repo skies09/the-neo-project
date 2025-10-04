@@ -22,7 +22,7 @@ import {
 	faExclamationTriangle,
 	faInfoCircle
 } from "@fortawesome/free-solid-svg-icons";
-import { getSizeDisplayName } from "../../helpers/sizeUtils.ts";
+import { getSizeDisplayName } from "../../helpers/sizeUtils";
 
 interface BreedDetailModalProps {
 	selectedBreed: Breed | null;

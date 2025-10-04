@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { dogAPI, Dog } from "../../services/api.ts";
+import { dogAPI, Dog } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 import {
@@ -16,7 +16,7 @@ import {
 	faBuilding,
 	faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { getSizeDisplayName } from "../../helpers/sizeUtils.ts";
+import { getSizeDisplayName } from "../../helpers/sizeUtils";
 
 export default function Adoption() {
 	const [gender, setGender] = useState("");

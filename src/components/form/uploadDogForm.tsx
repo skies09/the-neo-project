@@ -1,9 +1,9 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { dogAPI, Kennel } from "../../services/api.ts";
+import { dogAPI, Kennel } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useToast } from "../ToastContainer.tsx";
+import { useToast } from "../ToastContainer";
 import {
 	faDog,
 	faEdit,

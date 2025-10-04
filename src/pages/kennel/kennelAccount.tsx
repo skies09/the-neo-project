@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import ProfileCard from "../../components/cards/ProfileCard.tsx";
-import UploadDogForm from "../../components/form/uploadDogForm.tsx";
-import ChangePasswordModal from "../../components/modals/ChangePasswordModal.tsx";
+import ProfileCard from "../../components/cards/ProfileCard";
+import UploadDogForm from "../../components/form/uploadDogForm";
+import ChangePasswordModal from "../../components/modals/ChangePasswordModal";
 import { RootState } from "../../store/store";
-import { kennelAPI, dogAPI, Kennel, Dog } from "../../services/api.ts";
-import { getKennel } from "../../hooks/kennel.actions.tsx";
+import { kennelAPI, dogAPI, Kennel, Dog } from "../../services/api";
+import { getKennel } from "../../hooks/kennel.actions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 import {
@@ -15,7 +15,7 @@ import {
 	faTrash,
 	faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { getSizeDisplayName } from "../../helpers/sizeUtils.ts";
+import { getSizeDisplayName } from "../../helpers/sizeUtils";
 
 interface DogToEdit {
 	id?: string;
@@ -35,7 +35,7 @@ interface DogToEdit {
 
 const KennelAccount = () => {
 	const { kennel: kennelId } = useSelector(
-		(state: RootState) => state.kennel
+		(state: RootState) => (state as any).kennel || {}
 	);
 	const [showProfile, setShowProfile] = useState(false);
 	const [profileEdited, setProfileEdited] = useState(false);

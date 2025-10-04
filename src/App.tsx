@@ -1,19 +1,19 @@
 // src/App.tsx
 import React from "react";
-import NavBar from "./components/navBar.tsx";
+import NavBar from "./components/navBar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/home.tsx";
-import AllDogs from "./pages/adoption/allDogs.tsx";
-import Adoption from "./pages/adoption/adoptionCalculator.tsx";
-import BreedCalculator from "./pages/breedCalculator/breedCalculator.tsx";
-import Breeds from "./pages/breeds/breedsHome.tsx";
-import Contact from "./pages/contact.tsx";
-import KennelAccount from "./pages/kennel/kennelAccount.tsx";
-import KennelAdmin from "./pages/kennel/kennelAdmin.tsx";
-import PasswordReset from "./pages/kennel/passwordReset.tsx";
-import ProtectedRoute from "./routes/ProtectedRoute.tsx";
-import Header from "./components/header.tsx";
-import { ToastContainer } from "./components/ToastContainer.tsx";
+import Home from "./pages/home";
+import AllDogs from "./pages/adoption/allDogs";
+import Adoption from "./pages/adoption/adoptionCalculator";
+import BreedCalculator from "./pages/breedCalculator/breedCalculator";
+import Breeds from "./pages/breeds/breedsHome";
+import Contact from "./pages/contact";
+import KennelAccount from "./pages/kennel/kennelAccount";
+import KennelAdmin from "./pages/kennel/kennelAdmin";
+import PasswordReset from "./pages/kennel/passwordReset";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import Header from "./components/header";
+import { ToastContainer } from "./components/ToastContainer";
 
 const App: React.FC = () => (
 	<ToastContainer>

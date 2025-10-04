@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { breedsAPI, Breed } from "../../services/api.ts";
+import { breedsAPI, Breed } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
-import { useToast } from "../../components/ToastContainer.tsx";
+import { useToast } from "../../components/ToastContainer";
 import {
 	faSearch,
 	faHome,

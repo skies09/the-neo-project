@@ -1,7 +1,7 @@
 // ProtectedRoute.js
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { getKennel } from "../hooks/kennel.actions.tsx";
+import { getKennel } from "../hooks/kennel.actions";
 
 interface ProtectedRouteProps {
 	children: React.ReactNode;

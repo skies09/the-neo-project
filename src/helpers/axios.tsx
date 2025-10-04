@@ -1,11 +1,6 @@
 import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
-import {
-	getAccessToken,
-	getRefreshToken,
-	getKennel,
-} from "../hooks/kennel.actions.tsx";
-import { AxiosRequestConfig } from "axios";
+import { getAccessToken, getRefreshToken } from "../hooks/kennel.actions";
 
 const axiosService = axios.create({
 	baseURL: process.env.REACT_APP_NEO_PROJECT_BASE_URL,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import AdoptCard from "../../components/cards/adoptCard.tsx";
-import { dogAPI, Dog } from "../../services/api.ts";
+import AdoptCard from "../../components/cards/adoptCard";
+import { dogAPI, Dog } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 import {

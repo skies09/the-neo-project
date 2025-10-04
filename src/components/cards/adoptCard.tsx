@@ -13,7 +13,7 @@ import {
 	faMapMarkerAlt,
 	faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
-import { getSizeDisplayName } from "../../helpers/sizeUtils.ts";
+import { getSizeDisplayName } from "../../helpers/sizeUtils";
 
 interface AdoptionCardProps {
 	dog: Dog;
@@ -189,7 +189,7 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 											Phone:
 										</span>
 										<span className="font-semibold font-poppins text-oxfordBlue">
-											{dog.kennel.contact_number ||
+											{(dog.kennel as any).contact_number ||
 												"Not provided"}
 										</span>
 									</div>
@@ -202,7 +202,7 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 											Address:
 										</span>
 										<span className="font-semibold font-poppins text-oxfordBlue text-xs">
-											{dog.kennel.address_line_1 ||
+											{(dog.kennel as any).address_line_1 ||
 												"Not provided"}
 										</span>
 									</div>
@@ -215,8 +215,8 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 											Location:
 										</span>
 										<span className="font-semibold font-poppins text-oxfordBlue text-xs">
-											{dog.kennel.city ||
-												dog.kennel.town ||
+											{(dog.kennel as any).city ||
+												(dog.kennel as any).town ||
 												"Not provided"}
 										</span>
 									</div>

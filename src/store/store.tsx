@@ -1,8 +1,8 @@
 // src/store/store.js
 import { createStore, combineReducers } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-import breedReducer from "./breeds/reducers.tsx"; // assuming you have breed reducers
-import kennelReducer from "./kennels/reducers.tsx"; // assuming you have kennel reducers
+import breedReducer from "./breeds/reducers";
+import kennelReducer from "./kennels/reducers";
 
 // Combine reducers to handle multiple slices of state
 const rootReducer = combineReducers({

@@ -1,6 +1,6 @@
 // src/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getKennel } from "./hooks/kennel.actions.tsx";
+import { getKennel } from "./hooks/kennel.actions";
 
 type AuthContextType = {
 	isLoggedIn: boolean;

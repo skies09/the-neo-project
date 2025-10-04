@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { breedsAPI, Breed } from "../../services/api.ts";
-import BreedCard from "../../components/cards/breedCard.tsx";
+import { breedsAPI, Breed } from "../../services/api";
+import BreedCard from "../../components/cards/breedCard";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw, faList } from "@fortawesome/free-solid-svg-icons";
-import BreedDetailModal from "../../components/modals/BreedDetailModal.tsx";
+import BreedDetailModal from "../../components/modals/BreedDetailModal";
 
 export default function Breeds() {
 	const [groups, setGroups] = useState<string[]>([]);

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useKennelActions } from "../../hooks/kennel.actions.tsx";
+import { useKennelActions } from "../../hooks/kennel.actions";
 import { Kennel } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useToast } from "../ToastContainer.tsx";
+import { useToast } from "../ToastContainer";
 import {
 	faHome,
 	faEdit,

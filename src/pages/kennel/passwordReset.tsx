@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { useKennelActions } from "../../hooks/kennel.actions.tsx";
+import { useKennelActions } from "../../hooks/kennel.actions";
 
 const PasswordReset = () => {
 	const { resetPassword } = useKennelActions();

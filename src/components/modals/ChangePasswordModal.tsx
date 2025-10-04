@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faEye, faEyeSlash, faLock } from "@fortawesome/free-solid-svg-icons";
-import { kennelAPI } from "../../services/api.ts";
+import { kennelAPI } from "../../services/api";
 
 interface ChangePasswordModalProps {
 	isOpen: boolean;
