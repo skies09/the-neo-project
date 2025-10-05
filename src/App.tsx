@@ -32,7 +32,7 @@ const App: React.FC = () => (
 				<Route path="/contact" element={<Contact />} />
 				<Route path="/faq" element={<FAQ />} />
 				<Route path="/blog" element={<BlogList />} />
-				<Route path="/blog/:slug" element={<BlogPostPage />} />
+				<Route path="/blog/:id" element={<BlogPostPage />} />
 				<Route
 					path="/kennelAccount"
 					element={

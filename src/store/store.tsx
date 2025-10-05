@@ -9,14 +9,8 @@ import {
 } from "./dogOfTheDay/persistence";
 import { setDogOfTheDay, setLastFetchDate } from "./dogOfTheDay/actions";
 
-// Simple test reducer
-const testReducer = (state = { test: "working" }, action: any) => {
-	return state;
-};
-
 // Combine reducers to handle multiple slices of state
 const rootReducer = combineReducers({
-	test: testReducer,
 	// breed: breedReducer,
 	// kennel: kennelReducer,
 	dogOfTheDay: dogOfTheDayReducer,

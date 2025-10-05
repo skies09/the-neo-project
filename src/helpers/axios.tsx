@@ -46,7 +46,6 @@ axiosService.interceptors.response.use(
 	(err) => {
 		// Don't redirect on login errors - let the component handle them
 		if (err.config?.url?.includes("/api/auth/login")) {
-			console.log("Login error in interceptor:", err);
 			return Promise.reject(err);
 		}
 		return Promise.reject(err);
@@ -90,7 +89,6 @@ const refreshAuthLogic = async (failedRequest: any) => {
 			// Clear any stale authentication data
 			localStorage.removeItem("kennel");
 			// Don't automatically redirect - let the app handle auth failures gracefully
-			console.log("Authentication refresh failed - user will need to log in again");
 		});
 };
 
