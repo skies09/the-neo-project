@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const auth = useAuth();
+	const navigate = useNavigate();
 	const isLoggedIn = auth?.isLoggedIn ?? false;
 	const logout = auth?.logout ?? (() => {});
 
@@ -13,12 +14,12 @@ const Navbar = () => {
 			<div className="flex justify-between items-center h-full px-4 md:px-6">
 				{/* Company Logo */}
 				<div className="flex items-center">
-					<Link
-						to="/"
-						className="font-satisfy text-xl font-bold text-skyBlue tracking-wider drop-shadow-md"
+					<button
+						onClick={() => navigate("/")}
+						className="font-satisfy text-xl font-bold text-skyBlue tracking-wider drop-shadow-md hover:text-sunset transition-colors cursor-pointer"
 					>
 						The Neo Project
-					</Link>
+					</button>
 				</div>
 
 				{/* Desktop Links */}
@@ -56,15 +57,15 @@ const Navbar = () => {
 							>
 								Kennels
 							</Link>
-							<Link
-								to="/kennelAdmin"
-								className="text-skyBlue hover:text-sunset font-poppins font-semibold"
+							<button
 								onClick={() => {
 									logout();
+									navigate("/");
 								}}
+								className="text-skyBlue hover:text-sunset font-poppins font-semibold cursor-pointer"
 							>
 								Logout
-							</Link>
+							</button>
 						</div>
 					) : (
 						<Link
@@ -145,17 +146,16 @@ const Navbar = () => {
 							>
 								Kennels
 							</Link>
-							<Link
-								to="/kennelAdmin"
-								className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+							<button
 								onClick={() => {
 									logout();
+									navigate("/");
 									setIsOpen(false);
-									setIsOpen(!isOpen);
 								}}
+								className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold cursor-pointer w-full text-left"
 							>
 								Logout
-							</Link>
+							</button>
 						</div>
 					) : (
 						<Link

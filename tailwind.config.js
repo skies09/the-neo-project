@@ -11,6 +11,7 @@ module.exports = {
 			honeydew: "#F1FAEE",
 			mintCream: "#F4FDF3",
 			oxfordBlue: "#0B2545",
+			ghost: "#F8F8FF",
 		},
 		fontFamily: {
 			sans: ["Open Sans", "sans-serif"],

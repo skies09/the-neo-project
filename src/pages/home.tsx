@@ -4,6 +4,7 @@ import DogOfTheDay from "../components/homepage/DogOfTheDay";
 import HowItWorks from "../components/homepage/HowItWorks";
 import Testimonials from "../components/homepage/Testimonials";
 import WhyChooseUs from "../components/homepage/WhyChooseUs";
+import BlogHomepage from "../components/blog/BlogHomepage";
 import Footer from "../components/homepage/Footer";
 
 const Home: React.FC = () => {
@@ -13,6 +14,7 @@ const Home: React.FC = () => {
 			<WhyChooseUs />
 			<HowItWorks />
 			<DogOfTheDay />
+			<BlogHomepage />
 			<Testimonials />
 			<Footer />
 		</div>

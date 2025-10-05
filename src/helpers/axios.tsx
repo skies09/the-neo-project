@@ -87,8 +87,10 @@ const refreshAuthLogic = async (failedRequest: any) => {
 		})
 		.catch(() => {
 			localStorage.removeItem("auth");
-			// Redirect to login page if refresh fails
-			window.location.href = "/kennelAdmin"; // or your login route
+			// Clear any stale authentication data
+			localStorage.removeItem("kennel");
+			// Don't automatically redirect - let the app handle auth failures gracefully
+			console.log("Authentication refresh failed - user will need to log in again");
 		});
 };
 

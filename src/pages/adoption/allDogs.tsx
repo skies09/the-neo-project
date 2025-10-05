@@ -115,7 +115,7 @@ export default function AllDogs() {
 						className="text-4xl text-skyBlue ml-4"
 					/>
 				</div>
-				<p className="text-lg text-oxfordBlue/70 font-mono">
+				<p className="text-lg text-oxfordBlue/70 font-mono pt-16">
 					<FontAwesomeIcon icon={faSearch} className="mr-2" />
 					Find your perfect companion
 				</p>

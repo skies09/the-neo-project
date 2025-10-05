@@ -16,10 +16,10 @@ import {
 
 const Footer: React.FC = () => {
 	const quickLinks = [
-		{ name: "Browse Dogs", href: "/dogs" },
-		{ name: "Adoption Process", href: "/adoption" },
-		{ name: "Rescue Centers", href: "/rescues" },
-		{ name: "Success Stories", href: "/stories" },
+		{ name: "Browse Dogs", href: "/allDogs" },
+		{ name: "Adoption Process", href: "/adopt" },
+		{ name: "Dog Breeds", href: "/breeds" },
+		{ name: "Blog", href: "/blog" },
 	];
 
 	const supportLinks = [

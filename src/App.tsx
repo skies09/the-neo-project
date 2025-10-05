@@ -12,6 +12,8 @@ import FAQ from "./pages/faq";
 import KennelAccount from "./pages/kennel/kennelAccount";
 import KennelAdmin from "./pages/kennel/kennelAdmin";
 import PasswordReset from "./pages/kennel/passwordReset";
+import BlogList from "./pages/blog/BlogList";
+import BlogPostPage from "./pages/blog/BlogPost";
 import ProtectedRoute from "./routes/ProtectedRoute";
 // import Header from "./components/header";
 import { ToastContainer } from "./components/ToastContainer";
@@ -29,6 +31,8 @@ const App: React.FC = () => (
 				<Route path="/breeds" element={<Breeds />} />
 				<Route path="/contact" element={<Contact />} />
 				<Route path="/faq" element={<FAQ />} />
+				<Route path="/blog" element={<BlogList />} />
+				<Route path="/blog/:slug" element={<BlogPostPage />} />
 				<Route
 					path="/kennelAccount"
 					element={
