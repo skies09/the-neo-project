@@ -1,32 +1,28 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faQuoteLeft,
-	faStar,
-	faPaw,
-} from "@fortawesome/free-solid-svg-icons";
+import { faQuoteLeft, faStar, faPaw } from "@fortawesome/free-solid-svg-icons";
 
 const Testimonials: React.FC = () => {
 	const testimonials = [
 		{
 			name: "Sarah Johnson",
 			location: "Manchester",
-			text: "Neo Project made finding our perfect dog so easy! The search filters helped us find exactly what we were looking for, and the adoption process was smooth and stress-free.",
+			text: "The Neo Project made finding our perfect dog so easy! The search filters helped us find exactly what we were looking for, and the adoption process was smooth and stress-free.",
 			rating: 5,
 			image: "Profile Image Placeholder",
 		},
 		{
 			name: "Michael Chen",
 			location: "London",
-			text: "We adopted our rescue dog through Neo Project and couldn't be happier. The platform connected us with a wonderful rescue center, and our new family member is perfect!",
+			text: "We adopted our rescue dog through The Neo Project and couldn't be happier. The platform connected us with a wonderful rescue center, and our new family member is perfect!",
 			rating: 5,
 			image: "Profile Image Placeholder",
 		},
 		{
 			name: "Emma Williams",
 			location: "Birmingham",
-			text: "The team at Neo Project was incredibly helpful throughout the entire process. They made sure we found the right match for our family, and we're so grateful for their support.",
+			text: "The team at The Neo Project was incredibly helpful throughout the entire process. They made sure we found the right match for our family, and we're so grateful for their support.",
 			rating: 5,
 			image: "Profile Image Placeholder",
 		},
@@ -56,8 +52,8 @@ const Testimonials: React.FC = () => {
 						/>
 					</div>
 					<p className="text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto">
-						Hear from families who found their perfect companions through Neo
-						Project.
+						Hear from families who found their perfect companions
+						through The Neo Project.
 					</p>
 				</motion.div>
 
@@ -135,12 +131,15 @@ const Testimonials: React.FC = () => {
 							Ready to Find Your Perfect Match?
 						</h3>
 						<p className="text-oxfordBlue/70 font-poppins mb-6">
-							Join hundreds of happy families who found their forever friends
-							through Neo Project.
+							Join hundreds of happy families who found their
+							forever friends through The Neo Project.
 						</p>
 						<button className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
 							<div className="flex items-center space-x-3 relative z-10">
-								<FontAwesomeIcon icon={faPaw} className="text-lg" />
+								<FontAwesomeIcon
+									icon={faPaw}
+									className="text-lg"
+								/>
 								<span>Start Your Journey</span>
 							</div>
 							<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

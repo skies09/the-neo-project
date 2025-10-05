@@ -135,6 +135,7 @@ const Navbar = () => {
 					>
 						Dog breeds
 					</Link>
+
 					{isLoggedIn ? (
 						<div>
 							<Link

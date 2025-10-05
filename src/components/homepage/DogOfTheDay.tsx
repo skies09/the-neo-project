@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,31 +7,54 @@ import {
 	faCalendar,
 	faStar,
 } from "@fortawesome/free-solid-svg-icons";
+import { useSelector, useDispatch } from "react-redux";
 import { dogAPI, Dog } from "../../services/api";
 import AdoptCard from "../cards/adoptCard";
+import { RootState } from "../../store/store";
+import { 
+	setDogOfTheDay, 
+	setLastFetchDate, 
+	setLoading, 
+	setError,
+	shouldFetchNewDogOfTheDay,
+	getTodayDateString
+} from "../../store/dogOfTheDay/actions";
 
 const DogOfTheDay: React.FC = () => {
-	const [featuredDog, setFeaturedDog] = useState<Dog | null>(null);
-	const [loading, setLoading] = useState(true);
+	const dispatch = useDispatch();
+	const { dog: featuredDog, loading, error, lastFetchDate } = useSelector((state: RootState) => state.dogOfTheDay);
 
 	useEffect(() => {
 		const fetchFeaturedDog = async () => {
+			// Check if we need to fetch a new dog of the day
+			if (!shouldFetchNewDogOfTheDay(lastFetchDate)) {
+				return; // Use existing dog if it's still valid for today
+			}
+
+			dispatch(setLoading(true));
+			dispatch(setError(null));
+
 			try {
 				const dogs = await dogAPI.getAllDogs();
 				if (dogs && dogs.length > 0) {
 					// Get a random dog as "dog of the day"
 					const randomIndex = Math.floor(Math.random() * dogs.length);
-					setFeaturedDog(dogs[randomIndex]);
+					const selectedDog = dogs[randomIndex];
+					
+					// Dispatch actions to update Redux state
+					dispatch(setDogOfTheDay(selectedDog));
+					dispatch(setLastFetchDate(getTodayDateString()));
 				}
 			} catch (error) {
 				console.error("Error fetching featured dog:", error);
+				dispatch(setError("Failed to fetch today's featured dog"));
 			} finally {
-				setLoading(false);
+				dispatch(setLoading(false));
 			}
 		};
 
 		fetchFeaturedDog();
-	}, []);
+	}, [dispatch, lastFetchDate]);
 
 	return (
 		<section className="py-20 bg-gradient-to-br from-skyBlue/10 to-aquamarine/10">
@@ -75,6 +98,25 @@ const DogOfTheDay: React.FC = () => {
 							<p className="text-oxfordBlue/70 font-poppins">
 								Loading today's featured dog...
 							</p>
+						</div>
+					) : error ? (
+						<div className="bg-white rounded-3xl shadow-xl p-12 text-center">
+							<FontAwesomeIcon
+								icon={faPaw}
+								className="text-6xl text-red-500/60 mb-4"
+							/>
+							<h3 className="text-2xl font-bold text-oxfordBlue font-poppins mb-2">
+								Error Loading Dog
+							</h3>
+							<p className="text-oxfordBlue/70 font-poppins mb-4">
+								{error}
+							</p>
+							<button 
+								onClick={() => window.location.reload()}
+								className="bg-skyBlue text-white px-6 py-2 rounded-lg font-poppins hover:bg-skyBlue/80 transition-colors"
+							>
+								Try Again
+							</button>
 						</div>
 					) : featuredDog ? (
 						<div className="relative">

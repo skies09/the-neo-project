@@ -57,7 +57,7 @@ const WhyChooseUs: React.FC = () => {
 							className="text-4xl text-skyBlue mr-4"
 						/>
 						<h2 className="font-poppins text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
-							Why Choose Neo Project?
+							Why Choose The Neo Project?
 						</h2>
 						<FontAwesomeIcon
 							icon={faPaw}

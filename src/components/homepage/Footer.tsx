@@ -7,14 +7,11 @@ import {
 	faEnvelope,
 	faPhone,
 	faMapMarkerAlt,
-	// faFacebook,
-	// faTwitter,
-	// faInstagram,
 } from "@fortawesome/free-solid-svg-icons";
 import {
-	faFacebook as faFacebookBrand,
-	faTwitter as faTwitterBrand,
-	faInstagram as faInstagramBrand,
+	faFacebook,
+	faTiktok,
+	faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 
 const Footer: React.FC = () => {
@@ -51,7 +48,7 @@ const Footer: React.FC = () => {
 								/>
 							</div>
 							<span className="text-2xl font-bold font-poppins">
-								Neo Project
+								The Neo Project
 							</span>
 						</div>
 						<p className="text-honeydew/80 font-poppins leading-relaxed mb-6">
@@ -65,7 +62,7 @@ const Footer: React.FC = () => {
 								className="w-10 h-10 bg-skyBlue/20 rounded-full flex items-center justify-center hover:bg-skyBlue/30 transition-colors"
 							>
 								<FontAwesomeIcon
-									icon={faFacebookBrand as any}
+									icon={faInstagram as any}
 									className="text-skyBlue"
 								/>
 							</a>
@@ -74,7 +71,7 @@ const Footer: React.FC = () => {
 								className="w-10 h-10 bg-skyBlue/20 rounded-full flex items-center justify-center hover:bg-skyBlue/30 transition-colors"
 							>
 								<FontAwesomeIcon
-									icon={faTwitterBrand as any}
+									icon={faFacebook as any}
 									className="text-skyBlue"
 								/>
 							</a>
@@ -83,7 +80,7 @@ const Footer: React.FC = () => {
 								className="w-10 h-10 bg-skyBlue/20 rounded-full flex items-center justify-center hover:bg-skyBlue/30 transition-colors"
 							>
 								<FontAwesomeIcon
-									icon={faInstagramBrand as any}
+									icon={faTiktok as any}
 									className="text-skyBlue"
 								/>
 							</a>
@@ -195,7 +192,7 @@ const Footer: React.FC = () => {
 					transition={{ duration: 0.6, delay: 0.5 }}
 				>
 					<p className="text-honeydew/60 font-poppins">
-						© 2025 Neo Project. All rights reserved. Made with{" "}
+						© 2025 The Neo Project. All rights reserved. Made with{" "}
 						<FontAwesomeIcon
 							icon={faHeart}
 							className="text-aquamarine mx-1"
