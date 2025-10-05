@@ -22,8 +22,11 @@ const rootReducer = combineReducers({
 	dogOfTheDay: dogOfTheDayReducer,
 });
 
-// Create the Redux store with the combined reducer
-const store = createStore(rootReducer);
+// Create the Redux store with the combined reducer and Redux DevTools
+const store = createStore(
+	rootReducer,
+	(window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 const persistedDogOfTheDayState = loadDogOfTheDayState();
 
