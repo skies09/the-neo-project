@@ -21,7 +21,7 @@ const Hero: React.FC = () => {
 			>
 				<button
 					onClick={() => navigate("/allDogs")}
-					className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-6 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-44 whitespace-nowrap"
+					className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-6 py-4 rounded-full font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-44 whitespace-nowrap"
 				>
 					<div className="flex items-center justify-center space-x-2 relative z-10">
 						<FontAwesomeIcon icon={faPaw} className="text-lg" />
@@ -36,7 +36,7 @@ const Hero: React.FC = () => {
 
 				<button
 					onClick={() => navigate("/adopt")}
-					className="group relative overflow-hidden border-2 border-oxfordBlue text-oxfordBlue px-6 py-4 rounded-xl font-poppins font-semibold hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300 transform hover:scale-105 w-44 whitespace-nowrap"
+					className="group relative overflow-hidden border-2 border-oxfordBlue text-oxfordBlue px-6 py-4 rounded-full font-poppins font-semibold hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300 transform hover:scale-105 w-44 whitespace-nowrap"
 				>
 					<div className="flex items-center justify-center space-x-2 relative z-10">
 						<FontAwesomeIcon icon={faHeart} className="text-lg" />
@@ -90,13 +90,13 @@ const Hero: React.FC = () => {
 	return (
 		<section className="bg-mintCream flex items-center pt-20 lg:pt-28 px-4 relative pb-28 lg:pb-32">
 			<div className="max-w-7xl mx-auto pb-10">
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-0 items-center">
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-0 items-center lg:items-start">
 					{/* Left Column - Text Content */}
 					<motion.div
 						initial={{ opacity: 0, x: -50 }}
 						animate={{ opacity: 1, x: 0 }}
 						transition={{ duration: 0.8, ease: "easeOut" }}
-						className="space-y-4 lg:space-y-8"
+						className="space-y-4 lg:space-y-8 pt-3 lg:pt-6"
 					>
 						<div className="space-y-3 lg:space-y-6 pt-2">
 							<motion.div
@@ -105,7 +105,7 @@ const Hero: React.FC = () => {
 								transition={{ duration: 0.6, delay: 0.2 }}
 								className="flex items-center justify-center lg:justify-start space-x-3"
 							>
-								<h1 className="font-delius text-4xl md:text-6xl font-bold text-oxfordBlue drop-shadow-md text-center lg:text-left">
+								<h1 className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md text-center lg:text-left">
 									Every Dog{" "}
 									<span>
 										<br></br>Deserves A Home
@@ -117,7 +117,7 @@ const Hero: React.FC = () => {
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.6, delay: 0.4 }}
-								className="text-2xl text-oxfordBlue/70 font-fredoka leading-relaxed max-w-lg text-center lg:text-left w-2/3 mx-auto lg:ml-0"
+								className="text-lg lg:text-2xl text-oxfordBlue/70 font-fredoka leading-relaxed max-w-lg text-center lg:text-left w-full lg:w-2/3 mx-auto lg:ml-0"
 							>
 								Find your perfect dog. <br></br>Search hundreds
 								of rescue centers and find your perfect
@@ -139,7 +139,7 @@ const Hero: React.FC = () => {
 					>
 						<div className="relative">
 							{/* Hero Image */}
-							<div className="aspect-[4/3] rounded-2xl overflow-hidden">
+							<div className="aspect-[4/3] lg:aspect-auto rounded-2xl overflow-hidden">
 								<img
 									src="/images/hero.png"
 									alt="Happy rescue dog ready for adoption"
