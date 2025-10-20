@@ -1,9 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft, faStar, faPaw } from "@fortawesome/free-solid-svg-icons";
 
 const Testimonials: React.FC = () => {
+	const navigate = useNavigate();
+	
 	const testimonials = [
 		{
 			name: "Sarah Johnson",
@@ -134,7 +137,10 @@ const Testimonials: React.FC = () => {
 							Join hundreds of happy families who found their
 							forever friends through The Neo Project.
 						</p>
-						<button className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+						<button 
+							onClick={() => navigate("/adopt")}
+							className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+						>
 							<div className="flex items-center space-x-3 relative z-10">
 								<FontAwesomeIcon
 									icon={faPaw}

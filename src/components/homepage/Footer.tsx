@@ -6,7 +6,6 @@ import {
 	faHeart,
 	faEnvelope,
 	faPhone,
-	faMapMarkerAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
 	faFacebook,
@@ -19,6 +18,7 @@ const Footer: React.FC = () => {
 		{ name: "Browse Dogs", href: "/allDogs" },
 		{ name: "Adoption Process", href: "/adopt" },
 		{ name: "Dog Breeds", href: "/breeds" },
+		{ name: "Shop", href: "/shop" },
 		{ name: "Blog", href: "/blog" },
 	];
 
@@ -167,17 +167,6 @@ const Footer: React.FC = () => {
 								/>
 								<span className="text-honeydew/80 font-poppins">
 									contact@neoproject.com
-								</span>
-							</div>
-							<div className="flex items-start space-x-3">
-								<FontAwesomeIcon
-									icon={faMapMarkerAlt}
-									className="text-aquamarine mt-1"
-								/>
-								<span className="text-honeydew/80 font-poppins">
-									123 Dog Street,
-									<br />
-									Pet City, PC1 2AB
 								</span>
 							</div>
 						</div>

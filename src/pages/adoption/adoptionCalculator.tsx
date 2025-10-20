@@ -71,14 +71,14 @@ export default function Adoption() {
 	return (
 		<motion.div
 			id="adopt"
-			className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-20 pb-8 px-4"
+			className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16 pb-8 px-4"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
 		>
 			<div className="max-w-4xl mx-auto">
 				{/* Header */}
-				<motion.div 
+				<motion.div
 					className="text-center mb-8"
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -104,7 +104,7 @@ export default function Adoption() {
 				</motion.div>
 
 				{/* Search Form */}
-				<motion.div 
+				<motion.div
 					className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 mb-8"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -261,19 +261,23 @@ export default function Adoption() {
 				</motion.div>
 
 				{/* Results Section */}
-				<motion.div 
-					ref={resultsRef} 
+				<motion.div
+					ref={resultsRef}
 					className="max-w-3xl mx-auto"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
 				>
 					{dog && (
-						<motion.div 
+						<motion.div
 							className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-xl border border-skyBlue/20 p-8"
 							initial={{ opacity: 0, scale: 0.95 }}
 							animate={{ opacity: 1, scale: 1 }}
-							transition={{ duration: 0.5, delay: 0.8, ease: "easeOut" }}
+							transition={{
+								duration: 0.5,
+								delay: 0.8,
+								ease: "easeOut",
+							}}
 						>
 							<div className="text-center mb-6">
 								<div className="w-20 h-20 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center mx-auto mb-4">
@@ -478,11 +482,15 @@ export default function Adoption() {
 					)}
 
 					{error && (
-						<motion.div 
+						<motion.div
 							className="text-center p-6 bg-red-50 border border-red-200 rounded-2xl"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.5, delay: 0.8, ease: "easeOut" }}
+							transition={{
+								duration: 0.5,
+								delay: 0.8,
+								ease: "easeOut",
+							}}
 						>
 							<FontAwesomeIcon
 								icon={faSearch}

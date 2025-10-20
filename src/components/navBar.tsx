@@ -16,35 +16,35 @@ const Navbar = () => {
 				<div className="flex items-center">
 					<button
 						onClick={() => navigate("/")}
-						className="font-satisfy text-xl font-bold text-skyBlue tracking-wider drop-shadow-md hover:text-sunset transition-colors cursor-pointer"
+						className="font-delius text-xl font-bold text-skyBlue tracking-wider drop-shadow-md hover:text-sunset transition-colors cursor-pointer"
 					>
 						The Neo Project
 					</button>
 				</div>
 
 				{/* Desktop Links */}
-				<div className="hidden md:flex space-x-6">
+				<div className="hidden md:flex space-x-6 items-center">
 					<Link
 						to="/allDogs"
-						className="text-skyBlue hover:text-sunset font-poppins font-semibold"
+						className="text-skyBlue hover:text-sunset font-comic font-semibold"
 					>
 						Adopt a dog
 					</Link>
 					<Link
 						to="/adopt"
-						className="text-skyBlue hover:text-sunset font-poppins font-semibold"
+						className="text-skyBlue hover:text-sunset font-comic font-semibold"
 					>
 						Find your dog
 					</Link>
 					<Link
 						to="/breedCalculator"
-						className="text-skyBlue hover:text-sunset font-poppins font-semibold"
+						className="text-skyBlue hover:text-sunset font-comic font-semibold"
 					>
 						Breed calculator
 					</Link>
 					<Link
 						to="/breeds"
-						className="text-skyBlue hover:text-sunset font-poppins font-semibold"
+						className="text-skyBlue hover:text-sunset font-comic font-semibold"
 					>
 						Dog breeds
 					</Link>
@@ -53,7 +53,7 @@ const Navbar = () => {
 						<div>
 							<Link
 								to="/kennelAccount"
-								className="text-skyBlue hover:text-sunset font-poppins font-semibold mr-6"
+								className="text-skyBlue hover:text-sunset font-comic font-semibold mr-6"
 							>
 								Kennels
 							</Link>
@@ -62,7 +62,7 @@ const Navbar = () => {
 									logout();
 									navigate("/");
 								}}
-								className="text-skyBlue hover:text-sunset font-poppins font-semibold cursor-pointer"
+								className="text-skyBlue hover:text-sunset font-comic font-semibold cursor-pointer"
 							>
 								Logout
 							</button>
@@ -70,7 +70,7 @@ const Navbar = () => {
 					) : (
 						<Link
 							to="/kennelAdmin"
-							className="text-skyBlue hover:text-sunset font-poppins font-semibold"
+							className="text-skyBlue hover:text-sunset font-comic font-semibold"
 						>
 							Kennels
 						</Link>
@@ -110,28 +110,28 @@ const Navbar = () => {
 				<div className="md:hidden bg-oxfordBlue">
 					<Link
 						to="/allDogs"
-						className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+						className="block px-4 py-2 text-skyBlue hover:text-sunset font-comic font-semibold"
 						onClick={() => setIsOpen(!isOpen)}
 					>
 						Adopt a dog
 					</Link>
 					<Link
 						to="/adopt"
-						className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+						className="block px-4 py-2 text-skyBlue hover:text-sunset font-comic font-semibold"
 						onClick={() => setIsOpen(!isOpen)}
 					>
 						Find your dog
 					</Link>
 					<Link
 						to="/breedCalculator"
-						className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+						className="block px-4 py-2 text-skyBlue hover:text-sunset font-comic font-semibold"
 						onClick={() => setIsOpen(!isOpen)}
 					>
 						Breed calculator
 					</Link>
 					<Link
 						to="/breeds"
-						className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+						className="block px-4 py-2 text-skyBlue hover:text-sunset font-comic font-semibold"
 						onClick={() => setIsOpen(!isOpen)}
 					>
 						Dog breeds
@@ -141,7 +141,7 @@ const Navbar = () => {
 						<div>
 							<Link
 								to="/kennelAccount"
-								className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+								className="block px-4 py-2 text-skyBlue hover:text-sunset font-comic font-semibold"
 								onClick={() => setIsOpen(!isOpen)}
 							>
 								Kennels
@@ -152,7 +152,7 @@ const Navbar = () => {
 									navigate("/");
 									setIsOpen(false);
 								}}
-								className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold cursor-pointer w-full text-left"
+								className="block px-4 py-2 text-skyBlue hover:text-sunset font-comic font-semibold cursor-pointer w-full text-left"
 							>
 								Logout
 							</button>
@@ -160,7 +160,7 @@ const Navbar = () => {
 					) : (
 						<Link
 							to="/kennelAdmin"
-							className="block px-4 py-2 text-skyBlue hover:text-sunset font-poppins font-semibold"
+							className="block px-4 py-2 text-skyBlue hover:text-sunset font-comic font-semibold"
 							onClick={() => setIsOpen(!isOpen)}
 						>
 							Kennels

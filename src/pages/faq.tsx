@@ -28,7 +28,7 @@ const FAQ: React.FC = () => {
 			: faqData.filter((item) => item.category === selectedCategory);
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-honeydew via-mintCream to-skyBlue/10">
+		<div className="min-h-screen bg-gradient-to-br from-honeydew via-mintCream to-skyBlue/10 pt-16">
 			{/* Header */}
 			<section className="py-20 bg-gradient-to-br from-oxfordBlue to-skyBlue text-white">
 				<div className="max-w-7xl mx-auto px-4 text-center">

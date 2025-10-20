@@ -3,6 +3,7 @@ import { Dog } from '../../services/api';
 // State Interface
 export interface DogOfTheDayState {
   dog: Dog | null;
+  dogs?: Dog[]; // optional for backward compatibility with persisted state
   lastFetchDate: string | null;
   loading: boolean;
   error: string | null;
@@ -11,6 +12,7 @@ export interface DogOfTheDayState {
 // Initial State
 const initialState: DogOfTheDayState = {
   dog: null,
+  dogs: [],
   lastFetchDate: null,
   loading: false,
   error: null,
@@ -18,6 +20,7 @@ const initialState: DogOfTheDayState = {
 
 // Action Types
 const SET_DOG_OF_THE_DAY = 'SET_DOG_OF_THE_DAY';
+const SET_DOGS_OF_THE_DAY = 'SET_DOGS_OF_THE_DAY';
 const CLEAR_DOG_OF_THE_DAY = 'CLEAR_DOG_OF_THE_DAY';
 const SET_LAST_FETCH_DATE = 'SET_LAST_FETCH_DATE';
 const SET_LOADING = 'SET_LOADING';
@@ -36,11 +39,18 @@ const dogOfTheDayReducer = (
         loading: false,
         error: null,
       };
+
+    case SET_DOGS_OF_THE_DAY:
+      return {
+        ...state,
+        dogs: action.payload,
+      };
     
     case CLEAR_DOG_OF_THE_DAY:
       return {
         ...state,
         dog: null,
+        dogs: [],
         lastFetchDate: null,
         error: null,
       };

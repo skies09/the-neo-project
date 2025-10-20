@@ -43,7 +43,7 @@ export default function AllDogs() {
 	if (loading) {
 		return (
 			<motion.div
-				className="min-h-screen pt-2 pb-16 px-4"
+				className="min-h-screen pt-16 pb-16 px-4"
 				initial={{ opacity: 0 }}
 				animate={{ opacity: 1 }}
 				transition={{ duration: 0.8, ease: "easeOut" }}
@@ -67,7 +67,7 @@ export default function AllDogs() {
 	if (error) {
 		return (
 			<motion.div
-				className="min-h-screen pt-2 pb-16 px-4"
+				className="min-h-screen pt-16 pb-16 px-4"
 				initial={{ opacity: 0 }}
 				animate={{ opacity: 1 }}
 				transition={{ duration: 0.8, ease: "easeOut" }}
@@ -90,7 +90,7 @@ export default function AllDogs() {
 
 	return (
 		<motion.div
-			className="min-h-screen pt-2 pb-20 px-4"
+			className="min-h-screen pt-16 pb-20 px-4"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
@@ -102,7 +102,7 @@ export default function AllDogs() {
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 			>
-				<div className="flex justify-center items-center mb-4">
+				<div className="flex justify-center items-center mb-4 mt-20">
 					<FontAwesomeIcon
 						icon={faHeart}
 						className="text-4xl text-skyBlue mr-4"
@@ -115,7 +115,7 @@ export default function AllDogs() {
 						className="text-4xl text-skyBlue ml-4"
 					/>
 				</div>
-				<p className="text-lg text-oxfordBlue/70 font-mono pt-16">
+				<p className="text-lg text-oxfordBlue/70 font-mono pt-4">
 					<FontAwesomeIcon icon={faSearch} className="mr-2" />
 					Find your perfect companion
 				</p>

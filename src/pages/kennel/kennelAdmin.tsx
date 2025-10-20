@@ -140,7 +140,6 @@ const KennelAdmin = () => {
 			setLoading(false);
 			return response;
 		} catch (error: any) {
-			console.error("Kennel signup error:", error);
 			setErrorMessage(
 				error.message ||
 					"Failed to submit kennel signup. Please try again."
@@ -165,15 +164,11 @@ const KennelAdmin = () => {
 			setIsLoggingIn(false);
 			if (setSubmitting) setSubmitting(false);
 		} catch (err: any) {
-			console.error("Login error caught:", err);
-			console.error("Error response:", err.response);
-			console.error("Error message:", err.message);
 
 			// Extract error message from different possible sources
 			let errorMsg = "Invalid username or password";
 
 			if (err.response?.data) {
-				console.log("Error response data:", err.response.data);
 				// API error response
 				if (err.response.data.detail) {
 					errorMsg = err.response.data.detail;
@@ -214,7 +209,6 @@ const KennelAdmin = () => {
 				errorMsg = "Invalid username or password";
 			}
 
-			console.log("Setting error message to:", errorMsg);
 			setErrorMessage(errorMsg);
 			setIsLoggingIn(false);
 			if (setSubmitting) setSubmitting(false);

@@ -2,18 +2,20 @@
 import { createStore, combineReducers } from "redux";
 import breedReducer from "./breeds/reducers";
 import dogOfTheDayReducer from "./dogOfTheDay/reducers";
+import shopReducer from "./shop/reducers";
 import {
 	loadDogOfTheDayState,
 	isStateValidForToday,
 	saveDogOfTheDayState,
 } from "./dogOfTheDay/persistence";
-import { setDogOfTheDay, setLastFetchDate } from "./dogOfTheDay/actions";
+import { setDogOfTheDay, setDogsOfTheDay, setLastFetchDate } from "./dogOfTheDay/actions";
 
 // Combine reducers to handle multiple slices of state
 const rootReducer = combineReducers({
 	// breed: breedReducer,
 	// kennel: kennelReducer,
 	dogOfTheDay: dogOfTheDayReducer,
+	shop: shopReducer,
 });
 
 // Create the Redux store with the combined reducer and Redux DevTools
@@ -25,12 +27,16 @@ const store = createStore(
 const persistedDogOfTheDayState = loadDogOfTheDayState();
 
 if (
-	persistedDogOfTheDayState &&
-	isStateValidForToday(persistedDogOfTheDayState) &&
-	persistedDogOfTheDayState.dog
+    persistedDogOfTheDayState &&
+    isStateValidForToday(persistedDogOfTheDayState)
 ) {
-	store.dispatch(setDogOfTheDay(persistedDogOfTheDayState.dog));
-	store.dispatch(setLastFetchDate(persistedDogOfTheDayState.lastFetchDate));
+    if (persistedDogOfTheDayState.dogs && persistedDogOfTheDayState.dogs.length > 0) {
+        store.dispatch(setDogsOfTheDay(persistedDogOfTheDayState.dogs));
+        store.dispatch(setDogOfTheDay(persistedDogOfTheDayState.dogs[0]));
+    } else if (persistedDogOfTheDayState.dog) {
+        store.dispatch(setDogOfTheDay(persistedDogOfTheDayState.dog));
+    }
+    store.dispatch(setLastFetchDate(persistedDogOfTheDayState.lastFetchDate));
 }
 
 // Subscribe to store changes to persist dog of the day state

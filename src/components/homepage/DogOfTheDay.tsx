@@ -1,53 +1,68 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faPaw,
-	faHeart,
-	faCalendar,
-	faStar,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPaw, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { dogAPI, Dog } from "../../services/api";
 import AdoptCard from "../cards/adoptCard";
 import { RootState } from "../../store/store";
-import { 
-	setDogOfTheDay, 
-	setLastFetchDate, 
-	setLoading, 
+import {
+	setDogOfTheDay,
+	setDogsOfTheDay as setDogsOfTheDayAction,
+	setLastFetchDate,
+	setLoading,
 	setError,
 	shouldFetchNewDogOfTheDay,
-	getTodayDateString
+	getTodayDateString,
 } from "../../store/dogOfTheDay/actions";
 
 const DogOfTheDay: React.FC = () => {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { dog: featuredDog, loading, error, lastFetchDate } = useSelector((state: RootState) => state.dogOfTheDay);
+	const {
+		dog: featuredDog,
+		dogs,
+		loading,
+		error,
+		lastFetchDate,
+	} = useSelector((state: RootState) => state.dogOfTheDay);
+	const [dogsOfTheDay, setLocalDogsOfTheDay] = React.useState<Dog[]>([]);
 
 	useEffect(() => {
 		const fetchFeaturedDog = async () => {
-			// Check if we need to fetch a new dog of the day
-			if (!shouldFetchNewDogOfTheDay(lastFetchDate)) {
-				return; // Use existing dog if it's still valid for today
+			// Decide whether to fetch new data
+			const hasThreeDogsInStore = Array.isArray(dogs) && dogs.length >= 3;
+			const needFetch =
+				shouldFetchNewDogOfTheDay(lastFetchDate) ||
+				!hasThreeDogsInStore;
+
+			if (!needFetch) {
+				// Use existing persisted dogs if valid; fallback to persisted dogs
+				if (dogs && dogs.length > 0) {
+					setLocalDogsOfTheDay(dogs);
+				} else if (featuredDog) {
+					setLocalDogsOfTheDay([featuredDog]);
+				}
+				return;
 			}
 
 			dispatch(setLoading(true));
 			dispatch(setError(null));
 
 			try {
-				const dogs = await dogAPI.getAllDogs();
-				if (dogs && dogs.length > 0) {
-					// Get a random dog as "dog of the day"
-					const randomIndex = Math.floor(Math.random() * dogs.length);
-					const selectedDog = dogs[randomIndex];
-					
-					// Dispatch actions to update Redux state
-					dispatch(setDogOfTheDay(selectedDog));
+				const apiDogs = await dogAPI.getDogOfTheDay();
+				if (apiDogs && apiDogs.length > 0) {
+					const topThree = apiDogs.slice(0, 3);
+					setLocalDogsOfTheDay(topThree);
+					// Persist array and first dog for backward compatibility
+					dispatch(setDogsOfTheDayAction(topThree));
+					dispatch(setDogOfTheDay(topThree[0]));
 					dispatch(setLastFetchDate(getTodayDateString()));
 				}
 			} catch (error) {
-				console.error("Error fetching featured dog:", error);
-				dispatch(setError("Failed to fetch today's featured dog"));
+				console.error("Error fetching featured dogs:", error);
+				dispatch(setError("Failed to fetch today's featured dogs"));
 			} finally {
 				dispatch(setLoading(false));
 			}
@@ -67,27 +82,19 @@ const DogOfTheDay: React.FC = () => {
 					transition={{ duration: 0.6, ease: "easeOut" }}
 				>
 					<div className="flex justify-center items-center">
-						<FontAwesomeIcon
-							icon={faCalendar}
-							className="text-4xl text-skyBlue mr-4"
-						/>
-						<h2 className="font-poppins text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
-							Dog of the Day
+						<h2 className="font-comic text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+							The Neo Trio
 						</h2>
-						<FontAwesomeIcon
-							icon={faCalendar}
-							className="text-4xl text-skyBlue ml-4"
-						/>
 					</div>
-					<p className="text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto">
-						Meet today's featured rescue dog, waiting for their
+					<p className="text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto pt-4">
+						Meet today's featured rescue dogs, waiting for their
 						forever home!
 					</p>
 				</motion.div>
 
-				{/* Featured Dog Card */}
+				{/* Featured Dogs Grid */}
 				<motion.div
-					className="max-w-4xl mx-auto"
+					className="max-w-7xl mx-auto"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
@@ -96,7 +103,7 @@ const DogOfTheDay: React.FC = () => {
 						<div className="bg-white rounded-3xl shadow-xl p-12 text-center">
 							<div className="animate-spin w-16 h-16 border-4 border-skyBlue border-t-transparent rounded-full mx-auto mb-4"></div>
 							<p className="text-oxfordBlue/70 font-poppins">
-								Loading today's featured dog...
+								Loading today's featured dogs...
 							</p>
 						</div>
 					) : error ? (
@@ -106,31 +113,29 @@ const DogOfTheDay: React.FC = () => {
 								className="text-6xl text-red-500/60 mb-4"
 							/>
 							<h3 className="text-2xl font-bold text-oxfordBlue font-poppins mb-2">
-								Error Loading Dog
+								Error Loading Dogs
 							</h3>
 							<p className="text-oxfordBlue/70 font-poppins mb-4">
 								{error}
 							</p>
-							<button 
+							<button
 								onClick={() => window.location.reload()}
 								className="bg-skyBlue text-white px-6 py-2 rounded-lg font-poppins hover:bg-skyBlue/80 transition-colors"
 							>
 								Try Again
 							</button>
 						</div>
-					) : featuredDog ? (
-						<div className="relative">
-							{/* Special Badge - Positioned above the card with proper spacing */}
-							<div className="flex justify-center mb-8">
-								<div className="bg-gradient-to-r from-aquamarine to-turquoise text-white px-8 py-3 rounded-full font-poppins font-bold shadow-lg flex items-center space-x-2">
-									<FontAwesomeIcon icon={faStar} />
-									<span>Dog of the Day</span>
-								</div>
-							</div>
-
-							{/* Dog Card - Remove conflicting wrapper styles */}
-							<div className="transform hover:scale-105 transition-transform duration-300 px-4">
-								<AdoptCard dog={featuredDog} />
+					) : dogsOfTheDay.length > 0 ? (
+						<div>
+							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
+								{dogsOfTheDay.map((dog) => (
+									<div
+										key={dog.id}
+										className="transform hover:scale-105 transition-transform duration-300 px-2"
+									>
+										<AdoptCard dog={dog} />
+									</div>
+								))}
 							</div>
 						</div>
 					) : (
@@ -143,7 +148,7 @@ const DogOfTheDay: React.FC = () => {
 								No Dogs Available
 							</h3>
 							<p className="text-oxfordBlue/70 font-poppins">
-								Check back later for today's featured dog!
+								Check back later for today's featured dogs!
 							</p>
 						</div>
 					)}
@@ -156,7 +161,10 @@ const DogOfTheDay: React.FC = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
 				>
-					<button className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+					<button
+						onClick={() => navigate("/allDogs")}
+						className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+					>
 						<div className="flex items-center space-x-3 relative z-10">
 							<FontAwesomeIcon
 								icon={faHeart}

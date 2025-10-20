@@ -45,7 +45,7 @@ const BlogPostPage: React.FC = () => {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5">
+			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16">
 				<div className="max-w-4xl mx-auto px-4 py-20">
 					<div className="text-center">
 						<div className="animate-spin w-16 h-16 border-4 border-skyBlue border-t-transparent rounded-full mx-auto mb-4"></div>
@@ -60,7 +60,7 @@ const BlogPostPage: React.FC = () => {
 
 	if (error || !post) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5">
+			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16">
 				<div className="max-w-4xl mx-auto px-4 py-20">
 					<div className="text-center">
 						<div className="bg-lace rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
@@ -93,7 +93,7 @@ const BlogPostPage: React.FC = () => {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5">
+		<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16">
 			<div className="max-w-4xl mx-auto px-4 py-20">
 				{/* Back Button */}
 				<motion.div

@@ -87,7 +87,7 @@ export default function Breeds() {
 	if (loading && groups.length === 0 && breeds.length === 0) {
 		return (
 			<motion.div
-				className="min-h-screen pt-4 pb-8 px-4"
+				className="min-h-screen pt-16 pb-8 px-4"
 				initial={{ opacity: 0 }}
 				animate={{ opacity: 1 }}
 				transition={{ duration: 0.8, ease: "easeOut" }}
@@ -106,14 +106,14 @@ export default function Breeds() {
 
 	return (
 		<motion.div
-			className="min-h-screen pt-4 pb-8 px-4"
+			className="min-h-screen pt-16 pb-8 px-4"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
 		>
 			{/* Header Section */}
 			<motion.div
-				className="text-center mb-8"
+				className="text-center mb-8 mt-20"
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}

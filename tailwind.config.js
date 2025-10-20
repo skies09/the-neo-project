@@ -20,6 +20,10 @@ module.exports = {
 			satisfy: ["Satisfy", "cursive"],
 			greatVibes: ["Great Vibes", "cursive"],
 			poppins: ["Poppins", "sans-serif"],
+			fredoka: ["Fredoka", "sans-serif"],
+			comic: ["Comic Relief", "sans-serif"],
+			delius: ["Delius", "cursive"],
+			zain: ["Zain", "sans-serif"],
 		},
 		extend: {
 			transitionDuration: {

@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faSearch,
@@ -9,6 +10,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const HowItWorks: React.FC = () => {
+	const navigate = useNavigate();
+
 	const steps = [
 		{
 			icon: faSearch,
@@ -159,7 +162,10 @@ const HowItWorks: React.FC = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
 				>
-					<button className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+					<button
+						onClick={() => navigate("/adopt")}
+						className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+					>
 						<div className="flex items-center space-x-3 relative z-10">
 							<FontAwesomeIcon
 								icon={faSearch}

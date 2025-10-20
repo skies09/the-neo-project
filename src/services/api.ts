@@ -117,6 +117,14 @@ export const dogAPI = {
 			.then((response) => response.data.results);
 	},
 
+	// Get up to three dogs of the day (public)
+	getDogOfTheDay: (): Promise<Dog[]> => {
+		return axiosService.get(`/api/dogs/dog-of-the-day/`).then((response) => {
+			// Endpoint may return an array or a paginated object
+			return response.data.results || response.data;
+		});
+	},
+
 	// Filter dogs to find a match
 	filterDogs: (filters: DogFilter): Promise<Dog> => {
 		return axiosService

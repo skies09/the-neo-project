@@ -148,7 +148,7 @@ const KennelAccount = () => {
 
 	return (
 		<motion.div
-			className="min-h-screen py-8"
+			className="min-h-screen pt-16 pb-8"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}

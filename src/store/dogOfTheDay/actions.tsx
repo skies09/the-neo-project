@@ -2,6 +2,7 @@ import { Dog } from '../../services/api';
 
 // Action Types
 export const SET_DOG_OF_THE_DAY = 'SET_DOG_OF_THE_DAY';
+export const SET_DOGS_OF_THE_DAY = 'SET_DOGS_OF_THE_DAY';
 export const CLEAR_DOG_OF_THE_DAY = 'CLEAR_DOG_OF_THE_DAY';
 export const SET_LAST_FETCH_DATE = 'SET_LAST_FETCH_DATE';
 export const SET_LOADING = 'SET_LOADING';
@@ -11,6 +12,11 @@ export const SET_ERROR = 'SET_ERROR';
 export const setDogOfTheDay = (dog: Dog) => ({
   type: SET_DOG_OF_THE_DAY,
   payload: dog,
+});
+
+export const setDogsOfTheDay = (dogs: Dog[]) => ({
+  type: SET_DOGS_OF_THE_DAY,
+  payload: dogs,
 });
 
 export const clearDogOfTheDay = () => ({

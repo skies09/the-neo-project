@@ -98,7 +98,7 @@ export default function BreedCalculator() {
 	return (
 		<motion.div
 			id="breedCalculator"
-			className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-20 pb-8 px-4"
+			className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16 pb-8 px-4"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}

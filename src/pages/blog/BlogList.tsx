@@ -109,7 +109,7 @@ const BlogList: React.FC = () => {
 
 	if (loading && posts.length === 0) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5">
+			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16">
 				<div className="max-w-7xl mx-auto px-4 py-20">
 					<div className="text-center">
 						<div className="animate-spin w-16 h-16 border-4 border-skyBlue border-t-transparent rounded-full mx-auto mb-4"></div>
@@ -124,7 +124,7 @@ const BlogList: React.FC = () => {
 
 	if (error) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5">
+			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16">
 				<div className="max-w-7xl mx-auto px-4 py-20">
 					<div className="text-center">
 						<div className="bg-lace rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
@@ -148,7 +148,7 @@ const BlogList: React.FC = () => {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5">
+		<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16">
 			<div className="max-w-7xl mx-auto px-4 py-20">
 				{/* Header */}
 				<motion.div
