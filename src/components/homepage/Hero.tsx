@@ -20,27 +20,27 @@ const Hero: React.FC = () => {
 				className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
 			>
 				<button
-					onClick={() => navigate("/allDogs")}
-					className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-6 py-4 rounded-full font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-44 whitespace-nowrap"
+					onClick={() => navigate("/adopt")}
+					className="group relative overflow-hidden bg-gradient-to-r from-sark to-bayleaf text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset w-44 whitespace-nowrap"
 				>
 					<div className="flex items-center justify-center space-x-2 relative z-10">
-						<FontAwesomeIcon icon={faPaw} className="text-lg" />
-						<span>Browse Dogs</span>
+						<FontAwesomeIcon icon={faHeart} className="text-lg" />
+						<span>Find Your Dog</span>
 						<FontAwesomeIcon
 							icon={faArrowRight}
 							className="text-lg group-hover:translate-x-1 transition-transform duration-300"
 						/>
 					</div>
-					<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+					<div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 				</button>
 
 				<button
-					onClick={() => navigate("/adopt")}
-					className="group relative overflow-hidden border-2 border-oxfordBlue text-oxfordBlue px-6 py-4 rounded-full font-poppins font-semibold hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300 transform hover:scale-105 w-44 whitespace-nowrap"
+					onClick={() => navigate("/allDogs")}
+					className="group relative overflow-hidden border-2 border-tomThumb text-oxfordBlue px-6 py-4 rounded-full font-fredoka font-semibold hover:bg-gradient-to-r from-sark to-bayleaf hover:text-honeydew transition-all duration-300 transform hover:scale-105 w-44 whitespace-nowrap"
 				>
 					<div className="flex items-center justify-center space-x-2 relative z-10">
-						<FontAwesomeIcon icon={faHeart} className="text-lg" />
-						<span>Find Your Dog</span>
+						<FontAwesomeIcon icon={faPaw} className="text-lg" />
+						<span>Browse Dogs</span>
 					</div>
 				</button>
 			</motion.div>
@@ -50,18 +50,31 @@ const Hero: React.FC = () => {
 	const renderStatsSection = () => {
 		return (
 			<motion.div
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
 				transition={{ duration: 0.6, delay: 0.6 }}
-				className="absolute bottom-0 left-0 w-full bg-oxfordBlue text-honeydew"
+				className="relative bottom-0 left-0 w-full text-cherokee overflow-hidden"
 			>
-				<div className="max-w-7xl mx-auto px-4">
+				{/* Animated gradient background */}
+				<div
+					className="absolute inset-0"
+					style={{
+						background:
+							"linear-gradient(45deg, #6C8B58, #84AE92, #5A827E, #6C8B58)",
+						backgroundSize: "400% 400%",
+						animation: "gradientShift 8s ease infinite",
+					}}
+				/>
+				{/* Overlay for better text contrast */}
+				<div className="absolute inset-0 bg-black/20" />
+
+				<div className="relative z-10 max-w-7xl mx-auto px-4">
 					<div className="grid grid-cols-3 divide-x divide-honeydew/20">
 						<div className="py-4 md:py-6 text-center">
 							<div className="text-2xl md:text-3xl font-bold font-comic">
 								500+
 							</div>
-							<div className="text-ghost font-comic font-bold text-sm md:text-lg">
+							<div className="text-mintCream font-comic font-bold text-sm md:text-lg">
 								Dogs Available
 							</div>
 						</div>
@@ -69,7 +82,7 @@ const Hero: React.FC = () => {
 							<div className="text-2xl md:text-3xl font-bold font-comic">
 								200+
 							</div>
-							<div className="text-ghost font-comic font-bold text-sm md:text-lg">
+							<div className="text-mintCream font-comic font-bold text-sm md:text-lg">
 								Rescue Partners
 							</div>
 						</div>
@@ -77,7 +90,7 @@ const Hero: React.FC = () => {
 							<div className="text-2xl md:text-3xl font-bold font-comic">
 								100%
 							</div>
-							<div className="text-ghost font-comic font-bold text-sm md:text-lg">
+							<div className="text-mintCream font-comic font-bold text-sm md:text-lg">
 								Success Rate
 							</div>
 						</div>
@@ -88,9 +101,9 @@ const Hero: React.FC = () => {
 	};
 
 	return (
-		<section className="bg-mintCream flex items-center pt-20 lg:pt-28 px-4 relative pb-28 lg:pb-32">
-			<div className="max-w-7xl mx-auto pb-10">
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-0 items-center lg:items-start">
+		<section className="bg-mintCream pt-20 lg:pt-32 relative pb-0">
+			<div className="max-w-7xl mx-auto pb-10 lg:pb-20 px-4 ">
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 items-center lg:items-start">
 					{/* Left Column - Text Content */}
 					<motion.div
 						initial={{ opacity: 0, x: -50 }}
@@ -138,18 +151,33 @@ const Hero: React.FC = () => {
 						className="relative"
 					>
 						<div className="relative">
-							{/* Hero Image */}
-							<div className="aspect-[4/3] lg:aspect-auto rounded-2xl overflow-hidden">
-								<img
-									src="/images/hero.png"
+							{/* Hero Image with Zoom In Animation */}
+							<div className="aspect-[4/3] lg:aspect-auto rounded-2xl">
+								<motion.img
+									src="/images/Hero.png"
 									alt="Happy rescue dog ready for adoption"
-									className="w-full h-full object-contain"
+									className="w-auto justify-center mx-auto max-h-72 lg:max-h-96 h-full object-contain"
+									initial={{
+										opacity: 0,
+										scale: 0.6,
+										rotate: -5,
+									}}
+									animate={{
+										opacity: 1,
+										scale: 1.3,
+										rotate: 0,
+									}}
+									transition={{
+										duration: 2,
+										delay: 0.6,
+										ease: [0.25, 0.46, 0.45, 0.94],
+									}}
 								/>
 							</div>
 						</div>
 					</motion.div>
 				</div>
-				<div className="block lg:hidden pt-8">
+				<div className="block lg:hidden mt-12 md:mt-0">
 					{renderButtonSection()}
 				</div>
 			</div>

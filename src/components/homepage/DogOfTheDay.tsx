@@ -87,8 +87,7 @@ const DogOfTheDay: React.FC = () => {
 						</h2>
 					</div>
 					<p className="text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto pt-4">
-						Meet today's featured rescue dogs, waiting for their
-						forever home!
+						Meet today's top dogs, waiting for their forever home!
 					</p>
 				</motion.div>
 

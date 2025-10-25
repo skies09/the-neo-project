@@ -12,6 +12,20 @@ module.exports = {
 			mintCream: "#F4FDF3",
 			oxfordBlue: "#0B2545",
 			ghost: "#F8F8FF",
+			cherokee: "#FCCC99",
+			yellowOrange: "#FFa24D",
+			feta: "#F4FDF3",
+			peppermint: "#F1FAEE",
+			tomThumb: "#3A5A40",
+			twilight: "#F0FFFF",
+			titan: "#F9F9FF",
+
+			highland: "#6C8B58",
+			sprout: "#CAE0BC",
+			tara: "#EAFAEA",
+
+			bayleaf: "#84AE92",
+			sark: "#5A827E",
 		},
 		fontFamily: {
 			sans: ["Open Sans", "sans-serif"],

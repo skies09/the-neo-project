@@ -224,10 +224,10 @@ const ContactForm: React.FC<ContactFormProps> = ({
 	return (
 		<div className={className}>
 			<div className="text-center mb-6">
-				<div className="w-16 h-16 bg-gradient-to-br from-oxfordBlue to-skyBlue rounded-full flex items-center justify-center mx-auto mb-3">
+				<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3">
 					<FontAwesomeIcon
 						icon={getIcon()}
-						className="text-2xl text-honeydew"
+						className="text-2xl text-sunset"
 					/>
 				</div>
 				<h2 className="text-2xl font-bold text-oxfordBlue mb-2 font-poppins">
@@ -448,7 +448,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 						<motion.button
 							type="submit"
 							disabled={isLoading}
-							className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-3 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-oxfordBlue/30 disabled:opacity-50 disabled:cursor-not-allowed"
+							className="group relative overflow-hidden from-sark to-bayleaf text-oxfordBlue px-8 py-3 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-highland disabled:opacity-50 disabled:cursor-not-allowed"
 							whileHover={{ scale: isLoading ? 1 : 1.05 }}
 							whileTap={{ scale: isLoading ? 1 : 0.95 }}
 						>
@@ -468,7 +468,6 @@ const ContactForm: React.FC<ContactFormProps> = ({
 									{isLoading ? "Sending..." : "Send Message"}
 								</span>
 							</div>
-							<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 						</motion.button>
 					</div>
 				</Form>

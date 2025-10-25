@@ -34,7 +34,7 @@ const DonationSection: React.FC = () => {
 	};
 
 	return (
-		<section className="py-20 bg-gradient-to-br from-aquamarine/20 to-turquoise/20">
+		<section className="py-20 bg-mintCream">
 			<div className="max-w-6xl mx-auto px-4">
 				{/* Section Header */}
 				<motion.div
@@ -46,14 +46,14 @@ const DonationSection: React.FC = () => {
 					<div className="flex justify-center items-center mb-4">
 						<FontAwesomeIcon
 							icon={faHandHoldingHeart}
-							className="text-4xl text-aquamarine mr-4"
+							className="text-4xl text-skyBlue mr-4"
 						/>
-						<h2 className="font-poppins text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+						<h2 className="font-comic text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
 							Support Rescue Dogs
 						</h2>
 						<FontAwesomeIcon
 							icon={faHandHoldingHeart}
-							className="text-4xl text-aquamarine ml-4"
+							className="text-4xl text-skyBlue ml-4"
 						/>
 					</div>
 					<p className="text-lg text-oxfordBlue/70 font-poppins max-w-3xl mx-auto">
@@ -176,7 +176,7 @@ const DonationSection: React.FC = () => {
 								<div className="flex items-center space-x-4">
 									<div className="w-12 h-12 bg-gradient-to-br from-aquamarine to-turquoise rounded-full flex items-center justify-center">
 										<FontAwesomeIcon
-											icon={faPaw}
+											icon={faHandHoldingHeart}
 											className="text-xl text-white"
 										/>
 									</div>
