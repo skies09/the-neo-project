@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
 	];
 
 	return (
-		<footer className="bg-gradient-to-br from-oxfordBlue to-skyBlue text-honeydew py-16">
+		<footer className="bg-gradient-to-br from-tomThumb to-bayleaf text-honeydew py-16">
 			<div className="max-w-7xl mx-auto px-4">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 					{/* Company Info */}
@@ -44,14 +44,14 @@ const Footer: React.FC = () => {
 							<div className="w-12 h-12 bg-gradient-to-br from-aquamarine to-turquoise rounded-full flex items-center justify-center">
 								<FontAwesomeIcon
 									icon={faPaw}
-									className="text-2xl text-white"
+									className="text-2xl text-cherokee"
 								/>
 							</div>
-							<span className="text-2xl font-bold font-poppins">
+							<span className="text-2xl font-bold font-delius">
 								The Neo Project
 							</span>
 						</div>
-						<p className="text-honeydew/80 font-poppins leading-relaxed mb-6">
+						<p className="text-honeydew font-poppins leading-relaxed mb-6">
 							Connecting loving families with amazing dogs. Every
 							adoption is a new beginning filled with joy,
 							companionship, and unconditional love.
@@ -59,29 +59,29 @@ const Footer: React.FC = () => {
 						<div className="flex space-x-4">
 							<a
 								href="#"
-								className="w-10 h-10 bg-skyBlue/20 rounded-full flex items-center justify-center hover:bg-skyBlue/30 transition-colors"
+								className="w-12 h-12 bg-gradient-to-br from-aquamarine to-turquoise rounded-full flex items-center justify-center"
 							>
 								<FontAwesomeIcon
 									icon={faInstagram as any}
-									className="text-skyBlue"
+									className="text-cherokee text-2xl"
 								/>
 							</a>
 							<a
 								href="#"
-								className="w-10 h-10 bg-skyBlue/20 rounded-full flex items-center justify-center hover:bg-skyBlue/30 transition-colors"
+								className="w-12 h-12 bg-gradient-to-br from-aquamarine to-turquoise rounded-full flex items-center justify-center"
 							>
 								<FontAwesomeIcon
 									icon={faFacebook as any}
-									className="text-skyBlue"
+									className="text-cherokee text-2xl"
 								/>
 							</a>
 							<a
 								href="#"
-								className="w-10 h-10 bg-skyBlue/20 rounded-full flex items-center justify-center hover:bg-skyBlue/30 transition-colors"
+								className="w-12 h-12 bg-gradient-to-br from-aquamarine to-turquoise rounded-full flex items-center justify-center"
 							>
 								<FontAwesomeIcon
 									icon={faTiktok as any}
-									className="text-skyBlue"
+									className="text-cherokee text-2xl"
 								/>
 							</a>
 						</div>
@@ -93,7 +93,7 @@ const Footer: React.FC = () => {
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.6, delay: 0.2 }}
 					>
-						<h3 className="text-xl font-bold font-poppins mb-6">
+						<h3 className="text-xl font-bold font-poppins mb-6 text-cherokee">
 							Quick Links
 						</h3>
 						<ul className="space-y-3">
@@ -101,7 +101,7 @@ const Footer: React.FC = () => {
 								<li key={index}>
 									<a
 										href={link.href}
-										className="text-honeydew/80 hover:text-honeydew font-poppins transition-colors duration-200 flex items-center space-x-2"
+										className="transition-colors duration-200 flex items-center space-x-2 text-twilight hover:text-sunset font-comic font-medium"
 									>
 										<FontAwesomeIcon
 											icon={faPaw}
@@ -120,7 +120,7 @@ const Footer: React.FC = () => {
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.6, delay: 0.3 }}
 					>
-						<h3 className="text-xl font-bold font-poppins mb-6">
+						<h3 className="text-xl font-bold font-poppins mb-6 text-cherokee">
 							Support
 						</h3>
 						<ul className="space-y-3">
@@ -128,7 +128,7 @@ const Footer: React.FC = () => {
 								<li key={index}>
 									<a
 										href={link.href}
-										className="text-honeydew/80 hover:text-honeydew font-poppins transition-colors duration-200 flex items-center space-x-2"
+										className="transition-colors duration-200 flex items-center space-x-2 text-twilight hover:text-sunset font-comic font-medium"
 									>
 										<FontAwesomeIcon
 											icon={faHeart}
@@ -147,25 +147,25 @@ const Footer: React.FC = () => {
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.6, delay: 0.4 }}
 					>
-						<h3 className="text-xl font-bold font-poppins mb-6">
+						<h3 className="text-xl font-bold font-poppins mb-6 text-cherokee">
 							Get in Touch
 						</h3>
 						<div className="space-y-4">
 							<div className="flex items-center space-x-3">
 								<FontAwesomeIcon
 									icon={faPhone}
-									className="text-aquamarine"
+									className="text-twilight hover:text-sunset"
 								/>
-								<span className="text-honeydew/80 font-poppins">
+								<span className="text-twilight hover:text-sunset font-comic">
 									07777777777
 								</span>
 							</div>
 							<div className="flex items-center space-x-3">
 								<FontAwesomeIcon
 									icon={faEnvelope}
-									className="text-aquamarine"
+									className="text-twilight hover:text-sunset"
 								/>
-								<span className="text-honeydew/80 font-poppins">
+								<span className="text-twilight hover:text-sunset font-comic">
 									contact@neoproject.com
 								</span>
 							</div>
@@ -175,12 +175,12 @@ const Footer: React.FC = () => {
 
 				{/* Bottom Bar */}
 				<motion.div
-					className="border-t border-skyBlue/30 mt-12 pt-8 text-center"
+					className="border-t border-twilight mt-12 pt-8 text-center"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.5 }}
 				>
-					<p className="text-honeydew/60 font-poppins">
+					<p className="text-twilight/80 font-delius">
 						© 2025 The Neo Project. All rights reserved. Made with{" "}
 						<FontAwesomeIcon
 							icon={faHeart}

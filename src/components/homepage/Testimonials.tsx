@@ -6,7 +6,7 @@ import { faQuoteLeft, faStar, faPaw } from "@fortawesome/free-solid-svg-icons";
 
 const Testimonials: React.FC = () => {
 	const navigate = useNavigate();
-	
+
 	const testimonials = [
 		{
 			name: "Sarah Johnson",
@@ -121,37 +121,6 @@ const Testimonials: React.FC = () => {
 						</motion.div>
 					))}
 				</div>
-
-				{/* Call to Action */}
-				<motion.div
-					className="text-center mt-16"
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-				>
-					<div className="bg-white rounded-3xl shadow-xl p-8 max-w-2xl mx-auto">
-						<h3 className="text-2xl font-bold text-oxfordBlue font-poppins mb-4">
-							Ready to Find Your Perfect Match?
-						</h3>
-						<p className="text-oxfordBlue/70 font-poppins mb-6">
-							Join hundreds of happy families who found their
-							forever friends through The Neo Project.
-						</p>
-						<button 
-							onClick={() => navigate("/adopt")}
-							className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-						>
-							<div className="flex items-center space-x-3 relative z-10">
-								<FontAwesomeIcon
-									icon={faPaw}
-									className="text-lg"
-								/>
-								<span>Start Your Journey</span>
-							</div>
-							<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-						</button>
-					</div>
-				</motion.div>
 			</div>
 		</section>
 	);

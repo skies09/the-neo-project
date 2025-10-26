@@ -20,7 +20,7 @@ const WhyChooseUs: React.FC = () => {
 					transition={{ duration: 0.6, ease: "easeOut" }}
 				>
 					<div className="flex justify-center items-center mb-4">
-						<h2 className="font-comic text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+						<h2 className="font-delius text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
 							Why choose The Neo Project
 						</h2>
 					</div>
@@ -33,7 +33,7 @@ const WhyChooseUs: React.FC = () => {
 				</motion.div>
 
 				{/* Problem Content and Image - Desktop Layout */}
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:mb-16">
 					{/* Text Content - Left side on desktop */}
 					<motion.div
 						className="order-2 lg:order-1"

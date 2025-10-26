@@ -151,11 +151,15 @@ const DogOfTheDay: React.FC = () => {
 						className="text-center mt-12"
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+						transition={{
+							duration: 0.6,
+							delay: 0.4,
+							ease: "easeOut",
+						}}
 					>
 						<button
 							onClick={() => navigate("/allDogs")}
-							className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+							className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-xl"
 						>
 							<div className="flex items-center space-x-3 relative z-10">
 								<FontAwesomeIcon

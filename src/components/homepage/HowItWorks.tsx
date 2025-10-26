@@ -37,29 +37,21 @@ const HowItWorks: React.FC = () => {
 	];
 
 	return (
-		<section className="py-20 bg-gradient-to-br from-honeydew to-mintCream">
+		<section className="py-20 bg-gradient-to-br from-twilight to-sprout">
 			<div className="max-w-7xl mx-auto px-4">
 				{/* Section Header */}
 				<motion.div
-					className="text-center mb-16"
+					className="text-center mb-4 lg:mb-16"
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, ease: "easeOut" }}
 				>
 					<div className="flex justify-center items-center mb-4">
-						<FontAwesomeIcon
-							icon={faPaw}
-							className="text-4xl text-skyBlue mr-4"
-						/>
-						<h2 className="font-poppins text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+						<h2 className="font-delius text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
 							How It Works
 						</h2>
-						<FontAwesomeIcon
-							icon={faPaw}
-							className="text-4xl text-skyBlue ml-4"
-						/>
 					</div>
-					<p className="text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto">
+					<p className="text-lg text-highland font-fredoka max-w-5xl mx-auto">
 						Our simple 3-step process makes finding and adopting
 						your perfect dog easy and stress-free.
 					</p>
@@ -89,14 +81,14 @@ const HowItWorks: React.FC = () => {
 							</div> */}
 
 							{/* Step Card */}
-							<div className="bg-white rounded-3xl shadow-xl p-8 h-full transform hover:scale-105 transition-transform duration-300">
+							<div className="bg-titan rounded-3xl shadow-xl p-8 h-full transform hover:scale-105 transition-transform duration-300">
 								{/* Step Image */}
 								<div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg mb-6 bg-gray-100">
 									{index === 0 ? (
 										// Step 1 - Browse & Search
 										<img
-											src="/images/dog1.jpg"
-											alt="Person browsing dogs on computer"
+											src="/images/dog7.jpg"
+											alt="Dog jumping"
 											className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
 											style={{
 												imageRendering: "auto",
@@ -105,8 +97,8 @@ const HowItWorks: React.FC = () => {
 									) : index === 1 ? (
 										// Step 2 - Connect & Meet
 										<img
-											src="/images/dog2.jpg"
-											alt="Person meeting a dog at rescue center"
+											src="/images/dog6.jpg"
+											alt="Hand stroking dog"
 											className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
 											style={{
 												imageRendering: "auto",
@@ -115,8 +107,8 @@ const HowItWorks: React.FC = () => {
 									) : (
 										// Step 3 - Adopt & Love
 										<img
-											src="/images/dog4.jpg"
-											alt="Happy family with their adopted dog"
+											src="/images/dog5.jpg"
+											alt="Happy dog on hillside with owner"
 											className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
 											style={{
 												imageRendering: "auto",
@@ -130,27 +122,17 @@ const HowItWorks: React.FC = () => {
 									<div className="w-16 h-16 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center mx-auto mb-4">
 										<FontAwesomeIcon
 											icon={step.icon}
-											className="text-2xl text-white"
+											className="text-2xl text-yellowOrange"
 										/>
 									</div>
 									<h3 className="text-2xl font-bold text-oxfordBlue font-poppins mb-3">
 										{step.title}
 									</h3>
-									<p className="text-oxfordBlue/70 font-poppins leading-relaxed">
+									<p className="text-highland font-poppins leading-relaxed">
 										{step.description}
 									</p>
 								</div>
 							</div>
-
-							{/* Connecting Arrow (except for last step) */}
-							{index < steps.length - 1 && (
-								<div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-									<FontAwesomeIcon
-										icon={faPaw}
-										className="text-2xl text-skyBlue/60"
-									/>
-								</div>
-							)}
 						</motion.div>
 					))}
 				</div>
@@ -164,7 +146,7 @@ const HowItWorks: React.FC = () => {
 				>
 					<button
 						onClick={() => navigate("/adopt")}
-						className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+						className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-xl"
 					>
 						<div className="flex items-center space-x-3 relative z-10">
 							<FontAwesomeIcon

@@ -18,10 +18,10 @@ const BlogHomepage: React.FC = () => {
 
 			// Fetch all posts and filter for featured ones
 			const response = await blogAPI.getPosts({ page_size: 100 });
-			
+
 			// Filter for featured posts and take the first 2
 			const featuredPosts = response.results
-				.filter(post => post.featured === true)
+				.filter((post) => post.featured === true)
 				.slice(0, 2);
 
 			setFeaturedPosts(featuredPosts);
@@ -184,10 +184,13 @@ const BlogHomepage: React.FC = () => {
 						</p>
 						<Link
 							to="/blog"
-							className="inline-flex items-center space-x-2 bg-gradient-to-r from-skyBlue to-aquamarine text-ghost px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+							className="group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
 						>
 							<span>View All Posts</span>
-							<FontAwesomeIcon icon={faArrowRight} />
+							<FontAwesomeIcon
+								className="ml-2"
+								icon={faArrowRight}
+							/>
 						</Link>
 					</div>
 				</motion.div>
