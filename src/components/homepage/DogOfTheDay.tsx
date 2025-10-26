@@ -71,6 +71,11 @@ const DogOfTheDay: React.FC = () => {
 		fetchFeaturedDog();
 	}, [dispatch, lastFetchDate]);
 
+	// Don't render the section if there are no dogs (regardless of error state)
+	if (!loading && dogsOfTheDay.length === 0) {
+		return null;
+	}
+
 	return (
 		<section className="py-20 bg-gradient-to-br from-skyBlue/10 to-aquamarine/10">
 			<div className="max-w-7xl mx-auto px-4">
@@ -137,43 +142,32 @@ const DogOfTheDay: React.FC = () => {
 								))}
 							</div>
 						</div>
-					) : (
-						<div className="bg-white rounded-3xl shadow-xl p-12 text-center">
-							<FontAwesomeIcon
-								icon={faPaw}
-								className="text-6xl text-skyBlue/60 mb-4"
-							/>
-							<h3 className="text-2xl font-bold text-oxfordBlue font-poppins mb-2">
-								No Dogs Available
-							</h3>
-							<p className="text-oxfordBlue/70 font-poppins">
-								Check back later for today's featured dogs!
-							</p>
-						</div>
-					)}
+					) : null}
 				</motion.div>
 
-				{/* Call to Action */}
-				<motion.div
-					className="text-center mt-12"
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-				>
-					<button
-						onClick={() => navigate("/allDogs")}
-						className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+				{/* Call to Action - only show if there are dogs */}
+				{dogsOfTheDay.length > 0 && (
+					<motion.div
+						className="text-center mt-12"
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
 					>
-						<div className="flex items-center space-x-3 relative z-10">
-							<FontAwesomeIcon
-								icon={faHeart}
-								className="text-lg"
-							/>
-							<span>View All Available Dogs</span>
-						</div>
-						<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-					</button>
-				</motion.div>
+						<button
+							onClick={() => navigate("/allDogs")}
+							className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+						>
+							<div className="flex items-center space-x-3 relative z-10">
+								<FontAwesomeIcon
+									icon={faHeart}
+									className="text-lg"
+								/>
+								<span>View All Available Dogs</span>
+							</div>
+							<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+						</button>
+					</motion.div>
+				)}
 			</div>
 		</section>
 	);

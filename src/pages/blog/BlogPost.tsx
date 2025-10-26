@@ -11,6 +11,17 @@ import { blogAPI, BlogPost } from "../../services/blogApi";
 import { formatDateLong } from "../../helpers/dateUtils";
 import Footer from "../../components/homepage/Footer";
 
+// Utility function to convert line breaks to HTML
+const formatContent = (content: string): string => {
+	return content
+		.replace(/\r\n\r\n/g, '</p><p>') // Convert double line breaks to paragraph breaks
+		.replace(/\r\n/g, '<br>') // Convert single line breaks to <br> tags
+		.replace(/\n\n/g, '</p><p>') // Convert double \n to paragraph breaks
+		.replace(/\n/g, '<br>') // Convert single \n to <br> tags
+		.replace(/^/, '<p>') // Add opening <p> tag at the beginning
+		.replace(/$/, '</p>'); // Add closing </p> tag at the end
+};
+
 const BlogPostPage: React.FC = () => {
 	const { id: publicId } = useParams<{ id: string }>();
 	const navigate = useNavigate();
@@ -147,7 +158,7 @@ const BlogPostPage: React.FC = () => {
 					<div className="p-8">
 						<div
 							className="prose prose-lg max-w-none text-oxfordBlue font-poppins"
-							dangerouslySetInnerHTML={{ __html: post.content }}
+							dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
 						/>
 					</div>
 

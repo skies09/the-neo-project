@@ -33,19 +33,11 @@ const Contact = (form: ContactProps) => {
 					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 				>
 					<div className="flex justify-center items-center mb-4">
-						<FontAwesomeIcon
-							icon={faEnvelope}
-							className="text-4xl text-highland mr-4"
-						/>
 						<h1 className="font-comic text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
 							Contact Us
 						</h1>
-						<FontAwesomeIcon
-							icon={faEnvelope}
-							className="text-4xl text-highland ml-4"
-						/>
 					</div>
-					<p className="text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto">
+					<p className="text-md lg:text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto">
 						Need help? Have questions about adoption? <br></br>Get
 						in touch with us and we'll be happy to help!
 					</p>
@@ -63,64 +55,70 @@ const Contact = (form: ContactProps) => {
 							ease: "easeOut",
 						}}
 					>
-						<div className="bg-white rounded-3xl shadow-xl p-8">
+						<div className="bg-white rounded-3xl shadow-xl p-6 lg:p-8">
 							<h2 className="text-2xl font-bold text-oxfordBlue mb-6 font-comic text-center">
 								Get in Touch
 							</h2>
 
-							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-								<div className="text-center">
-									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-4">
+							<div className="space-y-6 md:grid md:grid-cols-3 md:gap-6 md:space-y-0">
+								<div className="flex items-center space-x-4 md:flex-col md:text-center md:space-x-0">
+									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center flex-shrink-0">
 										<FontAwesomeIcon
 											icon={faPhone}
 											className="text-sunset text-xl"
 										/>
 									</div>
-									<h3 className="font-semibold text-oxfordBlue font-poppins mb-2">
-										Phone
-									</h3>
-									<p className="text-oxfordBlue/70 font-poppins text-sm">
-										07777777777
-									</p>
-									<p className="text-sm text-oxfordBlue/60 font-poppins">
-										Mon-Fri 9AM-6PM
-									</p>
+									<div>
+										<h3 className="font-semibold text-oxfordBlue font-poppins mb-2">
+											Phone
+										</h3>
+										<p className="text-oxfordBlue/70 font-poppins text-xs md:text-sm">
+											07777777777
+										</p>
+										<p className="text-xs md:text-sm text-oxfordBlue/60 font-poppins">
+											Mon-Fri 9AM-6PM
+										</p>
+									</div>
 								</div>
 
-								<div className="text-center">
-									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-4">
+								<div className="flex items-center space-x-4 md:flex-col md:text-center md:space-x-0">
+									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center flex-shrink-0">
 										<FontAwesomeIcon
 											icon={faEnvelope}
 											className="text-sunset text-xl"
 										/>
 									</div>
-									<h3 className="font-semibold text-oxfordBlue font-poppins mb-2">
-										Email
-									</h3>
-									<p className="text-oxfordBlue/70 font-poppins text-sm">
-										contact@neoproject.com
-									</p>
-									<p className="text-sm text-oxfordBlue/60 font-poppins">
-										24hr response
-									</p>
+									<div>
+										<h3 className="font-semibold text-oxfordBlue font-poppins mb-2">
+											Email
+										</h3>
+										<p className="text-oxfordBlue/70 font-poppins text-xs md:text-sm">
+											contact@neoproject.com
+										</p>
+										<p className="text-xs md:text-sm text-oxfordBlue/60 font-poppins">
+											24hr response
+										</p>
+									</div>
 								</div>
 
-								<div className="text-center">
-									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-4">
+								<div className="flex items-center space-x-4 md:flex-col md:text-center md:space-x-0">
+									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center flex-shrink-0">
 										<FontAwesomeIcon
 											icon={faClock}
 											className="text-sunset text-xl"
 										/>
 									</div>
-									<h3 className="font-semibold text-oxfordBlue font-poppins mb-2">
-										Hours
-									</h3>
-									<p className="text-oxfordBlue/70 font-poppins text-sm">
-										Mon-Fri: 9AM-6PM
-									</p>
-									<p className="text-xs text-oxfordBlue/60 font-poppins">
-										Sat: 10AM-4PM
-									</p>
+									<div>
+										<h3 className="font-semibold text-oxfordBlue font-poppins mb-2">
+											Hours
+										</h3>
+										<p className="text-oxfordBlue/70 font-poppins text-xs md:text-sm">
+											Mon-Fri: 9AM-6PM
+										</p>
+										<p className="text-xs md:text-xs text-oxfordBlue/60 font-poppins">
+											Sat: 10AM-4PM
+										</p>
+									</div>
 								</div>
 							</div>
 						</div>

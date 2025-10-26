@@ -3,9 +3,9 @@ module.exports = {
 	content: ["./src/**/*.{js,jsx,ts,tsx}"],
 	theme: {
 		colors: {
-			skyBlue: "#5ED3E8",
-			aquamarine: "#ADFFD2",
-			turquoise: "#5AEDD7",
+			// skyBlue: "#5ED3E8",
+			// aquamarine: "#ADFFD2",
+			// turquoise: "#5AEDD7",
 			sunset: "#FFCF99",
 			flax: "#FFF799",
 			honeydew: "#F1FAEE",

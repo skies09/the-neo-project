@@ -16,10 +16,15 @@ const BlogHomepage: React.FC = () => {
 			setLoading(true);
 			setError(null);
 
-			// Fetch recent posts (last 2 published posts)
-			const recentResponse = await blogAPI.getPosts({ page_size: 2 });
+			// Fetch all posts and filter for featured ones
+			const response = await blogAPI.getPosts({ page_size: 100 });
+			
+			// Filter for featured posts and take the first 2
+			const featuredPosts = response.results
+				.filter(post => post.featured === true)
+				.slice(0, 2);
 
-			setFeaturedPosts(recentResponse.results.slice(0, 2));
+			setFeaturedPosts(featuredPosts);
 		} catch (err) {
 			console.error("Error fetching blog data:", err);
 			setError("Failed to load blog posts");
@@ -32,6 +37,11 @@ const BlogHomepage: React.FC = () => {
 		fetchBlogData();
 	}, []);
 
+	// Don't render the section if there are no blog posts (regardless of error state)
+	if (!loading && featuredPosts.length === 0) {
+		return null;
+	}
+
 	if (loading) {
 		return (
 			<section className="py-20 bg-gradient-to-br from-skyBlue/10 to-aquamarine/10">
@@ -41,26 +51,6 @@ const BlogHomepage: React.FC = () => {
 						<p className="text-oxfordBlue/70 font-poppins">
 							Loading blog posts...
 						</p>
-					</div>
-				</div>
-			</section>
-		);
-	}
-
-	if (error) {
-		return (
-			<section className="py-20 bg-gradient-to-br from-skyBlue/10 to-aquamarine/10">
-				<div className="max-w-7xl mx-auto px-4">
-					<div className="text-center">
-						<div className="bg-lace rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
-							<h3 className="text-xl font-bold text-oxfordBlue font-poppins mb-2">
-								Blog Temporarily Unavailable
-							</h3>
-							<p className="text-oxfordBlue/70 font-poppins">
-								We're having trouble loading our latest blog
-								posts. Please check back later.
-							</p>
-						</div>
 					</div>
 				</div>
 			</section>

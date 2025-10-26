@@ -12,6 +12,7 @@ export interface BlogPost {
 	tags: string;
 	tag_list: string[];
 	is_published: boolean;
+	featured: boolean;
 	created: string;
 	published_at: string;
 	updated: string;
