@@ -432,7 +432,7 @@ const KennelAdmin = () => {
 	return (
 		<motion.div
 			id="kennelAdmin"
-			className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-20 pb-8 px-4"
+			className="min-h-screen bg-tara pt-20 pb-8 px-4"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
@@ -462,7 +462,7 @@ const KennelAdmin = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
 				>
-					<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-2xl p-2 shadow-lg">
+					<div className="bg-mintCream backdrop-blur-sm rounded-2xl p-2 shadow-lg">
 						<motion.button
 							onClick={() => setIsLoginForm(true)}
 							className={`px-8 py-3 mx-1 rounded-xl font-semibold transition-all duration-200 ${
@@ -502,7 +502,7 @@ const KennelAdmin = () => {
 				>
 					{/* Login Form */}
 					{isLoginForm && (
-						<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 max-w-2xl mx-auto">
+						<div className="bg-mintCream backdrop-blur-sm rounded-3xl shadow-2xl p-8 max-w-2xl mx-auto">
 							<div>
 								<p className="text-oxfordBlue text-2xl font-bold mb-4 font-poppins text-center">
 									Kennel Login
@@ -581,7 +581,7 @@ const KennelAdmin = () => {
 														!values.username
 													}
 													type="submit"
-													className={`px-10 py-2 rounded-lg transition-all shadow-md font-poppins font-semibold bg-oxfordBlue text-honeydew ${
+													className={`px-10 py-2 rounded-full transition-all shadow-md font-fredoka text-xl font-semibold bg-gradient-to-r from-highland to-sark text-peppermint hover:scale-105 hover:text-sunset ${
 														!values.password ||
 														!values.username
 															? "opacity-60 cursor-not-allowed"
