@@ -1,11 +1,7 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faHeart,
-	faArrowRight,
-	faPaw,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faPaw } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 interface TransitionCTAProps {
@@ -16,14 +12,19 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 	simplified = false,
 }) => {
 	const navigate = useNavigate();
+	const sectionRef = useRef(null);
+	const sectionInView = useInView(sectionRef, {
+		once: true,
+		margin: "-100px",
+	});
 
 	return (
-		<section className="py-4 lg:py-10">
+		<section ref={sectionRef} className="py-4 lg:py-10">
 			<div className="max-w-5xl mx-auto px-4">
 				<motion.div
 					className="text-center"
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
+					initial={{ opacity: 0 }}
+					animate={sectionInView ? { opacity: 1 } : { opacity: 0 }}
 					transition={{ duration: 0.8, ease: "easeOut" }}
 				>
 					{/* Main CTA Content */}
@@ -37,8 +38,10 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 						{/* Heading */}
 						<motion.h2
 							className="text-3xl lg:text-4xl font-bold text-cherokee font-delius mb-4"
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
+							initial={{ opacity: 0 }}
+							animate={
+								sectionInView ? { opacity: 1 } : { opacity: 0 }
+							}
 							transition={{
 								duration: 0.6,
 								delay: 0.4,
@@ -54,8 +57,12 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 						{!simplified && (
 							<motion.p
 								className="text-lg text-titan font-poppins max-w-5xl mx-auto mb-8"
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
+								initial={{ opacity: 0 }}
+								animate={
+									sectionInView
+										? { opacity: 1 }
+										: { opacity: 0 }
+								}
 								transition={{
 									duration: 0.6,
 									delay: 0.6,
@@ -70,8 +77,10 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 						{/* CTA Buttons */}
 						<motion.div
 							className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
+							initial={{ opacity: 0 }}
+							animate={
+								sectionInView ? { opacity: 1 } : { opacity: 0 }
+							}
 							transition={{
 								duration: 0.6,
 								delay: simplified ? 0.4 : 0.8,
@@ -90,7 +99,6 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 											className="text-lg"
 										/>
 										<span>
-											{" "}
 											{simplified
 												? "Start Your Journey"
 												: "Find Your Match"}

@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faSearch,
@@ -9,14 +9,23 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const WhyChooseUs: React.FC = () => {
+	const headerRef = useRef(null);
+	const contentRef = useRef(null);
+	const imageRef = useRef(null);
+
+	const headerInView = useInView(headerRef, { once: true, margin: "-100px" });
+	const contentInView = useInView(contentRef, { once: true, margin: "-100px" });
+	const imageInView = useInView(imageRef, { once: true, margin: "-100px" });
+
 	return (
 		<section className="pt-10 lg:pt-20 pb-12 bg-gradient-to-br from-red-50 to-orange-50">
 			<div className="max-w-7xl mx-auto px-4">
 				{/* Section Header */}
 				<motion.div
+					ref={headerRef}
 					className="text-center mb-16"
 					initial={{ opacity: 0, y: -20 }}
-					animate={{ opacity: 1, y: 0 }}
+					animate={headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
 					transition={{ duration: 0.6, ease: "easeOut" }}
 				>
 					<div className="flex justify-center items-center mb-4">
@@ -36,17 +45,30 @@ const WhyChooseUs: React.FC = () => {
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:mb-16">
 					{/* Text Content - Left side on desktop */}
 					<motion.div
+						ref={contentRef}
 						className="order-2 lg:order-1"
-						initial={{ opacity: 0, x: -20 }}
-						animate={{ opacity: 1, x: 0 }}
-						transition={{
-							duration: 0.6,
-							delay: 0.2,
-							ease: "easeOut",
+						variants={{
+							hidden: { opacity: 0 },
+							visible: {
+								opacity: 1,
+								transition: {
+									staggerChildren: 0.15,
+									delayChildren: 0.2,
+								},
+							},
 						}}
+						initial="hidden"
+						animate={contentInView ? "visible" : "hidden"}
 					>
 						<div className="space-y-6 lg:pt-6">
-							<div className="flex items-start space-x-3">
+							<motion.div
+								className="flex items-start space-x-3"
+								variants={{
+									hidden: { opacity: 0, x: -20 },
+									visible: { opacity: 1, x: 0 },
+								}}
+								transition={{ duration: 0.6, ease: "easeOut" }}
+							>
 								<FontAwesomeIcon
 									icon={faSearch}
 									className="text-yellowOrange text-lg mt-1 flex-shrink-0"
@@ -63,8 +85,15 @@ const WhyChooseUs: React.FC = () => {
 										scrolling, no scattered sites.
 									</p>
 								</div>
-							</div>
-							<div className="flex items-start space-x-3">
+							</motion.div>
+							<motion.div
+								className="flex items-start space-x-3"
+								variants={{
+									hidden: { opacity: 0, x: -20 },
+									visible: { opacity: 1, x: 0 },
+								}}
+								transition={{ duration: 0.6, ease: "easeOut" }}
+							>
 								<FontAwesomeIcon
 									icon={faClock}
 									className="text-yellowOrange text-lg mt-1 flex-shrink-0"
@@ -81,8 +110,15 @@ const WhyChooseUs: React.FC = () => {
 										easily, and stress-free.
 									</p>
 								</div>
-							</div>
-							<div className="flex items-start space-x-3">
+							</motion.div>
+							<motion.div
+								className="flex items-start space-x-3"
+								variants={{
+									hidden: { opacity: 0, x: -20 },
+									visible: { opacity: 1, x: 0 },
+								}}
+								transition={{ duration: 0.6, ease: "easeOut" }}
+							>
 								<FontAwesomeIcon
 									icon={faGlobe}
 									className="text-yellowOrange text-lg mt-1 flex-shrink-0"
@@ -97,8 +133,15 @@ const WhyChooseUs: React.FC = () => {
 										rescues — fast, easy, and stress-free.
 									</p>
 								</div>
-							</div>
-							<div className="flex items-start space-x-3">
+							</motion.div>
+							<motion.div
+								className="flex items-start space-x-3"
+								variants={{
+									hidden: { opacity: 0, x: -20 },
+									visible: { opacity: 1, x: 0 },
+								}}
+								transition={{ duration: 0.6, ease: "easeOut" }}
+							>
 								<FontAwesomeIcon
 									icon={faPaw}
 									className="text-yellowOrange text-lg mt-1 flex-shrink-0"
@@ -115,12 +158,12 @@ const WhyChooseUs: React.FC = () => {
 										easy.
 									</p>
 								</div>
-							</div>
+							</motion.div>
 						</div>
 					</motion.div>
 
 					{/* Image Placeholder - Right side on desktop */}
-					<div className="order-1 lg:order-2">
+					<div className="order-1 lg:order-2" ref={imageRef}>
 						<div className="aspect-[4/3] lg:aspect-auto rounded-2xl">
 							<motion.img
 								src="/images/DogMatrix.png"
@@ -131,10 +174,14 @@ const WhyChooseUs: React.FC = () => {
 									scale: 0.6,
 									rotate: -5,
 								}}
-								animate={{
+								animate={imageInView ? {
 									opacity: 1,
 									scale: 1.3,
 									rotate: 0,
+								} : {
+									opacity: 0,
+									scale: 0.6,
+									rotate: -5,
 								}}
 								transition={{
 									duration: 2,

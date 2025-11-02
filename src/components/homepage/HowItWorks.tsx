@@ -1,37 +1,34 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faSearch,
-	faHeart,
-	faHome,
-	faPaw,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faHeart, faHome } from "@fortawesome/free-solid-svg-icons";
 
 const HowItWorks: React.FC = () => {
 	const navigate = useNavigate();
+	const cardsRef = useRef(null);
+	const cardsInView = useInView(cardsRef, { once: true, margin: "-100px" });
 
 	const steps = [
 		{
 			icon: faSearch,
 			title: "Browse & Search",
 			description:
-				"Explore our database of rescue dogs. Use our advanced filters to find the perfect match for your lifestyle.",
+				"Find your perfect rescue dog with our advanced search engine — or browse all the amazing dogs waiting for their forever homes.",
 			image: "Step 1 Image",
 		},
 		{
 			icon: faHeart,
 			title: "Connect & Meet",
 			description:
-				"Get in touch with the rescue center. Arrange to meet your potential new family member in person.",
+				"Get in touch with the rescue center and meet your future furry companion in person and find out if it’s love at first wag.",
 			image: "Step 2 Image",
 		},
 		{
 			icon: faHome,
 			title: "Adopt & Love",
 			description:
-				"Complete the adoption process and welcome your new best friend into their forever home.",
+				"Finalize the adoption and give a rescue their forever home — where every tail wag begins a new story.",
 			image: "Step 3 Image",
 		},
 	];
@@ -58,28 +55,34 @@ const HowItWorks: React.FC = () => {
 				</motion.div>
 
 				{/* Steps Grid */}
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+				<motion.div
+					ref={cardsRef}
+					className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+					variants={{
+						hidden: { opacity: 0 },
+						visible: {
+							opacity: 1,
+							transition: {
+								staggerChildren: 0.2,
+							},
+						},
+					}}
+					initial="hidden"
+					animate={cardsInView ? "visible" : "hidden"}
+				>
 					{steps.map((step, index) => (
 						<motion.div
 							key={index}
 							className="relative"
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
+							variants={{
+								hidden: { opacity: 0 },
+								visible: { opacity: 1 },
+							}}
 							transition={{
 								duration: 0.6,
-								delay: 0.2 + index * 0.1,
 								ease: "easeOut",
 							}}
 						>
-							{/* Step Number */}
-							{/* <div className="absolute -top-4 -left-4 z-10">
-								<div className="w-12 h-12 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center shadow-lg">
-									<span className="text-white font-poppins font-bold text-lg">
-										{index + 1}
-									</span>
-								</div>
-							</div> */}
-
 							{/* Step Card */}
 							<div className="bg-titan rounded-3xl shadow-xl p-8 h-full transform hover:scale-105 transition-transform duration-300">
 								{/* Step Image */}
@@ -135,7 +138,7 @@ const HowItWorks: React.FC = () => {
 							</div>
 						</motion.div>
 					))}
-				</div>
+				</motion.div>
 
 				{/* Call to Action */}
 				<motion.div

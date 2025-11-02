@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,13 +10,15 @@ import {
 
 const Hero: React.FC = () => {
 	const navigate = useNavigate();
+	const statsRef = useRef(null);
+	const statsInView = useInView(statsRef, { once: true, margin: "-50px" });
 
 	const renderButtonSection = () => {
 		return (
 			<motion.div
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.6, delay: 0.5 }}
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				transition={{ duration: 1.2, delay: 0.5 }}
 				className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
 			>
 				<button
@@ -49,10 +51,8 @@ const Hero: React.FC = () => {
 
 	const renderStatsSection = () => {
 		return (
-			<motion.div
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-				transition={{ duration: 0.6, delay: 0.6 }}
+			<div
+				ref={statsRef}
 				className="relative bottom-0 left-0 w-full text-cherokee overflow-hidden"
 			>
 				{/* Animated gradient background */}
@@ -69,34 +69,95 @@ const Hero: React.FC = () => {
 				<div className="absolute inset-0 bg-black/20" />
 
 				<div className="relative z-10 max-w-7xl mx-auto px-4">
-					<div className="grid grid-cols-3 divide-x divide-honeydew/20">
-						<div className="py-4 md:py-6 text-center">
+					<motion.div
+						className="grid grid-cols-3 divide-x divide-honeydew/20"
+						variants={{
+							hidden: { opacity: 0 },
+							visible: {
+								opacity: 1,
+								transition: {
+									staggerChildren: 0.2,
+								},
+							},
+						}}
+						initial="hidden"
+						animate={statsInView ? "visible" : "hidden"}
+					>
+						<motion.div
+							className="py-4 md:py-6 text-center"
+							variants={{
+								hidden: { opacity: 0, y: 50, scale: 0.5 },
+								visible: {
+									opacity: 1,
+									y: 0,
+									scale: 1,
+									transition: {
+										type: "spring",
+										stiffness: 50,
+										damping: 10,
+										bounce: 0.2,
+									},
+								},
+							}}
+						>
 							<div className="text-2xl md:text-3xl font-bold font-comic">
 								500+
 							</div>
 							<div className="text-mintCream font-comic font-bold text-sm md:text-lg">
 								Dogs Available
 							</div>
-						</div>
-						<div className="py-4 md:py-6 text-center">
+						</motion.div>
+						<motion.div
+							className="py-4 md:py-6 text-center"
+							variants={{
+								hidden: { opacity: 0, y: 50, scale: 0.5 },
+								visible: {
+									opacity: 1,
+									y: 0,
+									scale: 1,
+									transition: {
+										type: "spring",
+										stiffness: 50,
+										damping: 10,
+										bounce: 0.2,
+									},
+								},
+							}}
+						>
 							<div className="text-2xl md:text-3xl font-bold font-comic">
 								200+
 							</div>
 							<div className="text-mintCream font-comic font-bold text-sm md:text-lg">
 								Rescue Partners
 							</div>
-						</div>
-						<div className="py-4 md:py-6 text-center">
+						</motion.div>
+						<motion.div
+							className="py-4 md:py-6 text-center"
+							variants={{
+								hidden: { opacity: 0, y: 50, scale: 0.5 },
+								visible: {
+									opacity: 1,
+									y: 0,
+									scale: 1,
+									transition: {
+										type: "spring",
+										stiffness: 50,
+										damping: 10,
+										bounce: 0.2,
+									},
+								},
+							}}
+						>
 							<div className="text-2xl md:text-3xl font-bold font-comic">
 								100%
 							</div>
 							<div className="text-mintCream font-comic font-bold text-sm md:text-lg">
 								Success Rate
 							</div>
-						</div>
-					</div>
+						</motion.div>
+					</motion.div>
 				</div>
-			</motion.div>
+			</div>
 		);
 	};
 
@@ -106,16 +167,16 @@ const Hero: React.FC = () => {
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 items-center lg:items-start">
 					{/* Left Column - Text Content */}
 					<motion.div
-						initial={{ opacity: 0, x: -50 }}
-						animate={{ opacity: 1, x: 0 }}
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
 						transition={{ duration: 0.8, ease: "easeOut" }}
 						className="space-y-4 lg:space-y-8 pt-3 lg:pt-6"
 					>
 						<div className="space-y-3 lg:space-y-6 pt-2">
 							<motion.div
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ duration: 0.6, delay: 0.2 }}
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								transition={{ duration: 0.8, delay: 0.2 }}
 								className="flex items-center justify-center lg:justify-start space-x-3"
 							>
 								<h1 className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md text-center lg:text-left">
@@ -127,9 +188,9 @@ const Hero: React.FC = () => {
 							</motion.div>
 
 							<motion.p
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ duration: 0.6, delay: 0.4 }}
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								transition={{ duration: 0.8, delay: 0.2 }}
 								className="text-lg lg:text-2xl text-oxfordBlue/70 font-fredoka leading-relaxed max-w-lg text-center lg:text-left w-full lg:w-2/3 mx-auto lg:ml-0"
 							>
 								Find your perfect dog. <br></br>Search hundreds
