@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +8,13 @@ const HowItWorks: React.FC = () => {
 	const navigate = useNavigate();
 	const cardsRef = useRef(null);
 	const cardsInView = useInView(cardsRef, { once: true, margin: "-100px" });
+	const [hasAnimated, setHasAnimated] = useState(false);
+
+	useEffect(() => {
+		if (cardsInView && !hasAnimated) {
+			setHasAnimated(true);
+		}
+	}, [cardsInView, hasAnimated]);
 
 	const steps = [
 		{
@@ -68,7 +75,7 @@ const HowItWorks: React.FC = () => {
 						},
 					}}
 					initial="hidden"
-					animate={cardsInView ? "visible" : "hidden"}
+					animate={hasAnimated ? "visible" : cardsInView ? "visible" : "hidden"}
 				>
 					{steps.map((step, index) => (
 						<motion.div

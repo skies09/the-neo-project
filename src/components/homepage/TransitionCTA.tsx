@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faPaw } from "@fortawesome/free-solid-svg-icons";
@@ -6,10 +6,16 @@ import { useNavigate } from "react-router-dom";
 
 interface TransitionCTAProps {
 	simplified?: boolean;
+	title?: string;
+	firstButtonText?: string;
+	showFirstButtonIcon?: boolean;
 }
 
 const TransitionCTA: React.FC<TransitionCTAProps> = ({
 	simplified = false,
+	title,
+	firstButtonText,
+	showFirstButtonIcon = true,
 }) => {
 	const navigate = useNavigate();
 	const sectionRef = useRef(null);
@@ -17,6 +23,13 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 		once: true,
 		margin: "-100px",
 	});
+	const [hasAnimated, setHasAnimated] = useState(false);
+
+	useEffect(() => {
+		if (sectionInView && !hasAnimated) {
+			setHasAnimated(true);
+		}
+	}, [sectionInView, hasAnimated]);
 
 	return (
 		<section ref={sectionRef} className="py-4 lg:py-10">
@@ -24,7 +37,7 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 				<motion.div
 					className="text-center"
 					initial={{ opacity: 0 }}
-					animate={sectionInView ? { opacity: 1 } : { opacity: 0 }}
+					animate={hasAnimated ? { opacity: 1 } : sectionInView ? { opacity: 1 } : { opacity: 0 }}
 					transition={{ duration: 0.8, ease: "easeOut" }}
 				>
 					{/* Main CTA Content */}
@@ -40,7 +53,7 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 							className="text-3xl lg:text-4xl font-bold text-cherokee font-delius mb-4"
 							initial={{ opacity: 0 }}
 							animate={
-								sectionInView ? { opacity: 1 } : { opacity: 0 }
+								hasAnimated ? { opacity: 1 } : sectionInView ? { opacity: 1 } : { opacity: 0 }
 							}
 							transition={{
 								duration: 0.6,
@@ -48,9 +61,10 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 								ease: "easeOut",
 							}}
 						>
-							{simplified
-								? "Find Your Perfect Dog"
-								: "Ready to Find Your Perfect Match?"}
+							{title ||
+								(simplified
+									? "Find Your Perfect Dog"
+									: "Ready to Find Your Perfect Match?")}
 						</motion.h2>
 
 						{/* Description - Only show if not simplified */}
@@ -59,9 +73,7 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 								className="text-lg text-titan font-poppins max-w-5xl mx-auto mb-8"
 								initial={{ opacity: 0 }}
 								animate={
-									sectionInView
-										? { opacity: 1 }
-										: { opacity: 0 }
+									hasAnimated ? { opacity: 1 } : sectionInView ? { opacity: 1 } : { opacity: 0 }
 								}
 								transition={{
 									duration: 0.6,
@@ -79,7 +91,7 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 							className="flex flex-col sm:flex-row gap-4 justify-center items-center"
 							initial={{ opacity: 0 }}
 							animate={
-								sectionInView ? { opacity: 1 } : { opacity: 0 }
+								hasAnimated ? { opacity: 1 } : sectionInView ? { opacity: 1 } : { opacity: 0 }
 							}
 							transition={{
 								duration: 0.6,
@@ -94,14 +106,17 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 									className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-xl"
 								>
 									<div className="flex items-center space-x-3 relative z-10">
-										<FontAwesomeIcon
-											icon={faHeart}
-											className="text-lg"
-										/>
+										{showFirstButtonIcon && (
+											<FontAwesomeIcon
+												icon={faHeart}
+												className="text-lg"
+											/>
+										)}
 										<span>
-											{simplified
-												? "Start Your Journey"
-												: "Find Your Match"}
+											{firstButtonText ||
+												(simplified
+													? "Start Your Journey"
+													: "Find Your Match")}
 										</span>
 									</div>
 									<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

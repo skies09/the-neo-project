@@ -90,34 +90,26 @@ export default function AllDogs() {
 
 	return (
 		<motion.div
-			className="min-h-screen pt-16 pb-20 px-4"
+			className="min-h-screen pt-16 pb-20 px-4 bg-mintCream"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
 		>
 			{/* Header Section */}
 			<motion.div
-				className="text-center mb-8"
+				className="text-center pt-4 mb-8"
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 			>
-				<div className="flex justify-center items-center mb-4 mt-20">
-					<FontAwesomeIcon
-						icon={faHeart}
-						className="text-4xl text-skyBlue mr-4"
-					/>
-					<h1 className="font-poppins text-3xl lg:text-4xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+				<div className="flex justify-center items-center my-4">
+					<h1 className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md text-center">
 						Dogs for Adoption
 					</h1>
-					<FontAwesomeIcon
-						icon={faHeart}
-						className="text-4xl text-skyBlue ml-4"
-					/>
 				</div>
-				<p className="text-lg text-oxfordBlue/70 font-mono pt-4">
+				<p className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto mb-8">
 					<FontAwesomeIcon icon={faSearch} className="mr-2" />
-					Find your perfect companion
+					Browse all the dogs available
 				</p>
 			</motion.div>
 

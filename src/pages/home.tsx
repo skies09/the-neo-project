@@ -3,7 +3,6 @@ import Hero from "../components/homepage/Hero";
 import DogOfTheDay from "../components/homepage/DogOfTheDay";
 import HowItWorks from "../components/homepage/HowItWorks";
 import Testimonials from "../components/homepage/Testimonials";
-import DonationSection from "../components/homepage/DonationSection";
 import WhyChooseUs from "../components/homepage/WhyChooseUs";
 import TransitionCTA from "../components/homepage/TransitionCTA";
 import BlogHomepage from "../components/blog/BlogHomepage";
@@ -14,13 +13,24 @@ const Home: React.FC = () => {
 		<div className="min-h-screen">
 			<Hero />
 			<WhyChooseUs />
-			<TransitionCTA simplified={true} />
+			<TransitionCTA
+				simplified
+				title="Find Your Perfect Dog"
+				firstButtonText="Start Your Journey"
+				showFirstButtonIcon={true}
+			/>
 			<HowItWorks />
 			<DogOfTheDay />
 			<Testimonials />
 			<TransitionCTA />
 			<BlogHomepage />
-			<DonationSection />
+			<TransitionCTA
+				simplified
+				title="Ready to find your perfect dog?"
+				firstButtonText="Begin Your Journey Today"
+				showFirstButtonIcon={true}
+			/>
+
 			<Footer />
 		</div>
 	);

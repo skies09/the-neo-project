@@ -148,8 +148,8 @@ const BlogList: React.FC = () => {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16">
-			<div className="max-w-7xl mx-auto px-4 py-20">
+		<div className="min-h-screen pt-16 bg-mintCream">
+			<div className="max-w-7xl mx-auto px-4 pt-4 pb-12">
 				{/* Header */}
 				<motion.div
 					className="text-center mb-12"
@@ -157,10 +157,12 @@ const BlogList: React.FC = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6 }}
 				>
-					<h1 className="text-4xl lg:text-5xl font-bold text-oxfordBlue font-poppins mb-4">
-						Our Blog
-					</h1>
-					<p className="text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto">
+					<div className="flex justify-center items-center my-4">
+						<h1 className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md text-center">
+							Our Blog
+						</h1>
+					</div>
+					<p className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto mb-8">
 						Discover helpful tips, heartwarming stories, and expert
 						advice about dog care and adoption.
 					</p>

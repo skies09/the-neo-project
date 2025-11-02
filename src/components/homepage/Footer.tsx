@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -26,6 +27,7 @@ const Footer: React.FC = () => {
 		{ name: "Help Center", href: "/help" },
 		{ name: "Contact Us", href: "/contact" },
 		{ name: "FAQ", href: "/faq" },
+		{ name: "Donate", href: "/donate" },
 		{ name: "Support", href: "/support" },
 	];
 
@@ -99,8 +101,8 @@ const Footer: React.FC = () => {
 						<ul className="space-y-3">
 							{quickLinks.map((link, index) => (
 								<li key={index}>
-									<a
-										href={link.href}
+									<Link
+										to={link.href}
 										className="transition-colors duration-200 flex items-center space-x-2 text-twilight hover:text-sunset font-comic font-medium"
 									>
 										<FontAwesomeIcon
@@ -108,7 +110,7 @@ const Footer: React.FC = () => {
 											className="text-xs text-aquamarine"
 										/>
 										<span>{link.name}</span>
-									</a>
+									</Link>
 								</li>
 							))}
 						</ul>
@@ -126,8 +128,8 @@ const Footer: React.FC = () => {
 						<ul className="space-y-3">
 							{supportLinks.map((link, index) => (
 								<li key={index}>
-									<a
-										href={link.href}
+									<Link
+										to={link.href}
 										className="transition-colors duration-200 flex items-center space-x-2 text-twilight hover:text-sunset font-comic font-medium"
 									>
 										<FontAwesomeIcon
@@ -135,7 +137,7 @@ const Footer: React.FC = () => {
 											className="text-xs text-aquamarine"
 										/>
 										<span>{link.name}</span>
-									</a>
+									</Link>
 								</li>
 							))}
 						</ul>

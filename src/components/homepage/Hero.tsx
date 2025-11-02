@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,6 +12,13 @@ const Hero: React.FC = () => {
 	const navigate = useNavigate();
 	const statsRef = useRef(null);
 	const statsInView = useInView(statsRef, { once: true, margin: "-50px" });
+	const [statsAnimated, setStatsAnimated] = useState(false);
+
+	useEffect(() => {
+		if (statsInView && !statsAnimated) {
+			setStatsAnimated(true);
+		}
+	}, [statsInView, statsAnimated]);
 
 	const renderButtonSection = () => {
 		return (
@@ -68,7 +75,7 @@ const Hero: React.FC = () => {
 				{/* Overlay for better text contrast */}
 				<div className="absolute inset-0 bg-black/20" />
 
-				<div className="relative z-10 max-w-7xl mx-auto px-4">
+				<div className="relative z-10 max-w-7xl mx-auto lg:px-4">
 					<motion.div
 						className="grid grid-cols-3 divide-x divide-honeydew/20"
 						variants={{
@@ -81,7 +88,7 @@ const Hero: React.FC = () => {
 							},
 						}}
 						initial="hidden"
-						animate={statsInView ? "visible" : "hidden"}
+						animate={statsAnimated ? "visible" : statsInView ? "visible" : "hidden"}
 					>
 						<motion.div
 							className="py-4 md:py-6 text-center"
@@ -191,11 +198,11 @@ const Hero: React.FC = () => {
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
 								transition={{ duration: 0.8, delay: 0.2 }}
-								className="text-lg lg:text-2xl text-oxfordBlue/70 font-fredoka leading-relaxed max-w-lg text-center lg:text-left w-full lg:w-2/3 mx-auto lg:ml-0"
+								className="text-lg lg:text-2xl text-oxfordBlue/70 font-fredoka leading-relaxed max-w-lg text-center lg:text-left w-full lg:w-11/12 mx-auto lg:ml-0"
 							>
-								Find your perfect dog. <br></br>Search hundreds
-								of rescue centers and find your perfect
-								companion
+								Ready to find your perfect rescue dog? <br></br>
+								Search hundreds of rescue centers and find your
+								perfect companion
 							</motion.p>
 						</div>
 

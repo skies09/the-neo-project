@@ -9,6 +9,8 @@ import BreedCalculator from "./pages/breedCalculator/breedCalculator";
 import Breeds from "./pages/breeds/breedsHome";
 import Contact from "./pages/contact";
 import FAQ from "./pages/faq";
+import Donate from "./pages/donate";
+import Support from "./pages/support";
 import KennelAccount from "./pages/kennel/kennelAccount";
 import KennelAdmin from "./pages/kennel/kennelAdmin";
 import PasswordReset from "./pages/kennel/passwordReset";
@@ -44,6 +46,8 @@ const App: React.FC = () => (
 				<Route path="/breeds" element={<Breeds />} />
 				<Route path="/contact" element={<Contact />} />
 				<Route path="/faq" element={<FAQ />} />
+				<Route path="/donate" element={<Donate />} />
+				<Route path="/support" element={<Support />} />
 				<Route path="/blog" element={<BlogList />} />
 				<Route path="/blog/:id" element={<BlogPostPage />} />
 				<Route path="/shop" element={<ShopHome />} />

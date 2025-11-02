@@ -106,25 +106,17 @@ export default function BreedCalculator() {
 			<div className="max-w-4xl mx-auto">
 				{/* Header */}
 				<motion.div
-					className="text-center mb-8"
+					className="text-center pt-4 mb-8"
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 				>
-					<div className="flex justify-center items-center mb-4">
-						<FontAwesomeIcon
-							icon={faSearch}
-							className="text-4xl text-skyBlue mr-4"
-						/>
-						<h1 className="font-poppins text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+					<div className="flex justify-center items-center my-4">
+						<h1 className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md text-center">
 							Find Your Perfect Breed
 						</h1>
-						<FontAwesomeIcon
-							icon={faSearch}
-							className="text-4xl text-skyBlue ml-4"
-						/>
 					</div>
-					<p className="text-lg text-oxfordBlue/70 font-poppins">
+					<p className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto mb-8">
 						Tell us about your lifestyle and we'll recommend the
 						perfect breeds for you
 					</p>

@@ -106,22 +106,23 @@ export default function Breeds() {
 
 	return (
 		<motion.div
-			className="min-h-screen pt-16 pb-8 px-4"
+			className="min-h-screen pt-16 pb-8 px-4 bg-mintCream"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
 		>
 			{/* Header Section */}
 			<motion.div
-				className="text-center mb-8 mt-20"
+				className="text-center pt-4 mb-16"
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 			>
-				<h1 className="font-poppins text-3xl lg:text-4xl font-bold text-oxfordBlue tracking-wider drop-shadow-md mb-4">
-					Breeds
-				</h1>
-
+				<div className="flex justify-center items-center my-4">
+					<h1 className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md text-center">
+						Breeds
+					</h1>
+				</div>
 				{error && (
 					<motion.div
 						className="flex justify-center items-center mt-4"

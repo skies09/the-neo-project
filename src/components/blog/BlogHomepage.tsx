@@ -44,7 +44,7 @@ const BlogHomepage: React.FC = () => {
 
 	if (loading) {
 		return (
-			<section className="py-20 bg-gradient-to-br from-skyBlue/10 to-aquamarine/10">
+			<section className="py-20">
 				<div className="max-w-7xl mx-auto px-4">
 					<div className="text-center">
 						<div className="animate-spin w-12 h-12 border-4 border-skyBlue border-t-transparent rounded-full mx-auto mb-4"></div>
@@ -58,7 +58,7 @@ const BlogHomepage: React.FC = () => {
 	}
 
 	return (
-		<section className="py-20 bg-gradient-to-br from-skyBlue/10 to-aquamarine/10">
+		<section className="py-20">
 			<div className="max-w-7xl mx-auto px-4">
 				{/* Section Header */}
 				<motion.div
@@ -67,10 +67,12 @@ const BlogHomepage: React.FC = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6 }}
 				>
-					<h2 className="text-3xl lg:text-4xl font-bold text-oxfordBlue font-poppins mb-4">
-						Latest from Our Blog
-					</h2>
-					<p className="text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto">
+					<div className="flex justify-center items-center mb-4">
+						<h2 className="font-delius text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+							Latest from Our Blog
+						</h2>
+					</div>
+					<p className="text-lg text-highland font-fredoka max-w-5xl mx-auto">
 						Discover helpful tips, heartwarming stories, and expert
 						advice about dog care and adoption.
 					</p>

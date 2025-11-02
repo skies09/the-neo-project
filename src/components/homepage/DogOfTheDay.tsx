@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw, faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -28,6 +28,14 @@ const DogOfTheDay: React.FC = () => {
 		lastFetchDate,
 	} = useSelector((state: RootState) => state.dogOfTheDay);
 	const [dogsOfTheDay, setLocalDogsOfTheDay] = React.useState<Dog[]>([]);
+	const [hasFetched, setHasFetched] = useState(false);
+	const headerRef = useRef(null);
+	const contentRef = useRef(null);
+	const ctaRef = useRef(null);
+
+	const [headerAnimated, setHeaderAnimated] = useState(false);
+	const [contentAnimated, setContentAnimated] = useState(false);
+	const [ctaAnimated, setCtaAnimated] = useState(false);
 
 	useEffect(() => {
 		const fetchFeaturedDog = async () => {
@@ -44,6 +52,7 @@ const DogOfTheDay: React.FC = () => {
 				} else if (featuredDog) {
 					setLocalDogsOfTheDay([featuredDog]);
 				}
+				setHasFetched(true);
 				return;
 			}
 
@@ -65,42 +74,67 @@ const DogOfTheDay: React.FC = () => {
 				dispatch(setError("Failed to fetch today's featured dogs"));
 			} finally {
 				dispatch(setLoading(false));
+				setHasFetched(true);
 			}
 		};
 
 		fetchFeaturedDog();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dispatch, lastFetchDate]);
 
-	// Don't render the section if there are no dogs (regardless of error state)
-	if (!loading && dogsOfTheDay.length === 0) {
+	// Set up viewport detection (hooks must be called unconditionally)
+	const headerInView = useInView(headerRef, { once: true, margin: "-100px" });
+	const contentInView = useInView(contentRef, { once: true, margin: "-100px" });
+	const ctaInView = useInView(ctaRef, { once: true, margin: "-100px" });
+
+	useEffect(() => {
+		if (headerInView && !headerAnimated) setHeaderAnimated(true);
+		if (contentInView && !contentAnimated) setContentAnimated(true);
+		if (ctaInView && !ctaAnimated) setCtaAnimated(true);
+	}, [headerInView, contentInView, ctaInView, headerAnimated, contentAnimated, ctaAnimated]);
+
+	// Auto-show CTA after dogs are loaded and a delay
+	useEffect(() => {
+		if (dogsOfTheDay.length > 0 && !ctaAnimated) {
+			const timer = setTimeout(() => {
+				setCtaAnimated(true);
+			}, 1000); // Show CTA 1 second after dogs load
+			return () => clearTimeout(timer);
+		}
+	}, [dogsOfTheDay.length, ctaAnimated]);
+
+	// Don't render the section if there are no dogs after we've attempted to fetch
+	if (hasFetched && !loading && dogsOfTheDay.length === 0 && !error) {
 		return null;
 	}
 
 	return (
-		<section className="py-20 bg-gradient-to-br from-skyBlue/10 to-aquamarine/10">
+		<section className="py-20">
 			<div className="max-w-7xl mx-auto px-4">
 				{/* Section Header */}
 				<motion.div
+					ref={headerRef}
 					className="text-center mb-8"
 					initial={{ opacity: 0, y: -20 }}
-					animate={{ opacity: 1, y: 0 }}
+					animate={headerAnimated ? { opacity: 1, y: 0 } : headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
 					transition={{ duration: 0.6, ease: "easeOut" }}
 				>
-					<div className="flex justify-center items-center">
-						<h2 className="font-comic text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+					<div className="flex justify-center items-center mb-4">
+						<h2 className="font-delius text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
 							The Neo Trio
 						</h2>
 					</div>
-					<p className="text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto pt-4">
+					<p className="text-lg text-highland font-fredoka max-w-5xl mx-auto">
 						Meet today's top dogs, waiting for their forever home!
 					</p>
 				</motion.div>
 
 				{/* Featured Dogs Grid */}
 				<motion.div
+					ref={contentRef}
 					className="max-w-7xl mx-auto"
 					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
+					animate={contentAnimated ? { opacity: 1, y: 0 } : contentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
 					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 				>
 					{loading ? (
@@ -148,9 +182,14 @@ const DogOfTheDay: React.FC = () => {
 				{/* Call to Action - only show if there are dogs */}
 				{dogsOfTheDay.length > 0 && (
 					<motion.div
+						ref={ctaRef}
 						className="text-center mt-12"
 						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
+						animate={
+							ctaAnimated || ctaInView
+								? { opacity: 1, y: 0 }
+								: { opacity: 0, y: 20 }
+						}
 						transition={{
 							duration: 0.6,
 							delay: 0.4,

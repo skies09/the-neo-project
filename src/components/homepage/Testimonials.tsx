@@ -1,11 +1,23 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useInView } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuoteLeft, faStar, faPaw } from "@fortawesome/free-solid-svg-icons";
+import { faStar, faPaw } from "@fortawesome/free-solid-svg-icons";
 
 const Testimonials: React.FC = () => {
-	const navigate = useNavigate();
+	const sectionRef = useRef(null);
+	const headerRef = useRef(null);
+	const cardsRef = useRef(null);
+
+	const headerInView = useInView(headerRef, { once: true, margin: "-100px" });
+	const cardsInView = useInView(cardsRef, { once: true, margin: "-100px" });
+
+	const [headerAnimated, setHeaderAnimated] = useState(false);
+	const [cardsAnimated, setCardsAnimated] = useState(false);
+
+	useEffect(() => {
+		if (headerInView && !headerAnimated) setHeaderAnimated(true);
+		if (cardsInView && !cardsAnimated) setCardsAnimated(true);
+	}, [headerInView, cardsInView, headerAnimated, cardsAnimated]);
 
 	const testimonials = [
 		{
@@ -32,71 +44,81 @@ const Testimonials: React.FC = () => {
 	];
 
 	return (
-		<section className="py-20 bg-gradient-to-br from-skyBlue/10 to-aquamarine/10">
+		<section ref={sectionRef} className="pb-20 mb-4 pt-4 bg-peppermint">
 			<div className="max-w-7xl mx-auto px-4">
 				{/* Section Header */}
 				<motion.div
-					className="text-center mb-16"
+					ref={headerRef}
+					className="text-center mb-8"
 					initial={{ opacity: 0, y: -20 }}
-					animate={{ opacity: 1, y: 0 }}
+					animate={
+						headerAnimated
+							? { opacity: 1, y: 0 }
+							: headerInView
+							? { opacity: 1, y: 0 }
+							: { opacity: 0, y: -20 }
+					}
 					transition={{ duration: 0.6, ease: "easeOut" }}
 				>
-					<div className="flex justify-center items-center mb-4">
-						<FontAwesomeIcon
-							icon={faQuoteLeft}
-							className="text-4xl text-skyBlue mr-4"
-						/>
-						<h2 className="font-poppins text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+					<div className="flex justify-center items-center mt-8 mb-4">
+						<h2 className="font-delius text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
 							Happy Families
 						</h2>
-						<FontAwesomeIcon
-							icon={faQuoteLeft}
-							className="text-4xl text-skyBlue ml-4"
-						/>
 					</div>
-					<p className="text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto">
+					<p className="text-lg text-highland font-fredoka max-w-5xl mx-auto">
 						Hear from families who found their perfect companions
 						through The Neo Project.
 					</p>
 				</motion.div>
 
 				{/* Testimonials Grid */}
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+				<motion.div
+					ref={cardsRef}
+					className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+					variants={{
+						hidden: { opacity: 0 },
+						visible: {
+							opacity: 1,
+							transition: {
+								staggerChildren: 0.2,
+							},
+						},
+					}}
+					initial="hidden"
+					animate={
+						cardsAnimated
+							? "visible"
+							: cardsInView
+							? "visible"
+							: "hidden"
+					}
+				>
 					{testimonials.map((testimonial, index) => (
 						<motion.div
 							key={index}
-							className="bg-white rounded-3xl shadow-xl p-8 transform hover:scale-105 transition-transform duration-300"
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
+							className="bg-sark rounded-3xl shadow-xl p-8 transform hover:scale-105 transition-transform duration-300"
+							variants={{
+								hidden: { opacity: 0, y: 20 },
+								visible: { opacity: 1, y: 0 },
+							}}
 							transition={{
 								duration: 0.6,
-								delay: 0.2 + index * 0.1,
 								ease: "easeOut",
 							}}
 						>
-							{/* Quote Icon */}
-							<div className="flex justify-center mb-6">
-								<div className="w-16 h-16 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center">
-									<FontAwesomeIcon
-										icon={faQuoteLeft}
-										className="text-2xl text-white"
-									/>
-								</div>
-							</div>
-
 							{/* Rating */}
 							<div className="flex justify-center mb-4">
 								{[...Array(testimonial.rating)].map((_, i) => (
 									<FontAwesomeIcon
 										key={i}
 										icon={faStar}
-										className="text-yellow-400 text-lg mx-1"
+										className="text-yellowOrange text-lg mx-1"
 									/>
 								))}
 							</div>
 
 							{/* Testimonial Text */}
-							<p className="text-oxfordBlue/70 font-poppins text-center leading-relaxed mb-6">
+							<p className="text-feta font-poppins text-center leading-relaxed mb-6">
 								"{testimonial.text}"
 							</p>
 
@@ -110,17 +132,17 @@ const Testimonials: React.FC = () => {
 									/>
 								</div>
 								<div className="text-center">
-									<h4 className="font-poppins font-semibold text-oxfordBlue">
+									<h4 className="font-poppins font-semibold text-tara">
 										{testimonial.name}
 									</h4>
-									<p className="text-oxfordBlue/60 font-poppins text-sm">
+									<p className="text-tara font-poppins text-sm">
 										{testimonial.location}
 									</p>
 								</div>
 							</div>
 						</motion.div>
 					))}
-				</div>
+				</motion.div>
 			</div>
 		</section>
 	);

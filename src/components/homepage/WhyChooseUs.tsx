@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -14,18 +14,37 @@ const WhyChooseUs: React.FC = () => {
 	const imageRef = useRef(null);
 
 	const headerInView = useInView(headerRef, { once: true, margin: "-100px" });
-	const contentInView = useInView(contentRef, { once: true, margin: "-100px" });
+	const contentInView = useInView(contentRef, {
+		once: true,
+		margin: "-100px",
+	});
 	const imageInView = useInView(imageRef, { once: true, margin: "-100px" });
 
+	const [headerAnimated, setHeaderAnimated] = useState(false);
+	const [contentAnimated, setContentAnimated] = useState(false);
+	const [imageAnimated, setImageAnimated] = useState(false);
+
+	useEffect(() => {
+		if (headerInView && !headerAnimated) setHeaderAnimated(true);
+		if (contentInView && !contentAnimated) setContentAnimated(true);
+		if (imageInView && !imageAnimated) setImageAnimated(true);
+	}, [headerInView, contentInView, imageInView, headerAnimated, contentAnimated, imageAnimated]);
+
 	return (
-		<section className="pt-10 lg:pt-20 pb-12 bg-gradient-to-br from-red-50 to-orange-50">
+		<section className="pt-10 lg:pt-20 pb-12">
 			<div className="max-w-7xl mx-auto px-4">
 				{/* Section Header */}
 				<motion.div
 					ref={headerRef}
 					className="text-center mb-16"
 					initial={{ opacity: 0, y: -20 }}
-					animate={headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+					animate={
+						headerAnimated
+							? { opacity: 1, y: 0 }
+							: headerInView
+							? { opacity: 1, y: 0 }
+							: { opacity: 0, y: -20 }
+					}
 					transition={{ duration: 0.6, ease: "easeOut" }}
 				>
 					<div className="flex justify-center items-center mb-4">
@@ -58,7 +77,7 @@ const WhyChooseUs: React.FC = () => {
 							},
 						}}
 						initial="hidden"
-						animate={contentInView ? "visible" : "hidden"}
+						animate={contentAnimated ? "visible" : contentInView ? "visible" : "hidden"}
 					>
 						<div className="space-y-6 lg:pt-6">
 							<motion.div
@@ -174,18 +193,22 @@ const WhyChooseUs: React.FC = () => {
 									scale: 0.6,
 									rotate: -5,
 								}}
-								animate={imageInView ? {
-									opacity: 1,
-									scale: 1.3,
-									rotate: 0,
-								} : {
-									opacity: 0,
-									scale: 0.6,
-									rotate: -5,
-								}}
+								animate={
+									imageAnimated || imageInView
+										? {
+												opacity: 1,
+												scale: 1.3,
+												rotate: 0,
+										  }
+										: {
+												opacity: 0,
+												scale: 0.6,
+												rotate: -5,
+										  }
+								}
 								transition={{
 									duration: 2,
-									delay: 0.6,
+									delay: 0.3,
 									ease: [0.25, 0.46, 0.45, 0.94],
 								}}
 							/>

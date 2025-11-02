@@ -178,32 +178,32 @@ const ShopHome: React.FC = () => {
 	};
 
 	return (
-		<div className="min-h-screen bg-gray-50 pt-16">
+		<div className="min-h-screen bg-mintCream pt-16">
 			{/* Hero Section */}
-			<div className="bg-gradient-to-r from-skyBlue to-blue-600 text-white py-16">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-					<h1 className="text-4xl md:text-6xl font-bold mb-4">
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-4">
+				<div className="flex justify-center items-center my-4">
+					<h1 className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md text-center">
 						The Neo Project Shop
 					</h1>
-					<p className="text-xl md:text-2xl mb-8 opacity-90">
-						Premium products for your beloved pets
-					</p>
-					<div className="flex justify-center space-x-4">
-						<div className="bg-white bg-opacity-20 rounded-lg px-6 py-3">
-							<span className="text-sm font-medium">
-								Free UK Shipping
-							</span>
-						</div>
-						<div className="bg-white bg-opacity-20 rounded-lg px-6 py-3">
-							<span className="text-sm font-medium">
-								Premium Quality
-							</span>
-						</div>
-						<div className="bg-white bg-opacity-20 rounded-lg px-6 py-3">
-							<span className="text-sm font-medium">
-								Expert Curated
-							</span>
-						</div>
+				</div>
+				<p className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto mb-8">
+					Premium products for your beloved pets
+				</p>
+				<div className="flex justify-center space-x-4">
+					<div className="bg-white bg-opacity-20 rounded-lg px-6 py-3">
+						<span className="text-sm font-medium">
+							Free UK Shipping
+						</span>
+					</div>
+					<div className="bg-white bg-opacity-20 rounded-lg px-6 py-3">
+						<span className="text-sm font-medium">
+							Premium Quality
+						</span>
+					</div>
+					<div className="bg-white bg-opacity-20 rounded-lg px-6 py-3">
+						<span className="text-sm font-medium">
+							Expert Curated
+						</span>
 					</div>
 				</div>
 			</div>

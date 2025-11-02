@@ -164,7 +164,6 @@ const KennelAdmin = () => {
 			setIsLoggingIn(false);
 			if (setSubmitting) setSubmitting(false);
 		} catch (err: any) {
-
 			// Extract error message from different possible sources
 			let errorMsg = "Invalid username or password";
 
@@ -446,20 +445,12 @@ const KennelAdmin = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 				>
-					<div className="flex justify-center items-center mb-4">
-						<FontAwesomeIcon
-							icon={faUser}
-							className="text-4xl text-skyBlue mr-4"
-						/>
-						<h1 className="font-poppins text-4xl lg:text-5xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
+					<div className="flex justify-center items-center my-4">
+						<h1 className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md text-center">
 							Kennel Portal
 						</h1>
-						<FontAwesomeIcon
-							icon={faUser}
-							className="text-4xl text-skyBlue ml-4"
-						/>
 					</div>
-					<p className="text-lg text-oxfordBlue/70 font-poppins">
+					<p className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto mb-8">
 						Login to your account or register your rescue center
 					</p>
 				</motion.div>
