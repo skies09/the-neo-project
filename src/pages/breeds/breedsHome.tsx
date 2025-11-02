@@ -33,7 +33,7 @@ export default function Breeds() {
 					"Error fetching initial data:",
 					error instanceof Error ? error.message : String(error)
 				);
-				setError("No breeds found");
+				setError("No breeds found, please check back later");
 			} finally {
 				setLoading(false);
 			}
@@ -125,16 +125,20 @@ export default function Breeds() {
 				</div>
 				{error && (
 					<motion.div
-						className="flex justify-center items-center mt-4"
+						className="max-w-7xl mx-auto pt-8"
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{
-							duration: 0.5,
-							delay: 0.8,
+							duration: 0.6,
+							delay: 0.3,
 							ease: "easeOut",
 						}}
 					>
-						<p className="text-red-600 font-semibold">{error}</p>
+						<div className="flex flex-col justify-center items-center py-12 bg-sark rounded-3xl shadow-xl">
+							<p className="text-lg lg:text-xl text-mintCream font-fredoka max-w-5xl mx-auto text-center">
+								{error}
+							</p>
+						</div>
 					</motion.div>
 				)}
 			</motion.div>
@@ -170,23 +174,25 @@ export default function Breeds() {
 						})}
 					</div>
 				)}
-				<div className="flex justify-center items-center">
-					<motion.button
-						className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold text-base shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 border border-oxfordBlue/30"
-						onClick={() => fetchAll()}
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.95 }}
-					>
-						<div className="flex items-center space-x-3 relative z-10">
-							<FontAwesomeIcon
-								icon={faList}
-								className="text-lg"
-							/>
-							<span>All Breeds</span>
-						</div>
-						<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-oxfordBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-					</motion.button>
-				</div>
+				{breeds && breeds.length > 0 && (
+					<div className="flex justify-center items-center">
+						<motion.button
+							className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold text-base shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 border border-oxfordBlue/30"
+							onClick={() => fetchAll()}
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+						>
+							<div className="flex items-center space-x-3 relative z-10">
+								<FontAwesomeIcon
+									icon={faList}
+									className="text-lg"
+								/>
+								<span>All Breeds</span>
+							</div>
+							<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-oxfordBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+						</motion.button>
+					</div>
+				)}
 			</motion.div>
 
 			{/* Content Section */}

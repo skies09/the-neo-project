@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { ProductCategory } from "../../services/shopApi";
 
 interface CategoryGridProps {
@@ -15,7 +16,6 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 	// Ensure categories is always an array
 	const safeCategories = Array.isArray(categories) ? categories : [];
 
-
 	if (loading) {
 		return (
 			<div className="flex justify-center items-center py-12">
@@ -26,16 +26,22 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 
 	if (safeCategories.length === 0) {
 		return (
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-				<div className="text-center">
-					<h2 className="text-3xl font-bold text-gray-800 mb-4">
-						Shop by Category
-					</h2>
-					<p className="text-lg text-gray-600 mb-8">
-						No categories available at the moment.
+			<motion.div
+				className="max-w-7xl mx-auto min-h-screen"
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{
+					duration: 0.6,
+					delay: 0.3,
+					ease: "easeOut",
+				}}
+			>
+				<div className="flex flex-col justify-center items-center py-12 bg-sark rounded-3xl shadow-xl">
+					<p className="text-lg lg:text-xl text-mintCream font-fredoka max-w-5xl mx-auto text-center">
+						Shop currently unavailable, please try again later
 					</p>
 				</div>
-			</div>
+			</motion.div>
 		);
 	}
 
@@ -58,7 +64,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 						className="group relative overflow-hidden bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
 					>
 						<div className="p-8 text-center">
-					{/* Category visual removed (emoji icons removed) */}
+							{/* Category visual removed (emoji icons removed) */}
 
 							{/* Category Name */}
 							<h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-skyBlue transition-colors duration-200">

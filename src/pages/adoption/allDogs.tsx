@@ -4,7 +4,6 @@ import { dogAPI, Dog } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 import {
-	faHeart,
 	faPaw,
 	faSearch,
 	faHome,
@@ -23,7 +22,11 @@ export default function AllDogs() {
 
 			try {
 				const data = await dogAPI.getAllDogs();
-				setDogData(data);
+				if (data && Array.isArray(data)) {
+					setDogData(data);
+				} else {
+					setDogData([]);
+				}
 			} catch (error) {
 				console.error(
 					"Error fetching dogs:",
@@ -32,6 +35,7 @@ export default function AllDogs() {
 				setError(
 					"No dogs available for adoption at this time, please check back later"
 				);
+				setDogData([]);
 			} finally {
 				setLoading(false);
 			}
@@ -64,30 +68,6 @@ export default function AllDogs() {
 		);
 	}
 
-	if (error) {
-		return (
-			<motion.div
-				className="min-h-screen pt-16 pb-16 px-4"
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-				transition={{ duration: 0.8, ease: "easeOut" }}
-			>
-				<motion.div
-					className="flex flex-col justify-center items-center font-poppins text-2xl font-bold text-red-600 tracking-wider drop-shadow-md"
-					initial={{ opacity: 0, y: -20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-				>
-					<FontAwesomeIcon
-						icon={faPaw}
-						className="text-4xl mb-4 text-red-500"
-					/>
-					{error}
-				</motion.div>
-			</motion.div>
-		);
-	}
-
 	return (
 		<motion.div
 			className="min-h-screen pt-16 pb-20 px-4 bg-mintCream"
@@ -113,34 +93,52 @@ export default function AllDogs() {
 				</p>
 			</motion.div>
 
+			{/* Error Message */}
+			{error && (
+				<motion.div
+					className="max-w-7xl mx-auto pt-8"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+				>
+					<div className="flex flex-col justify-center items-center py-12 bg-sark rounded-3xl shadow-xl">
+						<p className="text-lg lg:text-xl text-mintCream font-fredoka max-w-5xl mx-auto text-center">
+							{error}
+						</p>
+					</div>
+				</motion.div>
+			)}
+
 			{/* Content Section */}
-			<motion.div
-				className="max-w-7xl mx-auto pt-12"
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-			>
-				{dogData && dogData.length > 0 ? (
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-28 justify-items-center">
-						{dogData.map((dog) => (
-							<AdoptCard key={dog.id} dog={dog} />
-						))}
-					</div>
-				) : (
-					<div className="flex flex-col justify-center items-center py-12">
-						<FontAwesomeIcon
-							icon={faHome}
-							className="text-6xl mb-4 text-oxfordBlue/50"
-						/>
-						<p className="text-lg text-oxfordBlue">
-							No dogs available for adoption at the moment.
-						</p>
-						<p className="text-sm text-oxfordBlue/70 mt-2">
-							Check back soon for new arrivals!
-						</p>
-					</div>
-				)}
-			</motion.div>
+			{!error && (
+				<motion.div
+					className="max-w-7xl mx-auto pt-12"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+				>
+					{dogData && dogData.length > 0 ? (
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-28 justify-items-center">
+							{dogData.map((dog) => (
+								<AdoptCard key={dog.id} dog={dog} />
+							))}
+						</div>
+					) : (
+						<div className="flex flex-col justify-center items-center py-12">
+							<FontAwesomeIcon
+								icon={faHome}
+								className="text-6xl mb-4 text-oxfordBlue/50"
+							/>
+							<p className="text-lg text-oxfordBlue font-poppins">
+								No dogs available for adoption at the moment.
+							</p>
+							<p className="text-sm text-oxfordBlue/70 mt-2 font-poppins">
+								Check back soon for new arrivals!
+							</p>
+						</div>
+					)}
+				</motion.div>
+			)}
 		</motion.div>
 	);
 }

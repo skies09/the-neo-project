@@ -24,13 +24,6 @@ const Home: React.FC = () => {
 			<Testimonials />
 			<TransitionCTA />
 			<BlogHomepage />
-			<TransitionCTA
-				simplified
-				title="Ready to find your perfect dog?"
-				firstButtonText="Begin Your Journey Today"
-				showFirstButtonIcon={true}
-			/>
-
 			<Footer />
 		</div>
 	);

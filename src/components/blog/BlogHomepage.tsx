@@ -5,6 +5,7 @@ import { faCalendar, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { blogAPI, BlogPost } from "../../services/blogApi";
 import { formatDateShort } from "../../helpers/dateUtils";
+import TransitionCTA from "../homepage/TransitionCTA";
 
 const BlogHomepage: React.FC = () => {
 	const [featuredPosts, setFeaturedPosts] = useState<BlogPost[]>([]);
@@ -58,8 +59,8 @@ const BlogHomepage: React.FC = () => {
 	}
 
 	return (
-		<section className="py-20">
-			<div className="max-w-7xl mx-auto px-4">
+		<section className="py-10">
+			<div className="max-w-7xl mx-auto px-4 pb-8">
 				{/* Section Header */}
 				<motion.div
 					className="text-center mb-12"
@@ -197,6 +198,12 @@ const BlogHomepage: React.FC = () => {
 					</div>
 				</motion.div>
 			</div>
+			<TransitionCTA
+				simplified
+				title="Ready to find your perfect dog?"
+				firstButtonText="Begin Your Journey Today"
+				showFirstButtonIcon={true}
+			/>
 		</section>
 	);
 };

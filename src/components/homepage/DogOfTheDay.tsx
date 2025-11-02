@@ -84,14 +84,24 @@ const DogOfTheDay: React.FC = () => {
 
 	// Set up viewport detection (hooks must be called unconditionally)
 	const headerInView = useInView(headerRef, { once: true, margin: "-100px" });
-	const contentInView = useInView(contentRef, { once: true, margin: "-100px" });
+	const contentInView = useInView(contentRef, {
+		once: true,
+		margin: "-100px",
+	});
 	const ctaInView = useInView(ctaRef, { once: true, margin: "-100px" });
 
 	useEffect(() => {
 		if (headerInView && !headerAnimated) setHeaderAnimated(true);
 		if (contentInView && !contentAnimated) setContentAnimated(true);
 		if (ctaInView && !ctaAnimated) setCtaAnimated(true);
-	}, [headerInView, contentInView, ctaInView, headerAnimated, contentAnimated, ctaAnimated]);
+	}, [
+		headerInView,
+		contentInView,
+		ctaInView,
+		headerAnimated,
+		contentAnimated,
+		ctaAnimated,
+	]);
 
 	// Auto-show CTA after dogs are loaded and a delay
 	useEffect(() => {
@@ -109,14 +119,22 @@ const DogOfTheDay: React.FC = () => {
 	}
 
 	return (
-		<section className="py-20">
+		<section
+			className={`${dogsOfTheDay.length > 0 ? "block" : "hidden"} py-20`}
+		>
 			<div className="max-w-7xl mx-auto px-4">
 				{/* Section Header */}
 				<motion.div
 					ref={headerRef}
 					className="text-center mb-8"
 					initial={{ opacity: 0, y: -20 }}
-					animate={headerAnimated ? { opacity: 1, y: 0 } : headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+					animate={
+						headerAnimated
+							? { opacity: 1, y: 0 }
+							: headerInView
+							? { opacity: 1, y: 0 }
+							: { opacity: 0, y: -20 }
+					}
 					transition={{ duration: 0.6, ease: "easeOut" }}
 				>
 					<div className="flex justify-center items-center mb-4">
@@ -134,7 +152,13 @@ const DogOfTheDay: React.FC = () => {
 					ref={contentRef}
 					className="max-w-7xl mx-auto"
 					initial={{ opacity: 0, y: 20 }}
-					animate={contentAnimated ? { opacity: 1, y: 0 } : contentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+					animate={
+						contentAnimated
+							? { opacity: 1, y: 0 }
+							: contentInView
+							? { opacity: 1, y: 0 }
+							: { opacity: 0, y: 20 }
+					}
 					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 				>
 					{loading ? (
@@ -143,25 +167,6 @@ const DogOfTheDay: React.FC = () => {
 							<p className="text-oxfordBlue/70 font-poppins">
 								Loading today's featured dogs...
 							</p>
-						</div>
-					) : error ? (
-						<div className="bg-white rounded-3xl shadow-xl p-12 text-center">
-							<FontAwesomeIcon
-								icon={faPaw}
-								className="text-6xl text-red-500/60 mb-4"
-							/>
-							<h3 className="text-2xl font-bold text-oxfordBlue font-poppins mb-2">
-								Error Loading Dogs
-							</h3>
-							<p className="text-oxfordBlue/70 font-poppins mb-4">
-								{error}
-							</p>
-							<button
-								onClick={() => window.location.reload()}
-								className="bg-skyBlue text-white px-6 py-2 rounded-lg font-poppins hover:bg-skyBlue/80 transition-colors"
-							>
-								Try Again
-							</button>
 						</div>
 					) : dogsOfTheDay.length > 0 ? (
 						<div>
