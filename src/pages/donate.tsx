@@ -245,7 +245,7 @@ const Donate: React.FC = () => {
 								<div className="bg-white rounded-3xl shadow-xl overflow-hidden">
 									<div className="aspect-[4/3] overflow-hidden">
 										<img
-											src="/images/dog3.jpg"
+											src="/images/dog8.jpg"
 											alt="Happy adopted rescue dog"
 											className="w-full h-full object-cover"
 										/>
@@ -269,13 +269,13 @@ const Donate: React.FC = () => {
 								ease: "easeOut",
 							}}
 						>
-							{/* Impact Image */}
-							<div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+							{/* Impact Image - Desktop (above) */}
+							<div className="hidden lg:block bg-white rounded-3xl shadow-xl overflow-hidden">
 								<div className="aspect-[4/3] overflow-hidden">
 									<img
-										src="/images/dog2.jpg"
+										src="/images/dog10.jpg"
 										alt="Rescue dog being cared for"
-										className="w-full h-full object-cover"
+										className="w-full h-full object-cover shadow-2xl"
 									/>
 								</div>
 							</div>
@@ -352,6 +352,17 @@ const Donate: React.FC = () => {
 											</div>
 										</div>
 									</div>
+								</div>
+							</div>
+
+							{/* Impact Image - Mobile (below) */}
+							<div className="block lg:hidden bg-white rounded-3xl shadow-xl overflow-hidden">
+								<div className="aspect-[4/3] overflow-hidden">
+									<img
+										src="/images/dog10.jpg"
+										alt="Rescue dog being cared for"
+										className="w-full h-full object-cover"
+									/>
 								</div>
 							</div>
 
@@ -462,7 +473,7 @@ const Donate: React.FC = () => {
 							</div>
 							<div className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
 								<img
-									src="/images/dog5.jpg"
+									src="/images/dog3.jpg"
 									alt="Rescue dog waiting for adoption"
 									className="w-full h-full object-cover"
 								/>
