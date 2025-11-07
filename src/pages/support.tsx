@@ -262,13 +262,13 @@ const Support: React.FC = () => {
 							</p>
 							<Link
 								to="/contact"
-								className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-xl"
+								className="group relative bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-md"
 							>
 								<FontAwesomeIcon
 									className="mr-2"
 									icon={faEnvelope}
 								/>
-								<span>Contact Us About Opportunities</span>
+								<span>Enquire About Opportunities</span>
 							</Link>
 						</motion.div>
 					</motion.div>

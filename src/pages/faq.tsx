@@ -28,23 +28,19 @@ const FAQ: React.FC = () => {
 			: faqData.filter((item) => item.category === selectedCategory);
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-honeydew via-mintCream to-skyBlue/10 pt-16">
+		<div className="min-h-screen bg-gradient-to-br from-twilight to-sprout pt-16">
 			{/* Header */}
-			<section className="py-20 bg-gradient-to-br from-oxfordBlue to-skyBlue text-white">
+			<section className="py-20 bg-gradient-to-br from-twilight to-sprout text-tara">
 				<div className="max-w-7xl mx-auto px-4 text-center">
 					<motion.div
 						initial={{ opacity: 0, y: -20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.6, ease: "easeOut" }}
 					>
-						<FontAwesomeIcon
-							icon={faQuestionCircle}
-							className="text-6xl mb-6 text-honeydew"
-						/>
-						<h1 className="font-poppins text-5xl lg:text-6xl font-bold mb-6 drop-shadow-md">
+						<h1 className="font-delius text-5xl lg:text-6xl font-bold mb-6 drop-shadow-md text-oxfordBlue">
 							Frequently Asked Questions
 						</h1>
-						<p className="text-xl text-honeydew/90 font-poppins max-w-3xl mx-auto">
+						<p className="text-lg text-highland font-fredoka max-w-5xl mx-auto">
 							Find answers to common questions about dog adoption,
 							our process, and how to give a rescue dog their
 							forever home.
@@ -62,7 +58,7 @@ const FAQ: React.FC = () => {
 						transition={{ duration: 0.6, delay: 0.2 }}
 						className="text-center mb-8"
 					>
-						<h2 className="font-poppins text-3xl font-bold text-oxfordBlue mb-6">
+						<h2 className="font-delius text-3xl font-bold text-oxfordBlue mb-6">
 							Browse by Category
 						</h2>
 						<div className="flex flex-wrap justify-center gap-4">
