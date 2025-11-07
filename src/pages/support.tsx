@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-	faHandsHelping,
 	faHeart,
 	faDog,
 	faUsers,
@@ -10,8 +9,6 @@ import {
 	faShareAlt,
 	faEnvelope,
 	faCalendarAlt,
-	faClock,
-	faMapMarkerAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Footer from "../components/homepage/Footer";
@@ -22,65 +19,6 @@ const Support: React.FC = () => {
 		once: true,
 		margin: "-100px",
 	});
-
-	const vacancies = [
-		{
-			title: "Dog Walker Volunteer",
-			center: "Manchester Dog Rescue",
-			location: "Manchester",
-			description:
-				"Help our rescue dogs get daily exercise and socialization. Flexible hours available.",
-			requirements: "Must be 18+, comfortable with dogs of all sizes",
-			type: "Volunteer",
-		},
-		{
-			title: "Foster Carer",
-			center: "Yorkshire Canine Rescue",
-			location: "Leeds",
-			description:
-				"Provide temporary homes for rescue dogs while they await adoption. Full support provided.",
-			requirements: "Dog-friendly home, commitment to care",
-			type: "Foster",
-		},
-		{
-			title: "Animal Care Assistant",
-			center: "London Dog Trust",
-			location: "London",
-			description:
-				"Full-time position helping with daily care, feeding, and health monitoring of rescue dogs.",
-			requirements:
-				"Animal care experience preferred, passion for rescue work",
-			type: "Paid Position",
-		},
-		{
-			title: "Adoption Coordinator",
-			center: "Birmingham Animal Rescue",
-			location: "Birmingham",
-			description:
-				"Help match rescue dogs with loving families. Manage adoption applications and home visits.",
-			requirements:
-				"Excellent communication skills, organizational ability",
-			type: "Part-time",
-		},
-		{
-			title: "Weekend Volunteer",
-			center: "Northwest Dog Haven",
-			location: "Liverpool",
-			description:
-				"Perfect for those who want to help but work weekdays. Weekend dog care and facility maintenance.",
-			requirements: "Available weekends, physically fit",
-			type: "Volunteer",
-		},
-		{
-			title: "Veterinary Assistant",
-			center: "Midlands Rescue Centre",
-			location: "Birmingham",
-			description:
-				"Assist with vaccinations, health checks, and medical treatments for rescue dogs.",
-			requirements: "Veterinary or animal care qualification",
-			type: "Paid Position",
-		},
-	];
 
 	const waysToHelp = [
 		{
@@ -185,14 +123,14 @@ const Support: React.FC = () => {
 							ease: "easeOut",
 						}}
 					>
-						<h2 className="text-3xl font-medium text-oxfordBlue font-fredoka mb-8 text-center">
+						<h2 className="text-3xl text-oxfordBlue font-delius font-semibold mb-8 text-center">
 							Ways You Can Help
 						</h2>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 							{waysToHelp.map((way, index) => (
 								<motion.div
 									key={index}
-									className="bg-white rounded-3xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+									className="bg-tomThumb rounded-3xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
 									initial={{ opacity: 0, y: 20 }}
 									animate={
 										sectionInView
@@ -204,22 +142,22 @@ const Support: React.FC = () => {
 										delay: 0.4 + index * 0.1,
 									}}
 								>
-									<div className="w-16 h-16 bg-gradient-to-br from-aquamarine to-turquoise rounded-full flex items-center justify-center mb-4">
+									<div className="w-16 h-16 rounded-full flex items-center justify-center mb-4">
 										<FontAwesomeIcon
 											icon={way.icon}
-											className="text-2xl text-white"
+											className="text-2xl text-sunset"
 										/>
 									</div>
-									<h3 className="text-xl font-bold text-oxfordBlue font-poppins mb-3">
+									<h3 className="text-xl font-bold text-tara font-delius mb-3">
 										{way.title}
 									</h3>
-									<p className="text-oxfordBlue/70 font-poppins mb-4 leading-relaxed">
+									<p className="text-tara/80 font-poppins mb-4 leading-relaxed">
 										{way.description}
 									</p>
 									{way.link !== "#" ? (
 										<Link
 											to={way.link}
-											className="inline-flex items-center space-x-2 text-aquamarine hover:text-turquoise font-poppins font-semibold transition-colors"
+											className="inline-flex items-center space-x-2 text-sunset hover:text-tara font-poppins font-semibold transition-colors"
 										>
 											<span>{way.action}</span>
 											<FontAwesomeIcon
@@ -230,7 +168,7 @@ const Support: React.FC = () => {
 									) : (
 										<a
 											href={way.link}
-											className="inline-flex items-center space-x-2 text-aquamarine hover:text-turquoise font-poppins font-semibold transition-colors"
+											className="inline-flex items-center space-x-2 text-sunset hover:text-tara font-poppins font-semibold transition-colors"
 										>
 											<span>{way.action}</span>
 											<FontAwesomeIcon
@@ -262,102 +200,45 @@ const Support: React.FC = () => {
 					>
 						<div className="text-center mb-12">
 							<div className="flex justify-center items-center mb-4">
-								<FontAwesomeIcon
-									icon={faUsers}
-									className="text-3xl text-skyBlue mr-3"
-								/>
-								<h2 className="text-3xl font-bold text-oxfordBlue font-poppins">
+								<h2 className="font-delius text-3xl lg:text-4xl font-bold text-oxfordBlue drop-shadow-md text-center">
 									Rescue Center Vacancies
 								</h2>
-								<FontAwesomeIcon
-									icon={faUsers}
-									className="text-3xl text-skyBlue ml-3"
-								/>
 							</div>
-							<p className="text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto">
+							<p className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto">
 								Join our network of rescue centers! Find
 								volunteer opportunities, paid positions, and
 								foster opportunities near you.
 							</p>
 						</div>
 
-						<div className="space-y-6">
-							{vacancies.map((vacancy, index) => (
-								<motion.div
-									key={index}
-									className="bg-white rounded-3xl shadow-xl p-6 lg:p-8 hover:shadow-2xl transition-all duration-300"
-									initial={{ opacity: 0, x: -20 }}
-									animate={
-										sectionInView
-											? { opacity: 1, x: 0 }
-											: { opacity: 0, x: -20 }
-									}
-									transition={{
-										duration: 0.6,
-										delay: 0.6 + index * 0.1,
-									}}
-								>
-									<div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-										<div className="flex-1">
-											<div className="flex items-center space-x-3 mb-3">
-												<span
-													className={`px-3 py-1 rounded-full text-sm font-poppins font-semibold ${
-														vacancy.type ===
-														"Paid Position"
-															? "bg-gradient-to-r from-aquamarine to-turquoise text-white"
-															: vacancy.type ===
-															  "Part-time"
-															? "bg-gradient-to-r from-skyBlue to-aquamarine text-white"
-															: "bg-gradient-to-r from-yellowOrange to-sunset text-white"
-													}`}
-												>
-													{vacancy.type}
-												</span>
-												<h3 className="text-2xl font-bold text-oxfordBlue font-poppins">
-													{vacancy.title}
-												</h3>
-											</div>
-											<div className="flex items-center space-x-4 mb-3 text-oxfordBlue/60">
-												<div className="flex items-center space-x-2">
-													<FontAwesomeIcon
-														icon={faMapMarkerAlt}
-													/>
-													<span className="font-poppins">
-														{vacancy.location}
-													</span>
-												</div>
-												<div className="flex items-center space-x-2">
-													<FontAwesomeIcon
-														icon={faDog}
-													/>
-													<span className="font-poppins">
-														{vacancy.center}
-													</span>
-												</div>
-											</div>
-											<p className="text-oxfordBlue/70 font-poppins mb-3 leading-relaxed">
-												{vacancy.description}
-											</p>
-											<p className="text-oxfordBlue/60 font-poppins text-sm">
-												<strong>Requirements:</strong>{" "}
-												{vacancy.requirements}
-											</p>
-										</div>
-										<div className="lg:ml-6">
-											<Link
-												to="/contact"
-												className="inline-flex items-center space-x-2 bg-gradient-to-r from-aquamarine to-turquoise text-white px-6 py-3 rounded-xl font-poppins font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap"
-											>
-												<FontAwesomeIcon
-													icon={faEnvelope}
-												/>
-												<span>Apply Now</span>
-											</Link>
-										</div>
-									</div>
-								</motion.div>
-							))}
-						</div>
+						<motion.div
+							className="bg-bayleaf rounded-3xl shadow-xl p-8 lg:p-12 text-center"
+							initial={{ opacity: 0, y: 20 }}
+							animate={
+								sectionInView
+									? { opacity: 1, y: 0 }
+									: { opacity: 0, y: 20 }
+							}
+							transition={{
+								duration: 0.6,
+								delay: 0.6,
+								ease: "easeOut",
+							}}
+						>
+							<FontAwesomeIcon
+								icon={faUsers}
+								className="text-5xl text-sunset/70 mb-4"
+							/>
+							<h3 className="text-2xl font-bold text-oxfordBlue font-delius mb-3">
+								No Vacancies at This Time
+							</h3>
+							<p className="text-mintCream font-poppins max-w-2xl mx-auto">
+								We currently don't have any open positions, but
+								we're always looking for passionate people to
+								join our mission. Check back soon or contact us
+								to express your interest!
+							</p>
+						</motion.div>
 
 						<motion.div
 							className="mt-12 text-center bg-gradient-to-br from-aquamarine/10 to-turquoise/10 rounded-3xl p-8"
@@ -369,10 +250,10 @@ const Support: React.FC = () => {
 							}
 							transition={{ duration: 0.6, delay: 1.2 }}
 						>
-							<h3 className="text-2xl font-bold text-oxfordBlue font-poppins mb-4">
+							<h3 className="text-2xl font-bold text-oxfordBlue font-delius mb-4">
 								Don't See What You're Looking For?
 							</h3>
-							<p className="text-oxfordBlue/70 font-poppins mb-6 max-w-2xl mx-auto">
+							<p className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto mb-8">
 								We're always looking for passionate people to
 								join our mission. Even if you don't see a
 								specific role listed, we'd love to hear from
@@ -381,9 +262,12 @@ const Support: React.FC = () => {
 							</p>
 							<Link
 								to="/contact"
-								className="inline-flex items-center space-x-2 bg-gradient-to-r from-aquamarine to-turquoise text-white px-8 py-4 rounded-xl font-poppins font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+								className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-xl"
 							>
-								<FontAwesomeIcon icon={faEnvelope} />
+								<FontAwesomeIcon
+									className="mr-2"
+									icon={faEnvelope}
+								/>
 								<span>Contact Us About Opportunities</span>
 							</Link>
 						</motion.div>
@@ -391,7 +275,7 @@ const Support: React.FC = () => {
 
 					{/* Call to Action */}
 					<motion.div
-						className="bg-gradient-to-br from-skyBlue to-aquamarine rounded-3xl shadow-2xl p-8 lg:p-12 text-center text-white mb-12"
+						className="bg-bayleaf rounded-3xl shadow-2xl p-8 lg:p-12 text-center text-white mb-12"
 						initial={{ opacity: 0, scale: 0.95 }}
 						animate={
 							sectionInView
@@ -404,10 +288,10 @@ const Support: React.FC = () => {
 							icon={faHeart}
 							className="text-5xl mb-4 text-yellowOrange"
 						/>
-						<h2 className="text-3xl lg:text-4xl font-bold font-poppins mb-4">
+						<h2 className="text-3xl lg:text-4xl font-bold font-delius text-oxfordBlue mb-4">
 							Ready to Make a Difference?
 						</h2>
-						<p className="text-lg font-poppins mb-8 max-w-2xl mx-auto opacity-90">
+						<p className="text-lg lg:text-xl text-mintCream font-fredoka max-w-3xl mx-auto mb-6">
 							Every act of support, no matter how big or small,
 							helps rescue dogs find their forever homes. Join us
 							in creating happy endings for dogs in need.
@@ -415,16 +299,22 @@ const Support: React.FC = () => {
 						<div className="flex flex-col sm:flex-row gap-4 justify-center">
 							<Link
 								to="/donate"
-								className="inline-flex items-center justify-center space-x-2 bg-white text-aquamarine px-8 py-4 rounded-xl font-poppins font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+								className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-xl"
 							>
-								<FontAwesomeIcon icon={faHeart} />
+								<FontAwesomeIcon
+									className="mr-2"
+									icon={faHeart}
+								/>
 								<span>Make a Donation</span>
 							</Link>
 							<Link
 								to="/contact"
-								className="inline-flex items-center justify-center space-x-2 bg-yellowOrange text-white px-8 py-4 rounded-xl font-poppins font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+								className="group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
 							>
-								<FontAwesomeIcon icon={faHandsHelping} />
+								<FontAwesomeIcon
+									className="mr-2"
+									icon={faUsers}
+								/>
 								<span>Get Involved</span>
 							</Link>
 						</div>
