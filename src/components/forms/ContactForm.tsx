@@ -205,7 +205,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 				transition={{ duration: 0.5 }}
 			>
 				<div className="text-center mb-6">
-					<div className="w-16 h-16 bg-gradient-to-br from-bayleaf to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3">
+					<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
 						<FontAwesomeIcon
 							icon={faCheckCircle}
 							className="text-2xl text-sunset"
@@ -226,7 +226,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 	return (
 		<div className={className}>
 			<div className="text-center mb-6">
-				<div className="w-16 h-16 bg-gradient-to-br from-bayleaf to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3">
+				<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
 					<FontAwesomeIcon
 						icon={getIcon()}
 						className="text-2xl text-sunset"

@@ -154,43 +154,45 @@ export default function Breeds() {
 					<div className="flex justify-center items-center flex-wrap gap-4 mb-6">
 						{groups.map((group, index) => {
 							return (
-								<motion.button
+								<button
 									key={index}
-									className="group relative overflow-hidden bg-gradient-to-r from-skyBlue to-turquoise text-oxfordBlue px-6 py-4 rounded-xl font-poppins font-semibold text-base shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 border border-skyBlue/30"
+									className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
+										selectedGroup === group
+											? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
+											: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
+									}`}
 									onClick={() => fetchBreedsOfGroup(group)}
-									whileHover={{ scale: 1.05 }}
-									whileTap={{ scale: 0.95 }}
 								>
-									<div className="flex items-center space-x-3 relative z-10">
+									<div className="flex items-center justify-center space-x-3">
 										<FontAwesomeIcon
 											icon={faPaw}
 											className="text-lg"
 										/>
 										<span>{group}</span>
 									</div>
-									<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-								</motion.button>
+								</button>
 							);
 						})}
 					</div>
 				)}
 				{breeds && breeds.length > 0 && (
 					<div className="flex justify-center items-center">
-						<motion.button
-							className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-4 rounded-xl font-poppins font-semibold text-base shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 border border-oxfordBlue/30"
+						<button
+							className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
+								!selectedGroup
+									? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
+									: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
+							}`}
 							onClick={() => fetchAll()}
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
 						>
-							<div className="flex items-center space-x-3 relative z-10">
+							<div className="flex items-center justify-center space-x-3">
 								<FontAwesomeIcon
 									icon={faList}
 									className="text-lg"
 								/>
 								<span>All Breeds</span>
 							</div>
-							<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-oxfordBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-						</motion.button>
+						</button>
 					</div>
 				)}
 			</motion.div>
@@ -212,12 +214,12 @@ export default function Breeds() {
 					breeds.length > 0 && (
 						<div>
 							{selectedGroup && (
-								<h2 className="text-2xl font-bold text-center mb-8 text-oxfordBlue">
+								<h2 className="text-4xl font-bold text-center mb-8 text-oxfordBlue font-delius">
 									{selectedGroup} Breeds
 								</h2>
 							)}
 							{!selectedGroup && (
-								<h2 className="text-2xl font-bold text-center mb-8 text-oxfordBlue">
+								<h2 className="text-4xl font-bold text-center mb-8 text-oxfordBlue font-delius">
 									All Breeds
 								</h2>
 							)}

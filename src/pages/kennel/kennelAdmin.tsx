@@ -257,15 +257,15 @@ const KennelAdmin = () => {
 			>
 				<Form className="my-4 flex flex-col justify-start items-start w-full lg:w-full space-y-6">
 					<div className="w-full">
-						<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+						<label className="ml-2 text-tara font-poppins font-semibold mb-2 flex items-center">
 							<FontAwesomeIcon
 								icon={faBuilding}
-								className="mr-2 text-oxfordBlue"
+								className="mr-2 text-tara"
 							/>
 							Center name
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 							type="text"
 							id="name"
 							name="name"
@@ -273,15 +273,15 @@ const KennelAdmin = () => {
 						/>
 					</div>
 					<div className="w-full">
-						<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+						<label className="ml-2 text-tara font-poppins font-semibold mb-2 flex items-center">
 							<FontAwesomeIcon
 								icon={faEnvelope}
-								className="mr-2 text-oxfordBlue"
+								className="mr-2 text-tara"
 							/>
 							Email
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 							type="email"
 							id="email"
 							name="email"
@@ -294,15 +294,15 @@ const KennelAdmin = () => {
 						/>
 					</div>
 					<div className="w-full">
-						<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+						<label className="ml-2 text-tara font-poppins font-semibold mb-2 flex items-center">
 							<FontAwesomeIcon
 								icon={faPhone}
-								className="mr-2 text-oxfordBlue"
+								className="mr-2 text-tara"
 							/>
 							Contact number
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 							type="text"
 							id="number"
 							name="number"
@@ -310,32 +310,32 @@ const KennelAdmin = () => {
 						/>
 					</div>
 					<div className="w-full">
-						<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+						<label className="ml-2 text-tara font-poppins font-semibold mb-2 flex items-center">
 							<FontAwesomeIcon
 								icon={faMapMarkerAlt}
-								className="mr-2 text-oxfordBlue"
+								className="mr-2 text-tara"
 							/>
 							Address Line 1
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 							type="text"
 							id="addressLine1"
 							name="addressLine1"
 							placeholder="Enter address"
 						/>
 					</div>
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+					<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="w-full">
-							<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+							<label className="ml-2 text-tara font-poppins font-semibold mb-2 flex items-center">
 								<FontAwesomeIcon
 									icon={faBuilding}
-									className="mr-2 text-oxfordBlue"
+									className="mr-2 text-tara"
 								/>
 								Town
 							</label>
 							<Field
-								className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+								className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 								type="text"
 								id="town"
 								name="town"
@@ -343,15 +343,15 @@ const KennelAdmin = () => {
 							/>
 						</div>
 						<div className="w-full">
-							<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+							<label className="ml-2 text-tara font-poppins font-semibold mb-2 flex items-center">
 								<FontAwesomeIcon
 									icon={faCity}
-									className="mr-2 text-oxfordBlue"
+									className="mr-2 text-tara"
 								/>
 								City
 							</label>
 							<Field
-								className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+								className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 								type="text"
 								id="city"
 								name="city"
@@ -360,15 +360,15 @@ const KennelAdmin = () => {
 						</div>
 					</div>
 					<div className="w-full">
-						<label className="block text-sm font-semibold text-oxfordBlue mb-2 flex items-center">
+						<label className="ml-2 text-tara font-poppins font-semibold mb-2 flex items-center">
 							<FontAwesomeIcon
 								icon={faMapMarkerAlt}
-								className="mr-2 text-oxfordBlue"
+								className="mr-2 text-tara"
 							/>
 							Postcode
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 							type="text"
 							id="postcode"
 							name="postcode"
@@ -377,25 +377,29 @@ const KennelAdmin = () => {
 					</div>
 
 					<div className="flex items-center justify-center mt-6 w-full">
-						<motion.button
+						<button
 							type="submit"
-							className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-3 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-oxfordBlue/30"
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
+							disabled={loading}
+							className="w-full group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
 						>
-							<div className="flex items-center space-x-3 relative z-10">
-								<FontAwesomeIcon
-									icon={faEnvelope}
-									className="text-lg"
-								/>
-								<span>
-									{loading
-										? "Sending..."
-										: "Send Application"}
-								</span>
+							<div className="flex items-center justify-center space-x-3 relative z-10">
+								{loading ? (
+									<>
+										<div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+										<span>Sending...</span>
+									</>
+								) : (
+									<>
+										<FontAwesomeIcon
+											icon={faEnvelope}
+											className="text-lg"
+										/>
+										<span>Send Application</span>
+									</>
+								)}
 							</div>
-							<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-						</motion.button>
+							<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+						</button>
 					</div>
 				</Form>
 			</Formik>
@@ -405,26 +409,24 @@ const KennelAdmin = () => {
 	const renderThankYou = () => {
 		return (
 			<motion.div
-				className="flex flex-col bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 max-w-md mx-auto"
+				className="text-center"
 				initial={{ opacity: 0, scale: 0.9 }}
 				animate={{ opacity: 1, scale: 1 }}
 				transition={{ duration: 0.5 }}
 			>
-				<div className="text-center">
-					<div className="w-16 h-16 bg-gradient-to-br from-oxfordBlue to-skyBlue rounded-full flex items-center justify-center mx-auto mb-4">
-						<FontAwesomeIcon
-							icon={faEnvelope}
-							className="text-2xl text-honeydew"
-						/>
-					</div>
-					<h3 className="text-2xl font-bold text-oxfordBlue mb-3">
-						Thank you!
-					</h3>
-					<p className="text-oxfordBlue/80 font-poppins">
-						We are working to create an account for your center and
-						will be in touch shortly
-					</p>
+				<div className="w-16 h-16 bg-gradient-to-br from-bayleaf to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3">
+					<FontAwesomeIcon
+						icon={faEnvelope}
+						className="text-2xl text-sunset"
+					/>
 				</div>
+				<h3 className="text-2xl font-bold text-tara mb-3 font-delius">
+					Thank you!
+				</h3>
+				<p className="text-tara/90 font-poppins">
+					We are working to create an account for your center and will
+					be in touch shortly
+				</p>
 			</motion.div>
 		);
 	};
@@ -432,7 +434,7 @@ const KennelAdmin = () => {
 	return (
 		<motion.div
 			id="kennelAdmin"
-			className="min-h-screen bg-tara pt-20 pb-8 px-4"
+			className="min-h-screen bg-mintCream pt-20 pb-8 px-4"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
@@ -462,36 +464,32 @@ const KennelAdmin = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
 				>
-					<div className="bg-mintCream backdrop-blur-sm rounded-2xl p-2 shadow-lg">
-						<motion.button
+					<div className="flex flex-wrap justify-center gap-4">
+						<button
 							onClick={() => setIsLoginForm(true)}
-							className={`px-8 py-3 mx-1 rounded-xl font-semibold transition-all duration-200 ${
+							className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
 								isLoginForm
-									? "bg-oxfordBlue text-honeydew shadow-md transform scale-105"
-									: "text-oxfordBlue hover:bg-oxfordBlue/10"
+									? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
+									: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
 							}`}
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
 						>
 							<FontAwesomeIcon icon={faUser} className="mr-2" />
 							Login
-						</motion.button>
-						<motion.button
+						</button>
+						<button
 							onClick={() => setIsLoginForm(false)}
-							className={`px-8 py-3 mx-1 rounded-xl font-semibold transition-all duration-200 ${
+							className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
 								!isLoginForm
-									? "bg-oxfordBlue text-honeydew shadow-md transform scale-105"
-									: "text-oxfordBlue hover:bg-oxfordBlue/10"
+									? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
+									: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
 							}`}
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
 						>
 							<FontAwesomeIcon
 								icon={faEnvelope}
 								className="mr-2"
 							/>
 							Signup
-						</motion.button>
+						</button>
 					</div>
 				</motion.div>
 				<motion.div
@@ -502,11 +500,11 @@ const KennelAdmin = () => {
 				>
 					{/* Login Form */}
 					{isLoginForm && (
-						<div className="bg-mintCream backdrop-blur-sm rounded-3xl shadow-2xl p-8 max-w-2xl mx-auto">
+						<div className="bg-tomThumb rounded-3xl shadow-xl p-8 lg:p-10 max-w-2xl mx-auto">
 							<div>
-								<p className="text-oxfordBlue text-2xl font-bold mb-4 font-poppins text-center">
+								<h2 className="text-3xl font-bold text-tara font-delius mb-8 text-center">
 									Kennel Login
-								</p>
+								</h2>
 								<Formik
 									initialValues={{
 										username: "",
@@ -528,24 +526,26 @@ const KennelAdmin = () => {
 									}}
 								>
 									{({ values, isSubmitting }) => (
-										<Form className="my-4 flex flex-col justify-start items-start w-full lg:w-full">
-											<p className="block text-md text-oxfordBlue font-sans">
-												Username
-											</p>
-											<Field
-												className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 font-sans"
-												type="text"
-												id="username"
-												name="username"
-												placeholder="Username"
-											/>
+										<Form className="my-4 flex flex-col justify-start items-start w-full lg:w-full space-y-4">
+											<div className="w-full">
+												<label className="ml-2 block text-tara font-poppins font-semibold mb-2">
+													Username
+												</label>
+												<Field
+													className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
+													type="text"
+													id="username"
+													name="username"
+													placeholder="Enter your username"
+												/>
+											</div>
 											<div className="relative w-full">
-												<p className="block text-md text-oxfordBlue font-sans">
+												<label className="ml-2 block text-tara font-poppins font-semibold mb-2">
 													Password
-												</p>
+												</label>
 
 												<Field
-													className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 font-sans pr-10"
+													className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors pr-10"
 													type={
 														showPassword
 															? "text"
@@ -553,7 +553,7 @@ const KennelAdmin = () => {
 													}
 													id="password"
 													name="password"
-													placeholder="Password"
+													placeholder="Enter your password"
 												/>
 
 												<span
@@ -562,7 +562,7 @@ const KennelAdmin = () => {
 															!showPassword
 														)
 													}
-													className="absolute right-3 top-8 cursor-pointer text-gray-500 hover:text-oxfordBlue"
+													className="absolute right-4 top-[2.75rem] cursor-pointer text-oxfordBlue/60 hover:text-oxfordBlue"
 												>
 													<FontAwesomeIcon
 														icon={
@@ -578,19 +578,26 @@ const KennelAdmin = () => {
 												<button
 													disabled={
 														!values.password ||
-														!values.username
+														!values.username ||
+														loggingIn
 													}
 													type="submit"
-													className={`px-10 py-2 rounded-full transition-all shadow-md font-fredoka text-xl font-semibold bg-gradient-to-r from-highland to-sark text-peppermint hover:scale-105 hover:text-sunset ${
-														!values.password ||
-														!values.username
-															? "opacity-60 cursor-not-allowed"
-															: "hover:bg-skyBlue hover:text-oxfordBlue"
-													}`}
+													className="w-full group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
 												>
-													{loggingIn
-														? "Logging in ..."
-														: "Login"}
+													<div className="flex items-center justify-center space-x-3 relative z-10">
+														{loggingIn ? (
+															<>
+																<div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+																<span>
+																	Logging
+																	in...
+																</span>
+															</>
+														) : (
+															<span>Login</span>
+														)}
+													</div>
+													<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 												</button>
 											</div>
 										</Form>
@@ -635,20 +642,20 @@ const KennelAdmin = () => {
 
 					{/* Signup Form */}
 					{!isLoginForm && (
-						<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 max-w-4xl mx-auto">
+						<div className="bg-tomThumb rounded-3xl shadow-xl p-8 lg:p-10 max-w-4xl mx-auto">
 							{!formSubmitted && (
 								<div>
 									<div className="text-center mb-6">
-										<div className="w-16 h-16 bg-gradient-to-br from-oxfordBlue to-skyBlue rounded-full flex items-center justify-center mx-auto mb-3">
+										<div className="w-16 h-16 bg-gradient-to-br from-bayleaf to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3">
 											<FontAwesomeIcon
 												icon={faEnvelope}
-												className="text-2xl text-honeydew"
+												className="text-2xl text-sunset"
 											/>
 										</div>
-										<h2 className="text-2xl font-bold text-oxfordBlue mb-2">
+										<h2 className="text-3xl font-bold text-tara font-delius mb-8 text-center">
 											Register Your Center
 										</h2>
-										<p className="text-oxfordBlue/70">
+										<p className="text-lg lg:text-xl text-tara/90 font-fredoka max-w-3xl mx-auto mb-8">
 											Are you a re-homing or animal rescue
 											center? Sign up here to upload dogs
 											available for adoption.

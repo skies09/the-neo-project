@@ -134,29 +134,27 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 
 					{/* Modal */}
 					<motion.div
-						className="relative bg-gradient-to-br from-skyBlue to-aquamarine rounded-3xl p-8 max-w-md w-full shadow-2xl"
+						className="relative bg-tomThumb rounded-3xl p-8 lg:p-10 max-w-md w-full shadow-2xl"
 						initial={{ scale: 0.9, opacity: 0, y: 20 }}
 						animate={{ scale: 1, opacity: 1, y: 0 }}
 						exit={{ scale: 0.9, opacity: 0, y: 20 }}
 						transition={{ type: "spring", damping: 25, stiffness: 300 }}
 					>
 						{/* Header */}
-						<div className="flex items-center justify-between mb-6">
-							<div className="flex items-center">
-								<div className="w-10 h-10 bg-oxfordBlue rounded-full flex items-center justify-center mr-3">
-									<FontAwesomeIcon
-										icon={faLock}
-										className="text-honeydew text-lg"
-									/>
-								</div>
-								<h2 className="text-2xl font-bold text-oxfordBlue">
-									Change Password
-								</h2>
+						<div className="text-center mb-6">
+							<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
+								<FontAwesomeIcon
+									icon={faLock}
+									className="text-2xl text-sunset"
+								/>
 							</div>
+							<h2 className="text-3xl font-bold text-tara font-delius mb-8 text-center">
+								Change Password
+							</h2>
 							<button
 								onClick={handleClose}
 								disabled={loading}
-								className="text-oxfordBlue hover:text-oxfordBlue/70 transition-colors disabled:opacity-50"
+								className="absolute top-4 right-4 text-tara hover:text-tara/70 transition-colors disabled:opacity-50"
 							>
 								<FontAwesomeIcon icon={faTimes} className="text-xl" />
 							</button>
@@ -190,7 +188,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 							<div>
 								<label
 									htmlFor="old_password"
-									className="block text-sm font-medium text-oxfordBlue mb-2"
+									className="block text-tara font-poppins font-semibold mb-2"
 								>
 									Current Password
 								</label>
@@ -202,14 +200,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 										value={formData.old_password}
 										onChange={handleInputChange}
 										disabled={loading}
-										className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-oxfordBlue focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+										className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed pr-10"
 										placeholder="Enter your current password"
 									/>
 									<button
 										type="button"
 										onClick={() => togglePasswordVisibility("old")}
 										disabled={loading}
-										className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-oxfordBlue transition-colors"
+										className="absolute right-4 top-1/2 transform -translate-y-1/2 text-oxfordBlue/60 hover:text-oxfordBlue transition-colors"
 									>
 										<FontAwesomeIcon
 											icon={showPasswords.old ? faEyeSlash : faEye}
@@ -222,7 +220,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 							<div>
 								<label
 									htmlFor="new_password"
-									className="block text-sm font-medium text-oxfordBlue mb-2"
+									className="block text-tara font-poppins font-semibold mb-2"
 								>
 									New Password
 								</label>
@@ -234,21 +232,21 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 										value={formData.new_password}
 										onChange={handleInputChange}
 										disabled={loading}
-										className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-oxfordBlue focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+										className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed pr-10"
 										placeholder="Enter your new password"
 									/>
 									<button
 										type="button"
 										onClick={() => togglePasswordVisibility("new")}
 										disabled={loading}
-										className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-oxfordBlue transition-colors"
+										className="absolute right-4 top-1/2 transform -translate-y-1/2 text-oxfordBlue/60 hover:text-oxfordBlue transition-colors"
 									>
 										<FontAwesomeIcon
 											icon={showPasswords.new ? faEyeSlash : faEye}
 										/>
 									</button>
 								</div>
-								<p className="text-xs text-gray-500 mt-1">
+								<p className="text-xs text-tara/70 font-poppins mt-1 ml-2">
 									Must be at least 8 characters long
 								</p>
 							</div>
@@ -257,7 +255,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 							<div>
 								<label
 									htmlFor="confirm_password"
-									className="block text-sm font-medium text-oxfordBlue mb-2"
+									className="block text-tara font-poppins font-semibold mb-2"
 								>
 									Confirm New Password
 								</label>
@@ -269,14 +267,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 										value={formData.confirm_password}
 										onChange={handleInputChange}
 										disabled={loading}
-										className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-oxfordBlue focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+										className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed pr-10"
 										placeholder="Confirm your new password"
 									/>
 									<button
 										type="button"
 										onClick={() => togglePasswordVisibility("confirm")}
 										disabled={loading}
-										className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-oxfordBlue transition-colors"
+										className="absolute right-4 top-1/2 transform -translate-y-1/2 text-oxfordBlue/60 hover:text-oxfordBlue transition-colors"
 									>
 										<FontAwesomeIcon
 											icon={showPasswords.confirm ? faEyeSlash : faEye}
@@ -289,16 +287,22 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 							<button
 								type="submit"
 								disabled={loading}
-								className="w-full bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew py-3 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
+								className="w-full group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
 							>
-								{loading ? (
-									<div className="flex items-center justify-center">
-										<div className="animate-spin rounded-full h-5 w-5 border-b-2 border-honeydew mr-2"></div>
-										Changing Password...
-									</div>
-								) : (
-									"Change Password"
-								)}
+								<div className="flex items-center justify-center space-x-3 relative z-10">
+									{loading ? (
+										<>
+											<div className="animate-spin w-5 h-5 border-2 border-oxfordBlue border-t-transparent rounded-full"></div>
+											<span>Changing Password...</span>
+										</>
+									) : (
+										<>
+											<FontAwesomeIcon icon={faLock} className="text-lg" />
+											<span>Change Password</span>
+										</>
+									)}
+								</div>
+								<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 							</button>
 						</form>
 					</motion.div>

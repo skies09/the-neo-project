@@ -148,7 +148,7 @@ const KennelAccount = () => {
 
 	return (
 		<motion.div
-			className="min-h-screen pt-16 pb-8"
+			className="min-h-screen bg-mintCream pt-16 pb-8"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
@@ -156,17 +156,19 @@ const KennelAccount = () => {
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				{/* Header */}
 				<motion.div
-					className="text-center mb-8"
+					className="text-center my-8"
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 				>
-					<h1 className="text-4xl font-bold text-oxfordBlue mb-2">
-						{loadingKennel
-							? "Loading..."
-							: kennelData?.name || "Kennel Account"}
-					</h1>
-					<p className="text-lg text-oxfordBlue/80">
+					<div className="flex justify-center items-center my-4">
+						<h1 className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md text-center">
+							{loadingKennel
+								? "Loading..."
+								: kennelData?.name || "Kennel Account"}
+						</h1>
+					</div>
+					<p className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto">
 						Manage your kennel profile and dogs
 					</p>
 				</motion.div>
@@ -178,17 +180,17 @@ const KennelAccount = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
 				>
-					<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-2xl p-2 shadow-lg">
+					<div className="flex flex-wrap justify-center gap-4">
 						<button
 							onClick={() => {
 								setShowProfile(false);
 								setShowDogUploadForm(false);
 								setDogToEdit(null);
 							}}
-							className={`px-8 py-3 mx-1 rounded-xl font-semibold transition-all duration-200 ${
+							className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
 								!showProfile
-									? "bg-oxfordBlue text-honeydew shadow-md transform scale-105"
-									: "text-oxfordBlue hover:bg-oxfordBlue/10"
+									? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
+									: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
 							}`}
 						>
 							<FontAwesomeIcon icon={faDog} className="mr-2" />
@@ -199,10 +201,10 @@ const KennelAccount = () => {
 								setShowProfile(true);
 								setProfileEdited(false);
 							}}
-							className={`px-8 py-3 mx-1 rounded-xl font-semibold transition-all duration-200 ${
+							className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
 								showProfile
-									? "bg-oxfordBlue text-honeydew shadow-md transform scale-105"
-									: "text-oxfordBlue hover:bg-oxfordBlue/10"
+									? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
+									: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
 							}`}
 						>
 							<FontAwesomeIcon icon={faUser} className="mr-2" />
@@ -249,13 +251,16 @@ const KennelAccount = () => {
 							<div className="text-center mb-8">
 								<button
 									onClick={() => setShowDogUploadForm(true)}
-									className="bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew px-8 py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+									className="group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
 								>
-									<FontAwesomeIcon
-										icon={faPlus}
-										className="mr-2"
-									/>
-									Add New Dog
+									<div className="flex items-center justify-center space-x-3 relative z-10">
+										<FontAwesomeIcon
+											icon={faPlus}
+											className="text-lg"
+										/>
+										<span>Add New Dog</span>
+									</div>
+									<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 								</button>
 							</div>
 						)}
@@ -275,11 +280,11 @@ const KennelAccount = () => {
 
 						{/* Dogs List */}
 						{!showDogUploadForm && (
-							<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl p-8 shadow-xl">
+							<div className="bg-tomThumb rounded-3xl p-8 shadow-xl">
 								{loadingDogs ? (
 									<div className="text-center py-12">
-										<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-oxfordBlue mx-auto mb-4"></div>
-										<p className="text-lg text-oxfordBlue font-semibold">
+										<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-tara mx-auto mb-4"></div>
+										<p className="text-lg text-tara font-semibold font-poppins">
 											Loading dogs...
 										</p>
 									</div>
@@ -288,13 +293,13 @@ const KennelAccount = () => {
 										<div className="text-6xl mb-4">
 											<FontAwesomeIcon
 												icon={faDog}
-												className="text-oxfordBlue"
+												className="text-tara"
 											/>
 										</div>
-										<h3 className="text-2xl font-bold text-oxfordBlue mb-2">
+										<h3 className="text-2xl font-bold text-tara font-delius mb-2">
 											No dogs found
 										</h3>
-										<p className="text-oxfordBlue/70">
+										<p className="text-tara/70 font-poppins">
 											Add your first dog to get started!
 										</p>
 									</div>
@@ -303,53 +308,53 @@ const KennelAccount = () => {
 										{dogData.map((dog) => (
 											<div
 												key={dog.id}
-												className="bg-gradient-to-br from-skyBlue to-aquamarine rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100 "
+												className="bg-gradient-to-br from-tara to-mintCream rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200"
 											>
 												<div className="text-center mb-4">
-													<div className="w-16 h-16 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center mx-auto mb-3">
+													<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
 														<FontAwesomeIcon
 															icon={faDog}
-															className="text-2xl text-honeydew"
+															className="text-2xl text-sunset"
 														/>
 													</div>
-													<h3 className="text-xl font-bold text-oxfordBlue">
+													<h3 className="text-xl font-bold text-oxfordBlue font-delius">
 														{dog.name}
 													</h3>
-													<p className="text-sm text-oxfordBlue/70">
+													<p className="text-sm text-oxfordBlue/70 font-poppins">
 														{dog.breed}
 													</p>
 												</div>
 
 												<div className="space-y-2 mb-6">
 													<div className="flex justify-between">
-														<span className="text-sm text-gray-600">
+														<span className="text-sm text-oxfordBlue/70 font-poppins">
 															Gender:
 														</span>
-														<span className="font-medium">
+														<span className="font-medium text-oxfordBlue font-poppins">
 															{dog.gender}
 														</span>
 													</div>
 													<div className="flex justify-between">
-														<span className="text-sm text-gray-600">
+														<span className="text-sm text-oxfordBlue/70 font-poppins">
 															Age:
 														</span>
-														<span className="font-medium">
+														<span className="font-medium text-oxfordBlue font-poppins">
 															{dog.age} years
 														</span>
 													</div>
 													<div className="flex justify-between">
-														<span className="text-sm text-gray-600">
+														<span className="text-sm text-oxfordBlue/70 font-poppins">
 															Weight:
 														</span>
-														<span className="font-medium">
+														<span className="font-medium text-oxfordBlue font-poppins">
 															{dog.weight}kg
 														</span>
 													</div>
 													<div className="flex justify-between">
-														<span className="text-sm text-gray-600">
+														<span className="text-sm text-oxfordBlue/70 font-poppins">
 															Size:
 														</span>
-														<span className="font-medium">
+														<span className="font-medium text-oxfordBlue font-poppins">
 															{getSizeDisplayName(
 																dog.size
 															)}
@@ -360,7 +365,7 @@ const KennelAccount = () => {
 												<div className="flex space-x-3">
 													<button
 														type="button"
-														className="flex-1 bg-oxfordBlue hover:bg-oxfordBlue/90 text-honeydew px-4 py-2 rounded-xl font-medium transition-all duration-200"
+														className="flex-1 group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-4 py-2 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
 														onClick={() => {
 															setShowDogUploadForm(
 																true
@@ -400,11 +405,14 @@ const KennelAccount = () => {
 															});
 														}}
 													>
-														<FontAwesomeIcon
-															icon={faEdit}
-															className="mr-1"
-														/>
-														Edit
+														<div className="flex items-center justify-center space-x-2 relative z-10">
+															<FontAwesomeIcon
+																icon={faEdit}
+																className="text-sm"
+															/>
+															<span>Edit</span>
+														</div>
+														<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 													</button>
 													<button
 														type="button"
@@ -413,13 +421,16 @@ const KennelAccount = () => {
 																dog.id
 															)
 														}
-														className="flex-1 bg-red-500 hover:bg-red-600 text-oxfordBlue px-4 py-2 rounded-xl font-medium transition-all duration-200"
+														className="flex-1 group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-4 py-2 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
 													>
-														<FontAwesomeIcon
-															icon={faTrash}
-															className="mr-1"
-														/>
-														Delete
+														<div className="flex items-center justify-center space-x-2 relative z-10">
+															<FontAwesomeIcon
+																icon={faTrash}
+																className="text-sm"
+															/>
+															<span>Delete</span>
+														</div>
+														<div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 													</button>
 												</div>
 											</div>

@@ -37,7 +37,7 @@ const Contact = (form: ContactProps) => {
 							Contact Us
 						</h1>
 					</div>
-					<p className="text-md lg:text-lg text-oxfordBlue/70 font-poppins max-w-2xl mx-auto">
+					<p className="text-lg text-highland font-fredoka max-w-5xl mx-auto">
 						Need help? Have questions about adoption? <br></br>Get
 						in touch with us and we'll be happy to help!
 					</p>
@@ -62,7 +62,7 @@ const Contact = (form: ContactProps) => {
 
 							<div className="space-y-6 md:grid md:grid-cols-3 md:gap-6 md:space-y-0">
 								<div className="flex items-center space-x-4 md:flex-col md:text-center md:space-x-0">
-									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center flex-shrink-0">
+									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center flex-shrink-0 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
 										<FontAwesomeIcon
 											icon={faPhone}
 											className="text-sunset text-xl"
@@ -82,7 +82,7 @@ const Contact = (form: ContactProps) => {
 								</div>
 
 								<div className="flex items-center space-x-4 md:flex-col md:text-center md:space-x-0">
-									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center flex-shrink-0">
+									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center flex-shrink-0 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
 										<FontAwesomeIcon
 											icon={faEnvelope}
 											className="text-sunset text-xl"
@@ -102,7 +102,7 @@ const Contact = (form: ContactProps) => {
 								</div>
 
 								<div className="flex items-center space-x-4 md:flex-col md:text-center md:space-x-0">
-									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center flex-shrink-0">
+									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center flex-shrink-0 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
 										<FontAwesomeIcon
 											icon={faClock}
 											className="text-sunset text-xl"

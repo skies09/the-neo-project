@@ -16,6 +16,7 @@ const HowItWorks: React.FC = () => {
 		}
 	}, [cardsInView, hasAnimated]);
 
+
 	const steps = [
 		{
 			icon: faSearch,
@@ -135,10 +136,10 @@ const HowItWorks: React.FC = () => {
 
 								{/* Step Content */}
 								<div className="text-center">
-									<div className="w-16 h-16 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center mx-auto mb-4">
+									<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
 										<FontAwesomeIcon
 											icon={step.icon}
-											className="text-2xl text-yellowOrange"
+											className="text-2xl text-sunset"
 										/>
 									</div>
 									<h3 className="text-2xl font-bold text-oxfordBlue font-poppins mb-3">
