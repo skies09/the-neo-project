@@ -123,7 +123,7 @@ const Donate: React.FC = () => {
 											setDonorName(e.target.value)
 										}
 										placeholder="Enter your name"
-										className="w-full px-4 py-3 border-2 border-gray-200 rounded-full font-poppins focus:border-aquamarine focus:outline-none transition-colors"
+										className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 									/>
 								</div>
 								<div>
@@ -137,7 +137,7 @@ const Donate: React.FC = () => {
 											setDonorEmail(e.target.value)
 										}
 										placeholder="Enter your email"
-										className="w-full px-4 py-3 border-2 border-gray-200 rounded-full font-poppins focus:border-aquamarine focus:outline-none transition-colors"
+										className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 									/>
 								</div>
 							</div>

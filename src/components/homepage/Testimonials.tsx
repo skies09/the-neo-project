@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faPaw } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 const Testimonials: React.FC = () => {
 	const sectionRef = useRef(null);
@@ -25,21 +25,21 @@ const Testimonials: React.FC = () => {
 			location: "Manchester",
 			text: "The Neo Project made finding our perfect dog so easy! The search filters helped us find exactly what we were looking for, and the adoption process was smooth and stress-free.",
 			rating: 5,
-			image: "Profile Image Placeholder",
+			image: "/images/homepageImages/reviewsImages/review1.jpg",
 		},
 		{
 			name: "Michael Chen",
 			location: "London",
 			text: "We adopted our rescue dog through The Neo Project and couldn't be happier. The platform connected us with a wonderful rescue center, and our new family member is perfect!",
 			rating: 5,
-			image: "Profile Image Placeholder",
+			image: "/images/homepageImages/reviewsImages/review2.jpg",
 		},
 		{
 			name: "Emma Williams",
 			location: "Birmingham",
 			text: "The team at The Neo Project was incredibly helpful throughout the entire process. They made sure we found the right match for our family, and we're so grateful for their support.",
 			rating: 5,
-			image: "Profile Image Placeholder",
+			image: "/images/homepageImages/reviewsImages/review3.jpg",
 		},
 	];
 
@@ -124,11 +124,12 @@ const Testimonials: React.FC = () => {
 
 							{/* Profile */}
 							<div className="flex items-center justify-center space-x-4">
-								{/* Profile Image Placeholder */}
-								<div className="w-16 h-16 bg-gradient-to-br from-skyBlue/20 to-aquamarine/20 rounded-full flex items-center justify-center border-2 border-dashed border-skyBlue/50">
-									<FontAwesomeIcon
-										icon={faPaw}
-										className="text-skyBlue/60"
+								{/* Profile Image */}
+								<div className="w-28 h-28 rounded-full overflow-hidden border-2 border-cherokee flex-shrink-0">
+									<img
+										src={testimonial.image}
+										alt={testimonial.name}
+										className="w-full h-full object-cover"
 									/>
 								</div>
 								<div className="text-center">
