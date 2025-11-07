@@ -28,7 +28,14 @@ const WhyChooseUs: React.FC = () => {
 		if (headerInView && !headerAnimated) setHeaderAnimated(true);
 		if (contentInView && !contentAnimated) setContentAnimated(true);
 		if (imageInView && !imageAnimated) setImageAnimated(true);
-	}, [headerInView, contentInView, imageInView, headerAnimated, contentAnimated, imageAnimated]);
+	}, [
+		headerInView,
+		contentInView,
+		imageInView,
+		headerAnimated,
+		contentAnimated,
+		imageAnimated,
+	]);
 
 	return (
 		<section className="pt-10 lg:pt-20 pb-12">
@@ -77,7 +84,13 @@ const WhyChooseUs: React.FC = () => {
 							},
 						}}
 						initial="hidden"
-						animate={contentAnimated ? "visible" : contentInView ? "visible" : "hidden"}
+						animate={
+							contentAnimated
+								? "visible"
+								: contentInView
+								? "visible"
+								: "hidden"
+						}
 					>
 						<div className="space-y-6 lg:pt-6">
 							<motion.div
@@ -185,7 +198,7 @@ const WhyChooseUs: React.FC = () => {
 					<div className="order-1 lg:order-2" ref={imageRef}>
 						<div className="aspect-[4/3] lg:aspect-auto rounded-2xl">
 							<motion.img
-								src="/images/DogMatrix.png"
+								src="/images/homepageImages/DogMatrix.png"
 								alt="Happy rescue dog ready for adoption"
 								className="w-auto justify-center mx-auto max-h-72 lg:max-h-96 h-full object-contain py-2 lg:pt-6"
 								initial={{

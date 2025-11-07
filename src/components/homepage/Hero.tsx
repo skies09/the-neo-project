@@ -88,7 +88,13 @@ const Hero: React.FC = () => {
 							},
 						}}
 						initial="hidden"
-						animate={statsAnimated ? "visible" : statsInView ? "visible" : "hidden"}
+						animate={
+							statsAnimated
+								? "visible"
+								: statsInView
+								? "visible"
+								: "hidden"
+						}
 					>
 						<motion.div
 							className="py-4 md:py-6 text-center"
@@ -222,7 +228,7 @@ const Hero: React.FC = () => {
 							{/* Hero Image with Zoom In Animation */}
 							<div className="aspect-[4/3] lg:aspect-auto rounded-2xl">
 								<motion.img
-									src="/images/Hero.png"
+									src="/images/homepageImages/Hero.png"
 									alt="Happy rescue dog ready for adoption"
 									className="w-auto justify-center mx-auto max-h-72 lg:max-h-96 h-full object-contain"
 									initial={{

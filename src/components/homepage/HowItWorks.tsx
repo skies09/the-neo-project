@@ -103,7 +103,7 @@ const HowItWorks: React.FC = () => {
 									{index === 0 ? (
 										// Step 1 - Browse & Search
 										<img
-											src="/images/dog7.jpg"
+											src="/images/homepageImages/dog7.jpg"
 											alt="Dog jumping"
 											className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
 											style={{
