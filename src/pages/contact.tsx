@@ -19,7 +19,7 @@ const Contact = (form: ContactProps) => {
 		<motion.div
 			ref={containerRef}
 			id="contact"
-			className="min-h-screen bg-mintCream pt-16 pb-8 px-4"
+			className="min-h-screen bg-mintCream py-16 px-4"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
@@ -55,7 +55,7 @@ const Contact = (form: ContactProps) => {
 							ease: "easeOut",
 						}}
 					>
-						<div className="bg-white rounded-3xl shadow-xl p-6 lg:p-8">
+						<div className="bg-tara rounded-3xl shadow-xl p-6 lg:p-8">
 							<h2 className="text-2xl font-bold text-oxfordBlue mb-6 font-comic text-center">
 								Get in Touch
 							</h2>
@@ -134,7 +134,7 @@ const Contact = (form: ContactProps) => {
 							ease: "easeOut",
 						}}
 					>
-						<div className="bg-gradient-to-br from-sprout to-tara via-bayleaf backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8">
+						<div className="bg-tomThumb rounded-3xl shadow-xl p-8 lg:p-10">
 							<ContactForm
 								contactType="general"
 								title="Send us a Message"

@@ -10,7 +10,6 @@ import {
 	faShieldAlt,
 	faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import Footer from "../components/homepage/Footer";
 import { useToast } from "../components/ToastContainer";
 
 const Donate: React.FC = () => {
@@ -371,7 +370,7 @@ const Donate: React.FC = () => {
 							</div>
 
 							{/* Why Donate */}
-							<div className="bg-gradient-to-br from-aquamarine/10 to-turquoise/10 rounded-3xl p-8">
+							<div className="rounded-3xl p-8">
 								<h4 className="text-2xl font-bold text-oxfordBlue font-poppins mb-6">
 									Why Your Donation Matters
 								</h4>
@@ -500,8 +499,6 @@ const Donate: React.FC = () => {
 					</motion.div>
 				</div>
 			</motion.div>
-
-			<Footer />
 		</div>
 	);
 };

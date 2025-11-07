@@ -11,7 +11,6 @@ import {
 	faCalendarAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import Footer from "../components/homepage/Footer";
 
 const Support: React.FC = () => {
 	const sectionRef = useRef(null);
@@ -241,7 +240,7 @@ const Support: React.FC = () => {
 						</motion.div>
 
 						<motion.div
-							className="mt-12 text-center bg-gradient-to-br from-aquamarine/10 to-turquoise/10 rounded-3xl p-8"
+							className="mt-12 text-center rounded-3xl p-8"
 							initial={{ opacity: 0, y: 20 }}
 							animate={
 								sectionInView
@@ -321,8 +320,6 @@ const Support: React.FC = () => {
 					</motion.div>
 				</div>
 			</motion.div>
-
-			<Footer />
 		</div>
 	);
 };

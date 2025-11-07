@@ -6,7 +6,6 @@ import Testimonials from "../components/homepage/Testimonials";
 import WhyChooseUs from "../components/homepage/WhyChooseUs";
 import TransitionCTA from "../components/homepage/TransitionCTA";
 import BlogHomepage from "../components/blog/BlogHomepage";
-import Footer from "../components/homepage/Footer";
 
 const Home: React.FC = () => {
 	return (
@@ -24,7 +23,6 @@ const Home: React.FC = () => {
 			<Testimonials />
 			<TransitionCTA />
 			<BlogHomepage />
-			<Footer />
 		</div>
 	);
 };

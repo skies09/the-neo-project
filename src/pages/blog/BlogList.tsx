@@ -11,7 +11,6 @@ import {
 import { Link } from "react-router-dom";
 import { blogAPI, BlogPost, BlogFilters } from "../../services/blogApi";
 import { formatDateLong } from "../../helpers/dateUtils";
-import Footer from "../../components/homepage/Footer";
 
 const BlogList: React.FC = () => {
 	const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -516,8 +515,6 @@ const BlogList: React.FC = () => {
 					</motion.div>
 				)}
 			</div>
-
-			<Footer />
 		</div>
 	);
 };

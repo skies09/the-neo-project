@@ -1,7 +1,12 @@
 // src/App.tsx
 import React from "react";
 import NavBar from "./components/navBar";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	useLocation,
+} from "react-router-dom";
 import Home from "./pages/home";
 import AllDogs from "./pages/adoption/allDogs";
 import Adoption from "./pages/adoption/adoptionCalculator";
@@ -21,10 +26,10 @@ import ProductDetail from "./pages/shop/ProductDetail";
 import CartPage from "./pages/shop/CartPage";
 import CheckoutPage from "./pages/shop/CheckoutPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
-// import Header from "./components/header";
 import { ToastContainer } from "./components/ToastContainer";
 import FloatingCartIcon from "./components/shop/FloatingCartIcon";
 import ScrollToTop from "./components/ScrollToTop";
+import Footer from "./components/homepage/Footer";
 
 const ShopOnlyFloatingIcon: React.FC = () => {
 	const location = useLocation();
@@ -37,7 +42,6 @@ const App: React.FC = () => (
 		<Router>
 			<ScrollToTop />
 			<NavBar />
-			{/* <Header /> */}
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/allDogs" element={<AllDogs />} />
@@ -73,6 +77,7 @@ const App: React.FC = () => (
 				/>
 			</Routes>
 			<ShopOnlyFloatingIcon />
+			<Footer />
 		</Router>
 	</ToastContainer>
 );

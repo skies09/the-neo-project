@@ -9,7 +9,6 @@ import {
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { blogAPI, BlogPost } from "../../services/blogApi";
 import { formatDateLong } from "../../helpers/dateUtils";
-import Footer from "../../components/homepage/Footer";
 
 // Utility function to convert line breaks to HTML
 const formatContent = (content: string): string => {
@@ -215,8 +214,6 @@ const BlogPostPage: React.FC = () => {
 					</div>
 				</motion.div>
 			</div>
-
-			<Footer />
 		</div>
 	);
 };

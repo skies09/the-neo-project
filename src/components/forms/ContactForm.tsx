@@ -204,19 +204,21 @@ const ContactForm: React.FC<ContactFormProps> = ({
 				animate={{ opacity: 1, scale: 1 }}
 				transition={{ duration: 0.5 }}
 			>
-				<div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-					<FontAwesomeIcon
-						icon={faCheckCircle}
-						className="text-2xl text-white"
-					/>
+				<div className="text-center mb-6">
+					<div className="w-16 h-16 bg-gradient-to-br from-bayleaf to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3">
+						<FontAwesomeIcon
+							icon={faCheckCircle}
+							className="text-2xl text-sunset"
+						/>
+					</div>
+					<h3 className="text-2xl font-bold text-tara mb-3 font-delius">
+						Thank You!
+					</h3>
+					<p className="text-tara/90 font-poppins">
+						Your message has been sent successfully. We'll get back
+						to you soon!
+					</p>
 				</div>
-				<h3 className="text-2xl font-bold text-oxfordBlue mb-3 font-poppins">
-					Thank You!
-				</h3>
-				<p className="text-oxfordBlue/80 font-poppins">
-					Your message has been sent successfully. We'll get back to
-					you soon!
-				</p>
 			</motion.div>
 		);
 	}
@@ -224,16 +226,18 @@ const ContactForm: React.FC<ContactFormProps> = ({
 	return (
 		<div className={className}>
 			<div className="text-center mb-6">
-				<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3">
+				<div className="w-16 h-16 bg-gradient-to-br from-bayleaf to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3">
 					<FontAwesomeIcon
 						icon={getIcon()}
 						className="text-2xl text-sunset"
 					/>
 				</div>
-				<h2 className="text-2xl font-bold text-oxfordBlue mb-2 font-poppins">
+				<h2 className="text-3xl font-bold text-tara font-delius mb-8 text-center">
 					{title}
 				</h2>
-				<p className="text-oxfordBlue/70 font-poppins">{description}</p>
+				<p className="text-lg lg:text-xl text-tara/90 font-fredoka max-w-3xl mx-auto mb-8">
+					{description}
+				</p>
 			</div>
 
 			{submitError && (
@@ -256,15 +260,15 @@ const ContactForm: React.FC<ContactFormProps> = ({
 				<Form className="w-full space-y-6">
 					{/* Name Field */}
 					<div>
-						<label className="block text-sm font-semibold text-oxfordBlue mb-2 items-center">
+						<label className="block text-tara font-poppins font-semibold mb-2 items-center">
 							<FontAwesomeIcon
 								icon={faUser}
-								className="mr-2 text-oxfordBlue"
+								className="mr-2 text-tara"
 							/>
 							Full Name *
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 							type="text"
 							name="name"
 							placeholder="Enter your full name"
@@ -278,15 +282,15 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
 					{/* Email Field */}
 					<div>
-						<label className="block text-sm font-semibold text-oxfordBlue mb-2 items-center">
+						<label className="block text-tara font-poppins font-semibold mb-2 items-center">
 							<FontAwesomeIcon
 								icon={faEnvelope}
-								className="mr-2 text-oxfordBlue"
+								className="mr-2 text-tara"
 							/>
 							Email Address *
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 							type="email"
 							name="email"
 							placeholder="Enter your email address"
@@ -300,15 +304,15 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
 					{/* Contact Number Field */}
 					<div>
-						<label className="block text-sm font-semibold text-oxfordBlue mb-2 items-center">
+						<label className="block text-tara font-poppins font-semibold mb-2 items-center">
 							<FontAwesomeIcon
 								icon={faPhone}
-								className="mr-2 text-oxfordBlue"
+								className="mr-2 text-tara"
 							/>
 							Contact Number *
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 							type="tel"
 							name="contact_number"
 							placeholder="Enter your contact number"
@@ -324,15 +328,15 @@ const ContactForm: React.FC<ContactFormProps> = ({
 					{showAddressFields && (
 						<>
 							<div>
-								<label className="block text-sm font-semibold text-oxfordBlue mb-2 items-center">
+								<label className="block text-tara font-poppins font-semibold mb-2 items-center">
 									<FontAwesomeIcon
 										icon={faMapMarkerAlt}
-										className="mr-2 text-oxfordBlue"
+										className="mr-2 text-tara"
 									/>
 									Address Line 1
 								</label>
 								<Field
-									className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+									className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 									type="text"
 									name="address_line_1"
 									placeholder="Enter your address"
@@ -346,11 +350,11 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<div>
-									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+									<label className="block text-tara font-poppins font-semibold mb-2">
 										Town
 									</label>
 									<Field
-										className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+										className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 										type="text"
 										name="town"
 										placeholder="Enter your town"
@@ -363,11 +367,11 @@ const ContactForm: React.FC<ContactFormProps> = ({
 								</div>
 
 								<div>
-									<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+									<label className="block text-tara font-poppins font-semibold mb-2">
 										City
 									</label>
 									<Field
-										className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+										className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 										type="text"
 										name="city"
 										placeholder="Enter your city"
@@ -381,11 +385,11 @@ const ContactForm: React.FC<ContactFormProps> = ({
 							</div>
 
 							<div>
-								<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+								<label className="block text-tara font-poppins font-semibold mb-2">
 									Postcode
 								</label>
 								<Field
-									className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+									className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 									type="text"
 									name="postcode"
 									placeholder="Enter your postcode"
@@ -401,11 +405,11 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
 					{/* Subject Field (optional) */}
 					<div>
-						<label className="block text-sm font-semibold text-oxfordBlue mb-2">
+						<label className="block text-tara font-poppins font-semibold mb-2">
 							Subject
 						</label>
 						<Field
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200"
+							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 							type="text"
 							name="subject"
 							placeholder="Enter a subject (optional)"
@@ -422,16 +426,16 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
 					{/* Message Field */}
 					<div>
-						<label className="block text-sm font-semibold text-oxfordBlue mb-2 items-center">
+						<label className="block text-tara font-poppins font-semibold mb-2 items-center">
 							<FontAwesomeIcon
 								icon={faMessage}
-								className="mr-2 text-oxfordBlue"
+								className="mr-2 text-tara"
 							/>
 							Message *
 						</label>
 						<Field
 							as="textarea"
-							className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-oxfordBlue focus:ring-2 focus:ring-oxfordBlue/20 font-poppins transition-all duration-200 resize-none"
+							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-3xl font-poppins focus:outline-none transition-colors resize-none"
 							name="message"
 							rows="4"
 							placeholder="Enter your message"
@@ -445,30 +449,29 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
 					{/* Submit Button */}
 					<div className="flex items-center justify-center pt-4">
-						<motion.button
+						<button
 							type="submit"
 							disabled={isLoading}
-							className="group relative overflow-hidden from-sark to-bayleaf text-oxfordBlue px-8 py-3 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-highland disabled:opacity-50 disabled:cursor-not-allowed"
-							whileHover={{ scale: isLoading ? 1 : 1.05 }}
-							whileTap={{ scale: isLoading ? 1 : 0.95 }}
+							className="w-full group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
 						>
-							<div className="flex items-center space-x-3 relative z-10">
+							<div className="flex items-center justify-center space-x-3 relative z-10">
 								{isLoading ? (
-									<FontAwesomeIcon
-										icon={faSpinner}
-										className="text-lg animate-spin"
-									/>
+									<>
+										<div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+										<span>Sending...</span>
+									</>
 								) : (
-									<FontAwesomeIcon
-										icon={getIcon()}
-										className="text-lg"
-									/>
+									<>
+										<FontAwesomeIcon
+											icon={getIcon()}
+											className="text-lg"
+										/>
+										<span>Send Message</span>
+									</>
 								)}
-								<span>
-									{isLoading ? "Sending..." : "Send Message"}
-								</span>
 							</div>
-						</motion.button>
+							<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+						</button>
 					</div>
 				</Form>
 			</Formik>

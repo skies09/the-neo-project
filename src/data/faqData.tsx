@@ -4,9 +4,9 @@ import {
 	faHome,
 	faUsers,
 	faShieldAlt,
-	faDollarSign,
 	faCalendar,
 	faPhone,
+	faPoundSign,
 } from "@fortawesome/free-solid-svg-icons";
 
 export interface FAQItem {
@@ -30,7 +30,7 @@ export const faqData: FAQItem[] = [
 		question: "What are the adoption fees?",
 		answer: "Adoption fees vary by rescue center and typically range from £150-£300. This usually includes vaccinations, microchipping, and spaying/neutering. Some rescue centers may offer reduced fees for older dogs or special circumstances.",
 		category: "Adoption Process",
-		icon: faDollarSign,
+		icon: faPoundSign,
 	},
 	{
 		id: 3,

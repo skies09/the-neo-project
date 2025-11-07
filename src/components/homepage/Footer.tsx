@@ -15,16 +15,30 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 
 const Footer: React.FC = () => {
+	const neoRaisedStyle: React.CSSProperties = {
+		background: 'linear-gradient(135deg, #5A827E 0%, #6C8B58 100%)',
+		boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.1)',
+	};
+
+	const handleNeoHover = (e: React.MouseEvent<HTMLElement>, isEntering: boolean) => {
+		if (isEntering) {
+			e.currentTarget.style.boxShadow = 'inset 8px 8px 16px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(255, 255, 255, 0.1)';
+		} else {
+			e.currentTarget.style.boxShadow = '8px 8px 16px rgba(0, 0, 0, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.1)';
+		}
+	};
+
 	const quickLinks = [
 		{ name: "Browse Dogs", href: "/allDogs" },
 		{ name: "Adoption Process", href: "/adopt" },
+		{ name: "Breed Calculator", href: "/breedCalculator" },
 		{ name: "Dog Breeds", href: "/breeds" },
 		{ name: "Shop", href: "/shop" },
 		{ name: "Blog", href: "/blog" },
 	];
 
 	const supportLinks = [
-		{ name: "Help Center", href: "/help" },
+		// { name: "Help Center", href: "/help" },
 		{ name: "Contact Us", href: "/contact" },
 		{ name: "FAQ", href: "/faq" },
 		{ name: "Donate", href: "/donate" },
@@ -43,7 +57,12 @@ const Footer: React.FC = () => {
 						transition={{ duration: 0.6, delay: 0.1 }}
 					>
 						<div className="flex items-center space-x-3 mb-6">
-							<div className="w-12 h-12 bg-gradient-to-br from-aquamarine to-turquoise rounded-full flex items-center justify-center">
+							<div 
+								className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300"
+								style={neoRaisedStyle}
+								onMouseEnter={(e) => handleNeoHover(e, true)}
+								onMouseLeave={(e) => handleNeoHover(e, false)}
+							>
 								<FontAwesomeIcon
 									icon={faPaw}
 									className="text-2xl text-cherokee"
@@ -61,7 +80,10 @@ const Footer: React.FC = () => {
 						<div className="flex space-x-4">
 							<a
 								href="#"
-								className="w-12 h-12 bg-gradient-to-br from-aquamarine to-turquoise rounded-full flex items-center justify-center"
+								className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-95"
+								style={neoRaisedStyle}
+								onMouseEnter={(e) => handleNeoHover(e, true)}
+								onMouseLeave={(e) => handleNeoHover(e, false)}
 							>
 								<FontAwesomeIcon
 									icon={faInstagram as any}
@@ -70,7 +92,10 @@ const Footer: React.FC = () => {
 							</a>
 							<a
 								href="#"
-								className="w-12 h-12 bg-gradient-to-br from-aquamarine to-turquoise rounded-full flex items-center justify-center"
+								className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-95"
+								style={neoRaisedStyle}
+								onMouseEnter={(e) => handleNeoHover(e, true)}
+								onMouseLeave={(e) => handleNeoHover(e, false)}
 							>
 								<FontAwesomeIcon
 									icon={faFacebook as any}
@@ -79,7 +104,10 @@ const Footer: React.FC = () => {
 							</a>
 							<a
 								href="#"
-								className="w-12 h-12 bg-gradient-to-br from-aquamarine to-turquoise rounded-full flex items-center justify-center"
+								className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-95"
+								style={neoRaisedStyle}
+								onMouseEnter={(e) => handleNeoHover(e, true)}
+								onMouseLeave={(e) => handleNeoHover(e, false)}
 							>
 								<FontAwesomeIcon
 									icon={faTiktok as any}
