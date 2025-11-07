@@ -75,7 +75,13 @@ const HowItWorks: React.FC = () => {
 						},
 					}}
 					initial="hidden"
-					animate={hasAnimated ? "visible" : cardsInView ? "visible" : "hidden"}
+					animate={
+						hasAnimated
+							? "visible"
+							: cardsInView
+							? "visible"
+							: "hidden"
+					}
 				>
 					{steps.map((step, index) => (
 						<motion.div
@@ -107,7 +113,7 @@ const HowItWorks: React.FC = () => {
 									) : index === 1 ? (
 										// Step 2 - Connect & Meet
 										<img
-											src="/images/dog6.jpg"
+											src="/images/homepageImages/dog6.jpg"
 											alt="Hand stroking dog"
 											className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
 											style={{
@@ -117,7 +123,7 @@ const HowItWorks: React.FC = () => {
 									) : (
 										// Step 3 - Adopt & Love
 										<img
-											src="/images/dog5.jpg"
+											src="/images/homepageImages/dog5.jpg"
 											alt="Happy dog on hillside with owner"
 											className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
 											style={{

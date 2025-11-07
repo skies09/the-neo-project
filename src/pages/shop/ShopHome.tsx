@@ -230,14 +230,14 @@ const ShopHome: React.FC = () => {
 										className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
 									>
 										<div className="relative">
-											<img
+											{/* <img
 												src={
 													product.primary_image ||
 													"/images/dog1.jpg"
 												}
 												alt={product.name}
 												className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-											/>
+											/> */}
 											<div className="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded-md text-sm font-semibold">
 												Bestseller
 											</div>

@@ -37,7 +37,13 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 				<motion.div
 					className="text-center"
 					initial={{ opacity: 0 }}
-					animate={hasAnimated ? { opacity: 1 } : sectionInView ? { opacity: 1 } : { opacity: 0 }}
+					animate={
+						hasAnimated
+							? { opacity: 1 }
+							: sectionInView
+							? { opacity: 1 }
+							: { opacity: 0 }
+					}
 					transition={{ duration: 0.8, ease: "easeOut" }}
 				>
 					{/* Main CTA Content */}
@@ -53,7 +59,11 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 							className="text-3xl lg:text-4xl font-bold text-cherokee font-delius mb-4"
 							initial={{ opacity: 0 }}
 							animate={
-								hasAnimated ? { opacity: 1 } : sectionInView ? { opacity: 1 } : { opacity: 0 }
+								hasAnimated
+									? { opacity: 1 }
+									: sectionInView
+									? { opacity: 1 }
+									: { opacity: 0 }
 							}
 							transition={{
 								duration: 0.6,
@@ -73,7 +83,11 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 								className="text-lg text-titan font-poppins max-w-5xl mx-auto mb-8"
 								initial={{ opacity: 0 }}
 								animate={
-									hasAnimated ? { opacity: 1 } : sectionInView ? { opacity: 1 } : { opacity: 0 }
+									hasAnimated
+										? { opacity: 1 }
+										: sectionInView
+										? { opacity: 1 }
+										: { opacity: 0 }
 								}
 								transition={{
 									duration: 0.6,
@@ -91,7 +105,11 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 							className="flex flex-col sm:flex-row gap-4 justify-center items-center"
 							initial={{ opacity: 0 }}
 							animate={
-								hasAnimated ? { opacity: 1 } : sectionInView ? { opacity: 1 } : { opacity: 0 }
+								hasAnimated
+									? { opacity: 1 }
+									: sectionInView
+									? { opacity: 1 }
+									: { opacity: 0 }
 							}
 							transition={{
 								duration: 0.6,
@@ -119,7 +137,7 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 													: "Find Your Match")}
 										</span>
 									</div>
-									<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+									{/* <div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div> */}
 								</button>
 
 								{/* Secondary CTA - Browse All Dogs */}
@@ -135,7 +153,7 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 											/>
 											<span>Browse All Dogs</span>
 										</div>
-										<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+										{/* <div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div> */}
 									</button>
 								)}
 							</>

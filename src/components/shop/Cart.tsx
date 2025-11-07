@@ -100,14 +100,14 @@ const Cart: React.FC<CartProps> = ({
 									<div className="flex items-center space-x-4">
 										{/* Product Image */}
 										<div className="flex-shrink-0">
-											<img
+											{/* <img
 												src="/images/dog1.jpg"
 												alt={
 													item.product_name ||
 													"Product"
 												}
 												className="w-20 h-20 object-cover rounded-md"
-											/>
+											/> */}
 										</div>
 
 										{/* Product Info */}

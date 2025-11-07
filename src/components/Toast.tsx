@@ -53,7 +53,7 @@ const Toast: React.FC<ToastProps> = ({
 	const getIconColor = () => {
 		switch (type) {
 			case "success":
-				return "text-green-500";
+				return "text-oxfordBlue";
 			case "error":
 				return "text-red-500";
 			case "warning":
@@ -61,22 +61,22 @@ const Toast: React.FC<ToastProps> = ({
 			case "info":
 				return "text-blue-500";
 			default:
-				return "text-blue-500";
+				return "text-oxfordBlue";
 		}
 	};
 
 	const getBgColor = () => {
 		switch (type) {
 			case "success":
-				return "bg-green-50 border-green-200";
+				return "bg-sprout border-oxfordBlue";
 			case "error":
-				return "bg-red-50 border-red-200";
+				return "bg-sprout border-red-200";
 			case "warning":
 				return "bg-yellow-50 border-yellow-200";
 			case "info":
 				return "bg-blue-50 border-blue-200";
 			default:
-				return "bg-blue-50 border-blue-200";
+				return "bg-sprout border-oxfordBlue";
 		}
 	};
 
@@ -90,24 +90,29 @@ const Toast: React.FC<ToastProps> = ({
 		>
 			<div className="flex items-start space-x-3">
 				<div className={`flex-shrink-0 ${getIconColor()}`}>
-					<FontAwesomeIcon icon={getIcon()} className="text-xl" />
+					<FontAwesomeIcon
+						icon={getIcon()}
+						className="text-xl text-tomThumb"
+					/>
 				</div>
 				<div className="flex-1 min-w-0">
 					<div className="flex items-center justify-between">
-						<h4 className="text-sm font-semibold text-gray-900">
+						<h4 className="text-sm font-semibold text-oxfordBlue font-poppins">
 							{title}
 						</h4>
 						<button
 							onClick={() => onClose(id)}
-							className="flex-shrink-0 ml-2 text-gray-400 hover:text-gray-600 transition-colors"
+							className="flex-shrink-0 ml-2 text-oxfordBlue font-poppins transition-colors"
 						>
 							<FontAwesomeIcon
 								icon={faTimes}
-								className="text-sm"
+								className="text-sm text-oxford"
 							/>
 						</button>
 					</div>
-					<p className="text-sm text-gray-600 mt-1">{message}</p>
+					<p className="text-sm text-oxfordBlue font-poppins mt-1">
+						{message}
+					</p>
 				</div>
 			</div>
 		</motion.div>

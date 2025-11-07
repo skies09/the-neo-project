@@ -11,6 +11,7 @@ import {
 	faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import Footer from "../components/homepage/Footer";
+import { useToast } from "../components/ToastContainer";
 
 const Donate: React.FC = () => {
 	const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
@@ -18,6 +19,7 @@ const Donate: React.FC = () => {
 	const [isDonating, setIsDonating] = useState(false);
 	const [donorName, setDonorName] = useState<string>("");
 	const [donorEmail, setDonorEmail] = useState<string>("");
+	const { showToast } = useToast();
 
 	const sectionRef = useRef(null);
 	const sectionInView = useInView(sectionRef, {
@@ -25,7 +27,7 @@ const Donate: React.FC = () => {
 		margin: "-100px",
 	});
 
-	const presetAmounts = [25, 50, 100, 250, 500];
+	const presetAmounts = [25, 50, 100];
 
 	const handleDonate = async () => {
 		const amount = selectedAmount || parseFloat(customAmount);
@@ -36,11 +38,13 @@ const Donate: React.FC = () => {
 		// Simulate donation process
 		setTimeout(() => {
 			setIsDonating(false);
-			alert(
-				`Thank you ${
+			showToast({
+				type: "success",
+				title: "Thank You!",
+				message: `Thank you ${
 					donorName || "for your donation"
-				} of £${amount}! Your contribution helps rescue dogs find their forever homes.`
-			);
+				} of £${amount}! Your contribution helps rescue dogs find their forever homes.`,
+			});
 			setSelectedAmount(null);
 			setCustomAmount("");
 			setDonorName("");
@@ -89,7 +93,7 @@ const Donate: React.FC = () => {
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 						{/* Left Column - Donation Form */}
 						<motion.div
-							className="bg-white rounded-3xl shadow-xl p-8 lg:p-10"
+							className="bg-tomThumb rounded-3xl shadow-xl p-8 lg:p-10"
 							initial={{ opacity: 0, x: -50 }}
 							animate={
 								sectionInView
@@ -102,14 +106,14 @@ const Donate: React.FC = () => {
 								ease: "easeOut",
 							}}
 						>
-							<h2 className="text-3xl font-bold text-oxfordBlue font-poppins mb-8 text-center">
+							<h2 className="text-3xl font-bold text-tara font-delius mb-8 text-center">
 								Make a Donation
 							</h2>
 
 							{/* Donor Information */}
 							<div className="mb-6 space-y-4">
 								<div>
-									<label className="block text-oxfordBlue font-poppins font-semibold mb-2">
+									<label className="block text-tara font-poppins font-semibold mb-2">
 										Your Name (Optional)
 									</label>
 									<input
@@ -119,11 +123,11 @@ const Donate: React.FC = () => {
 											setDonorName(e.target.value)
 										}
 										placeholder="Enter your name"
-										className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl font-poppins focus:border-aquamarine focus:outline-none transition-colors"
+										className="w-full px-4 py-3 border-2 border-gray-200 rounded-full font-poppins focus:border-aquamarine focus:outline-none transition-colors"
 									/>
 								</div>
 								<div>
-									<label className="block text-oxfordBlue font-poppins font-semibold mb-2">
+									<label className="block text-tara font-poppins font-semibold mb-2">
 										Your Email (Optional)
 									</label>
 									<input
@@ -133,14 +137,14 @@ const Donate: React.FC = () => {
 											setDonorEmail(e.target.value)
 										}
 										placeholder="Enter your email"
-										className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl font-poppins focus:border-aquamarine focus:outline-none transition-colors"
+										className="w-full px-4 py-3 border-2 border-gray-200 rounded-full font-poppins focus:border-aquamarine focus:outline-none transition-colors"
 									/>
 								</div>
 							</div>
 
 							{/* Preset Amounts */}
 							<div className="mb-6">
-								<label className="block text-oxfordBlue font-poppins font-semibold mb-3">
+								<label className="block text-tara font-poppins font-semibold mb-3">
 									Choose an amount
 								</label>
 								<div className="grid grid-cols-3 gap-3">
@@ -151,10 +155,10 @@ const Donate: React.FC = () => {
 												setSelectedAmount(amount);
 												setCustomAmount("");
 											}}
-											className={`p-4 rounded-xl font-poppins font-semibold transition-all duration-300 ${
+											className={`p-4 rounded-full font-poppins font-semibold transition-all duration-300  bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue ${
 												selectedAmount === amount
-													? "bg-gradient-to-r from-aquamarine to-turquoise text-white shadow-lg transform scale-105"
-													: "bg-gray-100 text-oxfordBlue hover:bg-aquamarine/20 hover:shadow-md"
+													? "text-yellowOrange shadow-lg transform scale-105"
+													: "text-honeydew hover:bg-titan hover:shadow-md"
 											}`}
 										>
 											£{amount}
@@ -165,13 +169,13 @@ const Donate: React.FC = () => {
 
 							{/* Custom Amount */}
 							<div className="mb-6">
-								<label className="block text-oxfordBlue font-poppins font-semibold mb-3">
+								<label className="block text-tara font-poppins font-semibold mb-3">
 									Or enter a custom amount
 								</label>
 								<div className="relative">
 									<FontAwesomeIcon
 										icon={faPoundSign}
-										className="absolute left-4 top-1/2 transform -translate-y-1/2 text-oxfordBlue/60"
+										className="absolute left-4 top-1/2 transform -translate-y-1/2 text-oxfordBlue/80"
 									/>
 									<input
 										type="number"
@@ -183,18 +187,18 @@ const Donate: React.FC = () => {
 										placeholder="Enter amount"
 										min="1"
 										step="0.01"
-										className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl font-poppins focus:border-aquamarine focus:outline-none transition-colors"
+										className="w-full pl-10 pr-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:border-aquamarine focus:outline-none transition-colors"
 									/>
 								</div>
 							</div>
 
 							{/* Security Badge */}
-							<div className="mb-6 flex items-center justify-center space-x-2 text-oxfordBlue/60">
+							<div className="mb-6 flex items-center justify-center space-x-2 text-tara">
 								<FontAwesomeIcon
 									icon={faShieldAlt}
 									className="text-lg"
 								/>
-								<span className="text-sm font-poppins">
+								<span className="text-sm font-sans">
 									Secure payment • 100% goes to rescue centers
 								</span>
 							</div>
@@ -206,7 +210,7 @@ const Donate: React.FC = () => {
 									isDonating ||
 									(!selectedAmount && !customAmount)
 								}
-								className="w-full group relative overflow-hidden bg-gradient-to-r from-aquamarine to-turquoise text-white px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+								className="w-full group relative overflow-hidden  bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
 							>
 								<div className="flex items-center justify-center space-x-3 relative z-10">
 									{isDonating ? (
@@ -245,7 +249,7 @@ const Donate: React.FC = () => {
 								<div className="bg-white rounded-3xl shadow-xl overflow-hidden">
 									<div className="aspect-[4/3] overflow-hidden">
 										<img
-											src="/images/dog8.jpg"
+											src="/images/donateImages/dog8.jpg"
 											alt="Happy adopted rescue dog"
 											className="w-full h-full object-cover"
 										/>
@@ -273,7 +277,7 @@ const Donate: React.FC = () => {
 							<div className="hidden lg:block bg-white rounded-3xl shadow-xl overflow-hidden">
 								<div className="aspect-[4/3] overflow-hidden">
 									<img
-										src="/images/dog10.jpg"
+										src="/images/donateImages/dog10.jpg"
 										alt="Rescue dog being cared for"
 										className="w-full h-full object-cover shadow-2xl"
 									/>
@@ -281,72 +285,72 @@ const Donate: React.FC = () => {
 							</div>
 
 							{/* Impact Stats */}
-							<div className="bg-white rounded-3xl shadow-xl p-8">
-								<h3 className="text-2xl font-bold text-oxfordBlue font-poppins mb-8 text-center">
+							<div className="bg-tomThumb rounded-3xl shadow-xl p-8">
+								<h3 className="text-2xl font-bold text-tara font-poppins mb-8 text-center">
 									Your Impact
 								</h3>
 								<div className="space-y-6">
 									<div className="flex items-center space-x-4">
-										<div className="w-16 h-16 bg-gradient-to-br from-aquamarine to-turquoise rounded-full flex items-center justify-center flex-shrink-0">
+										<div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0">
 											<FontAwesomeIcon
 												icon={faHandHoldingHeart}
-												className="text-2xl text-white"
+												className="text-2xl text-tara"
 											/>
 										</div>
 										<div>
-											<div className="text-2xl font-bold text-oxfordBlue font-poppins">
+											<div className="text-2xl font-bold text-tara font-poppins">
 												£25
 											</div>
-											<div className="text-oxfordBlue/70 font-poppins">
+											<div className="text-tara font-poppins">
 												Feeds a rescue dog for a week
 											</div>
 										</div>
 									</div>
 									<div className="flex items-center space-x-4">
-										<div className="w-16 h-16 bg-gradient-to-br from-turquoise to-skyBlue rounded-full flex items-center justify-center flex-shrink-0">
+										<div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0">
 											<FontAwesomeIcon
 												icon={faHeart}
-												className="text-2xl text-white"
+												className="text-2xl text-tara"
 											/>
 										</div>
 										<div>
-											<div className="text-2xl font-bold text-oxfordBlue font-poppins">
+											<div className="text-2xl font-bold text-tara font-poppins">
 												£50
 											</div>
-											<div className="text-oxfordBlue/70 font-poppins">
+											<div className="text-tara font-poppins">
 												Covers essential veterinary care
 											</div>
 										</div>
 									</div>
 									<div className="flex items-center space-x-4">
-										<div className="w-16 h-16 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center flex-shrink-0">
+										<div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0">
 											<FontAwesomeIcon
 												icon={faGift}
-												className="text-2xl text-white"
+												className="text-2xl text-tara"
 											/>
 										</div>
 										<div>
-											<div className="text-2xl font-bold text-oxfordBlue font-poppins">
+											<div className="text-2xl font-bold text-tara font-poppins">
 												£100
 											</div>
-											<div className="text-oxfordBlue/70 font-poppins">
+											<div className="text-tara font-poppins">
 												Sponsors a dog's adoption
 												journey
 											</div>
 										</div>
 									</div>
 									<div className="flex items-center space-x-4">
-										<div className="w-16 h-16 bg-gradient-to-br from-aquamarine to-skyBlue rounded-full flex items-center justify-center flex-shrink-0">
+										<div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0">
 											<FontAwesomeIcon
 												icon={faPaw}
-												className="text-2xl text-white"
+												className="text-2xl text-tara"
 											/>
 										</div>
 										<div>
-											<div className="text-2xl font-bold text-oxfordBlue font-poppins">
+											<div className="text-2xl font-bold text-tara font-poppins">
 												£250+
 											</div>
-											<div className="text-oxfordBlue/70 font-poppins">
+											<div className="text-tara font-poppins">
 												Supports multiple dogs'
 												rehabilitation
 											</div>
@@ -359,7 +363,7 @@ const Donate: React.FC = () => {
 							<div className="block lg:hidden bg-white rounded-3xl shadow-xl overflow-hidden">
 								<div className="aspect-[4/3] overflow-hidden">
 									<img
-										src="/images/dog10.jpg"
+										src="/images/donateImages/dog10.jpg"
 										alt="Rescue dog being cared for"
 										className="w-full h-full object-cover"
 									/>
@@ -371,11 +375,11 @@ const Donate: React.FC = () => {
 								<h4 className="text-2xl font-bold text-oxfordBlue font-poppins mb-6">
 									Why Your Donation Matters
 								</h4>
-								<ul className="space-y-4 text-oxfordBlue/70 font-poppins">
+								<ul className="space-y-4 text-oxfordBlue font-poppins">
 									<li className="flex items-start space-x-3">
 										<FontAwesomeIcon
 											icon={faCheckCircle}
-											className="text-aquamarine mt-1 text-lg"
+											className="text-oxfordBlue mt-1 text-lg"
 										/>
 										<span>
 											Provides essential medical care,
@@ -386,7 +390,7 @@ const Donate: React.FC = () => {
 									<li className="flex items-start space-x-3">
 										<FontAwesomeIcon
 											icon={faCheckCircle}
-											className="text-aquamarine mt-1 text-lg"
+											className="text-oxfordBlue mt-1 text-lg"
 										/>
 										<span>
 											Supports rescue center operations
@@ -396,7 +400,7 @@ const Donate: React.FC = () => {
 									<li className="flex items-start space-x-3">
 										<FontAwesomeIcon
 											icon={faCheckCircle}
-											className="text-aquamarine mt-1 text-lg"
+											className="text-oxfordBlue mt-1 text-lg"
 										/>
 										<span>
 											Helps with training, rehabilitation,
@@ -406,7 +410,7 @@ const Donate: React.FC = () => {
 									<li className="flex items-start space-x-3">
 										<FontAwesomeIcon
 											icon={faCheckCircle}
-											className="text-aquamarine mt-1 text-lg"
+											className="text-oxfordBlue mt-1 text-lg"
 										/>
 										<span>
 											Enables more dogs to find their
@@ -416,7 +420,7 @@ const Donate: React.FC = () => {
 									<li className="flex items-start space-x-3">
 										<FontAwesomeIcon
 											icon={faCheckCircle}
-											className="text-aquamarine mt-1 text-lg"
+											className="text-oxfordBlue mt-1 text-lg"
 										/>
 										<span>
 											100% of donations go directly to
@@ -427,15 +431,15 @@ const Donate: React.FC = () => {
 							</div>
 
 							{/* Trust Badge */}
-							<div className="bg-white rounded-3xl shadow-xl p-8 text-center">
+							<div className="bg-tomThumb rounded-3xl shadow-xl p-8 text-center">
 								<FontAwesomeIcon
 									icon={faShieldAlt}
-									className="text-4xl text-aquamarine mb-4"
+									className="text-4xl text-tara mb-4"
 								/>
-								<h4 className="text-xl font-bold text-oxfordBlue font-poppins mb-2">
+								<h4 className="text-xl font-bold text-tara font-poppins mb-2">
 									Secure & Transparent
 								</h4>
-								<p className="text-oxfordBlue/70 font-poppins text-sm">
+								<p className="text-tara font-poppins text-sm">
 									All donations are processed securely. We
 									ensure 100% of your contribution goes
 									directly to supporting rescue dogs and their
@@ -460,34 +464,34 @@ const Donate: React.FC = () => {
 							ease: "easeOut",
 						}}
 					>
-						<h2 className="text-3xl font-bold text-oxfordBlue font-poppins mb-8 text-center">
+						<h2 className="text-3xl font-bold text-oxfordBlue font-delius mb-8 text-center">
 							Dogs You're Helping
 						</h2>
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 							<div className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
 								<img
-									src="/images/dog4.jpg"
+									src="/images/donateImages/dog4.jpg"
 									alt="Rescue dog waiting for adoption"
 									className="w-full h-full object-cover"
 								/>
 							</div>
 							<div className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
 								<img
-									src="/images/dog3.jpg"
+									src="/images/donateImages/dog3.jpg"
 									alt="Rescue dog waiting for adoption"
 									className="w-full h-full object-cover"
 								/>
 							</div>
 							<div className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
 								<img
-									src="/images/dog6.jpg"
+									src="/images/donateImages/dog22.jpg"
 									alt="Rescue dog waiting for adoption"
 									className="w-full h-full object-cover"
 								/>
 							</div>
 							<div className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
 								<img
-									src="/images/dog7.jpg"
+									src="/images/donateImages/dog18.jpg"
 									alt="Rescue dog waiting for adoption"
 									className="w-full h-full object-cover"
 								/>
