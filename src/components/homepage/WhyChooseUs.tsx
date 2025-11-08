@@ -62,8 +62,9 @@ const WhyChooseUs: React.FC = () => {
 					<p className="text-lg text-highland font-fredoka max-w-5xl mx-auto">
 						You opened your heart to a rescue dog, dreaming of love
 						and companionship.
-						<br></br>Now, you’re feeling lost — weighed down by
-						frustration, missed signals, and heartache.
+						<br></br>Searching countless rescue centers takes time,
+						and not every search leads to that perfect dog - the one
+						meant for you.
 					</p>
 				</motion.div>
 

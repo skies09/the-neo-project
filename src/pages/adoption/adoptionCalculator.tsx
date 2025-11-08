@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { dogAPI, Dog } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
 	faSearch,
 	faVenusMars,
@@ -9,24 +9,89 @@ import {
 	faCat,
 	faBaby,
 	faDog,
-	faSpinner,
-	faPaw,
-	faBirthdayCake,
-	faRuler,
-	faBuilding,
-	faInfoCircle,
+	faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
-import { getSizeDisplayName } from "../../helpers/sizeUtils";
+import AdoptionCard from "../../components/cards/adoptCard";
+
+interface DogFilter {
+	gender?: string;
+	goodWithDogs?: string | boolean;
+	goodWithCats?: string | boolean;
+	goodWithChildren?: string | boolean;
+}
+
+interface Question {
+	id: string;
+	label: string;
+	icon: any;
+	type: "radio";
+	options: { value: string; label: string; icon?: any }[];
+	field: keyof DogFilter;
+}
 
 export default function Adoption() {
+	const [hasStarted, setHasStarted] = useState(false);
+	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [gender, setGender] = useState("");
-	const [goodWithDogs, setGoodWithDogs] = useState(false);
-	const [goodWithCats, setGoodWithCats] = useState(false);
-	const [goodWithChildren, setGoodWithChildren] = useState(false);
+	const [goodWithDogs, setGoodWithDogs] = useState("");
+	const [goodWithCats, setGoodWithCats] = useState("");
+	const [goodWithChildren, setGoodWithChildren] = useState("");
 	const [dog, setDog] = useState<Dog | null>(null);
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 	const resultsRef = useRef<HTMLDivElement>(null);
+
+	// Questions array
+	const questions: Question[] = [
+		{
+			id: "gender",
+			label: "What gender are you looking for?",
+			icon: faVenusMars,
+			type: "radio",
+			field: "gender",
+			options: [
+				{ value: "Male", label: "Male" },
+				{ value: "Female", label: "Female" },
+				{ value: "notBothered", label: "Not bothered" },
+			],
+		},
+		{
+			id: "goodWithDogs",
+			label: "Does the dog need to be good with other dogs?",
+			icon: faDog,
+			type: "radio",
+			field: "goodWithDogs",
+			options: [
+				{ value: "yes", label: "Yes" },
+				{ value: "no", label: "No" },
+				{ value: "notBothered", label: "Not bothered" },
+			],
+		},
+		{
+			id: "goodWithCats",
+			label: "Does the dog need to be good with cats?",
+			icon: faCat,
+			type: "radio",
+			field: "goodWithCats",
+			options: [
+				{ value: "yes", label: "Yes" },
+				{ value: "no", label: "No" },
+				{ value: "notBothered", label: "Not bothered" },
+			],
+		},
+		{
+			id: "goodWithChildren",
+			label: "Does the dog need to be good with children?",
+			icon: faBaby,
+			type: "radio",
+			field: "goodWithChildren",
+			options: [
+				{ value: "yes", label: "Yes" },
+				{ value: "no", label: "No" },
+				{ value: "notBothered", label: "Not bothered" },
+			],
+		},
+	];
 
 	// Auto-scroll to results when dog is found
 	useEffect(() => {
@@ -38,17 +103,82 @@ export default function Adoption() {
 		}
 	}, [dog]);
 
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
+	const getCurrentValue = (field: keyof DogFilter): string => {
+		switch (field) {
+			case "gender":
+				return gender;
+			case "goodWithDogs":
+				return goodWithDogs;
+			case "goodWithCats":
+				return goodWithCats;
+			case "goodWithChildren":
+				return goodWithChildren;
+			default:
+				return "";
+		}
+	};
+
+	const isQuestionAnswered = (question: Question): boolean => {
+		const value = getCurrentValue(question.field);
+		return value !== "";
+	};
+
+	const handleAnswer = (question: Question, value: string) => {
+		switch (question.field) {
+			case "gender":
+				setGender(value === "notBothered" ? "" : value);
+				break;
+			case "goodWithDogs":
+				setGoodWithDogs(value);
+				break;
+			case "goodWithCats":
+				setGoodWithCats(value);
+				break;
+			case "goodWithChildren":
+				setGoodWithChildren(value);
+				break;
+		}
+	};
+
+	const handleNext = () => {
+		if (currentQuestionIndex < questions.length - 1) {
+			setCurrentQuestionIndex(currentQuestionIndex + 1);
+		} else {
+			handleSubmit();
+		}
+	};
+
+	const handlePrevious = () => {
+		if (currentQuestionIndex > 0) {
+			setCurrentQuestionIndex(currentQuestionIndex - 1);
+		}
+	};
+
+	const handleSubmit = async () => {
 		setLoading(true);
 		setError("");
 
 		try {
 			const filters = {
 				gender: gender || undefined,
-				goodWithDogs: goodWithDogs || undefined,
-				goodWithCats: goodWithCats || undefined,
-				goodWithChildren: goodWithChildren || undefined,
+				goodWithDogs:
+					goodWithDogs === "yes"
+						? true
+						: goodWithDogs === "no"
+						? false
+						: undefined,
+				goodWithCats:
+					goodWithCats === "yes"
+						? true
+						: goodWithCats === "no"
+						? false
+						: undefined,
+				goodWithChildren:
+					goodWithChildren === "yes"
+						? true
+						: goodWithChildren === "no"
+						? false
+						: undefined,
 			};
 			const matchedDog = await dogAPI.filterDogs(filters);
 
@@ -68,435 +198,358 @@ export default function Adoption() {
 		}
 	};
 
+	const currentQuestion = questions[currentQuestionIndex];
+	const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
 	return (
 		<motion.div
 			id="adopt"
-			className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16 pb-8 px-4"
+			className="min-h-screen bg-gradient-to-br from-twilight to-sprout pt-16 pb-8 px-4"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
 		>
 			<div className="max-w-4xl mx-auto">
-				{/* Header */}
-				<motion.div
-					className="text-center pt-4 mb-8"
-					initial={{ opacity: 0, y: -20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-				>
-					<div className="flex justify-center items-center my-4">
-						<h1 className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md text-center">
-							Find Your Perfect Dog
-						</h1>
-					</div>
-					<p className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto mb-8">
-						Tell us what you're looking for and we'll find your
-						ideal companion
-					</p>
-				</motion.div>
-
-				{/* Search Form */}
-				<motion.div
-					className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 mb-8"
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-				>
-					<div className="text-center mb-6">
-						<div className="w-16 h-16 bg-gradient-to-br from-oxfordBlue to-skyBlue rounded-full flex items-center justify-center mx-auto mb-3">
-							<FontAwesomeIcon
-								icon={faDog}
-								className="text-2xl text-honeydew"
-							/>
-						</div>
-						<h2 className="text-2xl font-bold text-oxfordBlue mb-2">
-							Search Criteria
-						</h2>
-						<p className="text-oxfordBlue/70">
-							Select your preferences to find the perfect match
-						</p>
-					</div>
-
-					<form onSubmit={handleSubmit} className="space-y-6">
-						{/* Gender Selection */}
-						<div className="bg-white/80 rounded-2xl p-6">
-							<label className="block text-lg font-semibold text-oxfordBlue mb-4 flex items-center">
-								<FontAwesomeIcon
-									icon={faVenusMars}
-									className="mr-3 text-oxfordBlue"
-								/>
-								Gender Preference
-							</label>
-							<div className="flex gap-6">
-								<label className="flex items-center space-x-3 cursor-pointer group">
-									<input
-										type="radio"
-										name="gender"
-										value="Male"
-										checked={gender === "Male"}
-										onChange={() => setGender("Male")}
-										className="w-5 h-5 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
-									/>
-									<span className="text-oxfordBlue font-medium group-hover:text-oxfordBlue/80 transition-colors">
-										Male
-									</span>
-								</label>
-								<label className="flex items-center space-x-3 cursor-pointer group">
-									<input
-										type="radio"
-										name="gender"
-										value="Female"
-										checked={gender === "Female"}
-										onChange={() => setGender("Female")}
-										className="w-5 h-5 text-oxfordBlue border-gray-300 focus:ring-oxfordBlue"
-									/>
-									<span className="text-oxfordBlue font-medium group-hover:text-oxfordBlue/80 transition-colors">
-										Female
-									</span>
-								</label>
-							</div>
-						</div>
-
-						{/* Compatibility Preferences */}
-						<div className="bg-white/80 rounded-2xl p-6">
-							<h3 className="text-lg font-semibold text-oxfordBlue mb-4 flex items-center">
-								<FontAwesomeIcon
-									icon={faHeart}
-									className="mr-3 text-oxfordBlue"
-								/>
-								Compatibility Requirements
-							</h3>
-							<div className="space-y-4">
-								<label className="flex items-center space-x-3 cursor-pointer group">
-									<input
-										type="checkbox"
-										checked={goodWithDogs}
-										onChange={() =>
-											setGoodWithDogs(!goodWithDogs)
-										}
-										className="w-5 h-5 text-oxfordBlue border-gray-300 rounded focus:ring-oxfordBlue"
-									/>
-									<FontAwesomeIcon
-										icon={faDog}
-										className="text-oxfordBlue"
-									/>
-									<span className="text-oxfordBlue font-medium group-hover:text-oxfordBlue/80 transition-colors">
-										Good with other dogs
-									</span>
-								</label>
-								<label className="flex items-center space-x-3 cursor-pointer group">
-									<input
-										type="checkbox"
-										checked={goodWithCats}
-										onChange={() =>
-											setGoodWithCats(!goodWithCats)
-										}
-										className="w-5 h-5 text-oxfordBlue border-gray-300 rounded focus:ring-oxfordBlue"
-									/>
-									<FontAwesomeIcon
-										icon={faCat}
-										className="text-oxfordBlue"
-									/>
-									<span className="text-oxfordBlue font-medium group-hover:text-oxfordBlue/80 transition-colors">
-										Good with cats
-									</span>
-								</label>
-								<label className="flex items-center space-x-3 cursor-pointer group">
-									<input
-										type="checkbox"
-										checked={goodWithChildren}
-										onChange={() =>
-											setGoodWithChildren(
-												!goodWithChildren
-											)
-										}
-										className="w-5 h-5 text-oxfordBlue border-gray-300 rounded focus:ring-oxfordBlue"
-									/>
-									<FontAwesomeIcon
-										icon={faBaby}
-										className="text-oxfordBlue"
-									/>
-									<span className="text-oxfordBlue font-medium group-hover:text-oxfordBlue/80 transition-colors">
-										Good with children
-									</span>
-								</label>
-							</div>
-						</div>
-
-						{/* Search Button */}
-						<div className="text-center">
-							<button
-								type="submit"
-								disabled={loading}
-								className="bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew py-4 px-8 rounded-2xl font-poppins font-semibold text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-							>
-								{loading ? (
-									<div className="flex items-center justify-center">
-										<FontAwesomeIcon
-											icon={faSpinner}
-											className="animate-spin mr-3"
-										/>
-										Searching...
-									</div>
-								) : (
-									<div className="flex items-center justify-center">
-										<FontAwesomeIcon
-											icon={faSearch}
-											className="mr-3"
-										/>
-										Find My Perfect Dog
-									</div>
-								)}
-							</button>
-						</div>
-					</form>
-				</motion.div>
-
-				{/* Results Section */}
-				<motion.div
-					ref={resultsRef}
-					className="max-w-3xl mx-auto"
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-				>
-					{dog && (
+				{/* Start Screen */}
+				{!hasStarted && (
+					<motion.div
+						className="text-center py-20"
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.8, ease: "easeOut" }}
+					>
 						<motion.div
-							className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-xl border border-skyBlue/20 p-8"
-							initial={{ opacity: 0, scale: 0.95 }}
-							animate={{ opacity: 1, scale: 1 }}
-							transition={{
-								duration: 0.5,
-								delay: 0.8,
-								ease: "easeOut",
-							}}
+							className="mb-8"
+							initial={{ scale: 0.8, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							transition={{ duration: 0.6, delay: 0.2 }}
 						>
-							<div className="text-center mb-6">
-								<div className="w-20 h-20 bg-gradient-to-br from-skyBlue to-aquamarine rounded-full flex items-center justify-center mx-auto mb-4">
-									<FontAwesomeIcon
-										icon={faDog}
-										className="text-3xl text-white"
-									/>
-								</div>
-								<h3 className="text-3xl font-bold text-oxfordBlue mb-2">
-									{dog.name}
-								</h3>
-								<p className="text-oxfordBlue/70 font-poppins">
-									Your perfect match!
-								</p>
+							<div className="w-24 h-24 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+								<FontAwesomeIcon
+									icon={faDog}
+									className="text-4xl text-honeydew"
+								/>
 							</div>
-
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-								{/* Basic Information */}
-								<div className="space-y-4">
-									<h4 className="text-xl font-semibold text-oxfordBlue mb-4 flex items-center">
-										<FontAwesomeIcon
-											icon={faInfoCircle}
-											className="mr-2 text-oxfordBlue"
-										/>
-										Basic Information
-									</h4>
-
-									<div className="flex items-center space-x-3">
-										<FontAwesomeIcon
-											icon={faVenusMars}
-											className="text-oxfordBlue w-5"
-										/>
-										<span className="text-oxfordBlue font-medium">
-											Gender:
-										</span>
-										<span className="text-oxfordBlue">
-											{dog.gender || "Unknown"}
-										</span>
-									</div>
-
-									<div className="flex items-center space-x-3">
-										<FontAwesomeIcon
-											icon={faPaw}
-											className="text-oxfordBlue w-5"
-										/>
-										<span className="text-oxfordBlue font-medium">
-											Breed:
-										</span>
-										<span className="text-oxfordBlue">
-											{dog.breed || "Unknown"}
-										</span>
-									</div>
-
-									<div className="flex items-center space-x-3">
-										<FontAwesomeIcon
-											icon={faBirthdayCake}
-											className="text-oxfordBlue w-5"
-										/>
-										<span className="text-oxfordBlue font-medium">
-											Age:
-										</span>
-										<span className="text-oxfordBlue">
-											{dog.age
-												? `${dog.age} years`
-												: "Unknown"}
-										</span>
-									</div>
-
-									<div className="flex items-center space-x-3">
-										<FontAwesomeIcon
-											icon={faRuler}
-											className="text-oxfordBlue w-5"
-										/>
-										<span className="text-oxfordBlue font-medium">
-											Size:
-										</span>
-										<span className="text-oxfordBlue">
-											{getSizeDisplayName(dog.size)}
-										</span>
-									</div>
-								</div>
-
-								{/* Compatibility Information */}
-								<div className="space-y-4">
-									<h4 className="text-xl font-semibold text-oxfordBlue mb-4 flex items-center">
-										<FontAwesomeIcon
-											icon={faHeart}
-											className="mr-2 text-oxfordBlue"
-										/>
-										Compatibility
-									</h4>
-
-									<div className="flex items-center space-x-3">
-										<FontAwesomeIcon
-											icon={faDog}
-											className="text-oxfordBlue w-5"
-										/>
-										<span className="text-oxfordBlue font-medium">
-											Good with dogs:
-										</span>
-										<span
-											className={`font-medium ${
-												dog.good_with_dogs
-													? "text-green-600"
-													: dog.good_with_dogs ===
-													  null
-													? "text-gray-500"
-													: "text-red-600"
-											}`}
-										>
-											{dog.good_with_dogs
-												? "Yes"
-												: dog.good_with_dogs === null
-												? "Unknown"
-												: "No"}
-										</span>
-									</div>
-
-									<div className="flex items-center space-x-3">
-										<FontAwesomeIcon
-											icon={faCat}
-											className="text-oxfordBlue w-5"
-										/>
-										<span className="text-oxfordBlue font-medium">
-											Good with cats:
-										</span>
-										<span
-											className={`font-medium ${
-												dog.good_with_cats
-													? "text-green-600"
-													: dog.good_with_cats ===
-													  null
-													? "text-gray-500"
-													: "text-red-600"
-											}`}
-										>
-											{dog.good_with_cats
-												? "Yes"
-												: dog.good_with_cats === null
-												? "Unknown"
-												: "No"}
-										</span>
-									</div>
-
-									<div className="flex items-center space-x-3">
-										<FontAwesomeIcon
-											icon={faBaby}
-											className="text-oxfordBlue w-5"
-										/>
-										<span className="text-oxfordBlue font-medium">
-											Good with children:
-										</span>
-										<span
-											className={`font-medium ${
-												dog.good_with_children
-													? "text-green-600"
-													: dog.good_with_children ===
-													  null
-													? "text-gray-500"
-													: "text-red-600"
-											}`}
-										>
-											{dog.good_with_children
-												? "Yes"
-												: dog.good_with_children ===
-												  null
-												? "Unknown"
-												: "No"}
-										</span>
-									</div>
-
-									<div className="flex items-center space-x-3">
-										<FontAwesomeIcon
-											icon={faBuilding}
-											className="text-oxfordBlue w-5"
-										/>
-										<span className="text-oxfordBlue font-medium">
-											Kennel:
-										</span>
-										<span className="text-oxfordBlue">
-											{dog.kennel?.name || "Unknown"}
-										</span>
-									</div>
-								</div>
-							</div>
-
-							{dog.extra_information && (
-								<div className="mt-6 p-4 bg-skyBlue/10 rounded-2xl border border-skyBlue/20">
-									<h4 className="text-lg font-semibold text-oxfordBlue mb-2 flex items-center">
-										<FontAwesomeIcon
-											icon={faInfoCircle}
-											className="mr-2 text-oxfordBlue"
-										/>
-										Additional Information
-									</h4>
-									<p className="text-oxfordBlue/80 leading-relaxed">
-										{dog.extra_information}
-									</p>
-								</div>
-							)}
 						</motion.div>
-					)}
-
-					{error && (
-						<motion.div
-							className="text-center p-6 bg-red-50 border border-red-200 rounded-2xl"
+						<motion.h1
+							className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md mb-6"
+							initial={{ opacity: 0, y: -20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.6, delay: 0.3 }}
+						>
+							Find Your Perfect Dog
+						</motion.h1>
+						<motion.p
+							className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto mb-12"
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ duration: 0.6, delay: 0.4 }}
+						>
+							Tell us what you're looking for and we'll find your
+							ideal companion. <br></br>This will only take a few
+							moments!
+						</motion.p>
+						<motion.button
+							onClick={() => setHasStarted(true)}
+							className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset text-xl"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
-							transition={{
-								duration: 0.5,
-								delay: 0.8,
-								ease: "easeOut",
-							}}
+							transition={{ duration: 0.6, delay: 0.5 }}
 						>
-							<FontAwesomeIcon
-								icon={faSearch}
-								className="text-3xl text-red-500 mb-3"
-							/>
-							<p className="text-red-600 font-medium text-lg">
-								{error}
-							</p>
-							<p className="text-red-500 mt-2">
-								Try adjusting your search criteria
+							<div className="flex items-center justify-center space-x-3 relative z-10">
+								<span>Begin</span>
+								<FontAwesomeIcon
+									icon={faArrowRight}
+									className="text-lg group-hover:translate-x-1 transition-transform duration-300"
+								/>
+							</div>
+						</motion.button>
+					</motion.div>
+				)}
+
+				{/* Question Flow */}
+				{hasStarted && !loading && !dog && (
+					<>
+						{/* Progress Bar */}
+						<motion.div
+							className="mb-8"
+							initial={{ opacity: 0, y: -20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.4 }}
+						>
+							<div className="flex justify-between items-center mb-2">
+								<span className="text-oxfordBlue font-poppins font-semibold">
+									Question {currentQuestionIndex + 1} of{" "}
+									{questions.length}
+								</span>
+								<span className="text-oxfordBlue/70 font-poppins text-sm">
+									{Math.round(progress)}%
+								</span>
+							</div>
+							<div className="w-full bg-tara/30 rounded-full h-3 overflow-hidden">
+								<motion.div
+									className="h-full bg-gradient-to-r from-highland to-sark rounded-full"
+									initial={{ width: 0 }}
+									animate={{ width: `${progress}%` }}
+									transition={{
+										duration: 0.5,
+										ease: "easeOut",
+									}}
+								/>
+							</div>
+						</motion.div>
+
+						{/* Question Card */}
+						<div className="bg-tomThumb rounded-3xl shadow-xl p-8 lg:p-10 mb-8">
+							<AnimatePresence mode="wait">
+								<motion.div
+									key={currentQuestionIndex}
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									exit={{ opacity: 0 }}
+									transition={{
+										duration: 0.3,
+										ease: "easeInOut",
+									}}
+								>
+									{/* Question Header */}
+									<div className="text-center mb-8">
+										<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
+											<FontAwesomeIcon
+												icon={currentQuestion.icon}
+												className="text-2xl text-sunset"
+											/>
+										</div>
+										<h2 className="text-2xl lg:text-3xl font-bold text-tara font-delius mb-2">
+											{currentQuestion.label}
+										</h2>
+									</div>
+
+									{/* Question Options */}
+									<div className="space-y-4">
+										<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+											{currentQuestion.options.map(
+												(option) => {
+													const isSelected =
+														getCurrentValue(
+															currentQuestion.field
+														) === option.value ||
+														(currentQuestion.field ===
+															"gender" &&
+															option.value ===
+																"notBothered" &&
+															getCurrentValue(
+																currentQuestion.field
+															) === "");
+													return (
+														<label
+															key={option.value}
+															className={`flex items-center justify-center space-x-3 cursor-pointer group p-4 rounded-2xl border-2 transition-all duration-300 ${
+																isSelected
+																	? "bg-gradient-to-r from-highland to-sark text-honeydew border-highland shadow-lg transform scale-105"
+																	: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew"
+															}`}
+														>
+															<input
+																type="radio"
+																name={
+																	currentQuestion.id
+																}
+																value={
+																	option.value
+																}
+																checked={
+																	isSelected
+																}
+																onChange={() =>
+																	handleAnswer(
+																		currentQuestion,
+																		option.value
+																	)
+																}
+																className="sr-only"
+															/>
+															{option.icon && (
+																<FontAwesomeIcon
+																	icon={
+																		option.icon
+																	}
+																	className="text-lg"
+																/>
+															)}
+															<span className="font-poppins font-semibold text-center">
+																{option.label}
+															</span>
+														</label>
+													);
+												}
+											)}
+										</div>
+									</div>
+
+									{/* Navigation Buttons */}
+									<div className="flex justify-between items-center mt-8">
+										<button
+											onClick={handlePrevious}
+											disabled={
+												currentQuestionIndex === 0
+											}
+											className="px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew disabled:hover:bg-gradient-to-r disabled:hover:from-tara disabled:hover:to-mintCream disabled:hover:text-oxfordBlue"
+										>
+											Previous
+										</button>
+
+										<button
+											onClick={handleNext}
+											disabled={
+												!isQuestionAnswered(
+													currentQuestion
+												)
+											}
+											className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100"
+										>
+											<div className="flex items-center justify-center space-x-3 relative z-10">
+												<span>
+													{currentQuestionIndex ===
+													questions.length - 1
+														? "Find My Dog"
+														: "Next"}
+												</span>
+												{currentQuestionIndex !==
+													questions.length - 1 && (
+													<FontAwesomeIcon
+														icon={faArrowRight}
+														className="text-lg group-hover:translate-x-1 transition-transform duration-300"
+													/>
+												)}
+											</div>
+										</button>
+									</div>
+								</motion.div>
+							</AnimatePresence>
+						</div>
+					</>
+				)}
+
+				{/* Loading State */}
+				{loading && (
+					<motion.div
+						className="bg-tomThumb rounded-3xl shadow-xl p-12 text-center"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+					>
+						<div className="animate-spin w-16 h-16 border-4 border-skyBlue border-t-transparent rounded-full mx-auto mb-4"></div>
+						<p className="text-tara font-poppins text-lg">
+							Finding your perfect dog...
+						</p>
+					</motion.div>
+				)}
+
+				{/* Results Section */}
+				{dog && (
+					<motion.div
+						ref={resultsRef}
+						className="max-w-4xl mx-auto py-10"
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{
+							duration: 0.6,
+							delay: 0.2,
+							ease: "easeOut",
+						}}
+					>
+						{/* Results Header */}
+						<motion.div
+							className="text-center mb-8"
+							initial={{ opacity: 0, y: -20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.6, delay: 0.3 }}
+						>
+							<div className="w-20 h-20 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl">
+								<FontAwesomeIcon
+									icon={faHeart}
+									className="text-3xl text-honeydew"
+								/>
+							</div>
+							<h2 className="font-delius text-4xl md:text-5xl font-bold text-oxfordBlue drop-shadow-md mb-3">
+								Your Chosen One!
+							</h2>
+							<p className="text-lg text-highland font-fredoka max-w-2xl mx-auto">
+								We found your perfect dog.
 							</p>
 						</motion.div>
-					)}
-				</motion.div>
+
+						{/* Dog Card */}
+						<motion.div
+							className="flex justify-center"
+							initial={{ opacity: 0, scale: 0.9 }}
+							animate={{ opacity: 1, scale: 1 }}
+							transition={{ duration: 0.6, delay: 0.4 }}
+						>
+							<AdoptionCard dog={dog} />
+						</motion.div>
+					</motion.div>
+				)}
+
+				{/* Error Message */}
+				{error && (
+					<motion.div
+						ref={resultsRef}
+						className="max-w-2xl mx-auto"
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{
+							duration: 0.6,
+							delay: 0.2,
+							ease: "easeOut",
+						}}
+					>
+						<motion.div
+							className="bg-gradient-to-br from-tara to-mintCream rounded-3xl shadow-xl p-8 text-center border-2 border-oxfordBlue/20"
+							initial={{ opacity: 0, scale: 0.95 }}
+							animate={{ opacity: 1, scale: 1 }}
+							transition={{ duration: 0.5, delay: 0.3 }}
+						>
+							<div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mx-auto mb-4">
+								<FontAwesomeIcon
+									icon={faSearch}
+									className="text-2xl text-honeydew"
+								/>
+							</div>
+							<h3 className="text-2xl font-bold text-oxfordBlue mb-3 font-delius">
+								No Match Found
+							</h3>
+							<p className="text-oxfordBlue font-poppins text-lg mb-4">
+								{error}
+							</p>
+							<p className="text-oxfordBlue/70 font-poppins mb-6">
+								Try adjusting your search criteria or browse all
+								available dogs
+							</p>
+							<button
+								onClick={() => {
+									setHasStarted(false);
+									setCurrentQuestionIndex(0);
+									setGender("");
+									setGoodWithDogs("");
+									setGoodWithCats("");
+									setGoodWithChildren("");
+									setError("");
+									setDog(null);
+								}}
+								className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset"
+							>
+								<div className="flex items-center justify-center space-x-3 relative z-10">
+									<span>Try Again</span>
+									<FontAwesomeIcon
+										icon={faArrowRight}
+										className="text-lg group-hover:translate-x-1 transition-transform duration-300"
+									/>
+								</div>
+							</button>
+						</motion.div>
+					</motion.div>
+				)}
 			</div>
 		</motion.div>
 	);

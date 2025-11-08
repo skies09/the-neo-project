@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,6 +11,7 @@ import {
 import { faqData, faqCategories } from "../data/faqData";
 
 const FAQ: React.FC = () => {
+	const navigate = useNavigate();
 	const [openItems, setOpenItems] = useState<number[]>([]);
 	const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -183,7 +185,10 @@ const FAQ: React.FC = () => {
 							companion.
 						</p>
 						<div className="flex flex-col sm:flex-row justify-center gap-4">
-							<button className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-xl">
+							<button 
+								onClick={() => navigate("/contact")}
+								className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-xl"
+							>
 								<div className="flex items-center justify-center space-x-3 relative z-10">
 									<FontAwesomeIcon
 										icon={faPhone}
@@ -192,7 +197,10 @@ const FAQ: React.FC = () => {
 									<span>Contact Us</span>
 								</div>
 							</button>
-							<button className="group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+							<button 
+								onClick={() => navigate("/allDogs")}
+								className="group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+							>
 								<div className="flex items-center justify-center space-x-3 relative z-10">
 									<FontAwesomeIcon
 										icon={faHeart}
