@@ -59,7 +59,7 @@ const BlogHomepage: React.FC = () => {
 	}
 
 	return (
-		<section className="py-10">
+		<section className="py-10 bg-gradient-to-br from-honeydew to-mintCream">
 			<div className="max-w-7xl mx-auto px-4 pb-8">
 				{/* Section Header */}
 				<motion.div
@@ -91,46 +91,49 @@ const BlogHomepage: React.FC = () => {
 							{featuredPosts.map((post, index) => (
 								<motion.article
 									key={post.public_id}
-									className="bg-lace rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+									className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group"
 									initial={{ opacity: 0, y: 20 }}
 									animate={{ opacity: 1, y: 0 }}
 									transition={{
 										duration: 0.6,
 										delay: 0.3 + index * 0.1,
 									}}
+									whileHover={{ scale: 1.02 }}
 								>
 									<Link to={`/blog/${post.public_id}`}>
 										<div className="relative">
 											{/* Placeholder for featured image */}
-											<div className="h-48 bg-gradient-to-br from-skyBlue/20 to-aquamarine/20 flex items-center justify-center">
-												<FontAwesomeIcon
-													icon={faCalendar}
-													className="text-4xl text-skyBlue/50"
-												/>
+											<div className="h-48 bg-gradient-to-br from-highland/20 to-sark/20 flex items-center justify-center">
+												<div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center shadow-lg">
+													<FontAwesomeIcon
+														icon={faCalendar}
+														className="text-2xl text-honeydew"
+													/>
+												</div>
 											</div>
 
 											{/* Category Badge */}
 											<div className="absolute top-4 left-4">
-												<span className="bg-skyBlue text-ghost px-3 py-1 rounded-full text-xs font-bold">
+												<span className="bg-gradient-to-r from-highland to-sark text-honeydew px-3 py-1 rounded-full text-xs font-bold font-poppins shadow-md">
 													{post.category}
 												</span>
 											</div>
 										</div>
 
 										<div className="p-6">
-											<h3 className="text-xl font-bold text-oxfordBlue mb-3 line-clamp-2">
+											<h3 className="text-xl font-bold text-oxfordBlue mb-3 line-clamp-2 font-delius group-hover:text-highland transition-colors">
 												{post.title}
 											</h3>
 
-											<p className="text-oxfordBlue/70 mb-4 line-clamp-3">
+											<p className="text-oxfordBlue/70 mb-4 line-clamp-3 font-poppins">
 												{post.excerpt}
 											</p>
 
-											<div className="flex items-center text-sm text-oxfordBlue/60 mb-3">
+											<div className="flex items-center text-sm text-oxfordBlue/60 mb-3 font-poppins">
 												<span className="flex items-center">
 													<FontAwesomeIcon
 														icon={faCalendar}
-														className="mr-1"
+														className="mr-2 text-highland"
 													/>
 													{formatDateShort(
 														post.published_at ||
@@ -153,7 +156,7 @@ const BlogHomepage: React.FC = () => {
 																		key={
 																			tag
 																		}
-																		className="bg-gray-100 text-oxfordBlue/70 px-2 py-1 rounded text-xs"
+																		className="bg-oxfordBlue/10 text-oxfordBlue px-2 py-1 rounded-full text-xs font-poppins font-medium border border-oxfordBlue/20"
 																	>
 																		#{tag}
 																	</span>
@@ -176,8 +179,8 @@ const BlogHomepage: React.FC = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.6 }}
 				>
-					<div className="bg-lace rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
-						<h3 className="text-2xl font-bold text-oxfordBlue font-poppins mb-4">
+					<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl p-8 max-w-2xl mx-auto border-2 border-oxfordBlue/10">
+						<h3 className="text-2xl font-bold text-oxfordBlue font-delius mb-4">
 							Explore More Stories
 						</h3>
 						<p className="text-oxfordBlue/70 font-poppins mb-6">
@@ -187,11 +190,11 @@ const BlogHomepage: React.FC = () => {
 						</p>
 						<Link
 							to="/blog"
-							className="group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+							className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset inline-flex items-center"
 						>
 							<span>View All Posts</span>
 							<FontAwesomeIcon
-								className="ml-2"
+								className="ml-2 group-hover:translate-x-1 transition-transform duration-300"
 								icon={faArrowRight}
 							/>
 						</Link>

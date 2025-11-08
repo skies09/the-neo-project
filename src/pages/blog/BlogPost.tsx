@@ -55,10 +55,10 @@ const BlogPostPage: React.FC = () => {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16">
+			<div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16">
 				<div className="max-w-4xl mx-auto px-4 py-20">
 					<div className="text-center">
-						<div className="animate-spin w-16 h-16 border-4 border-skyBlue border-t-transparent rounded-full mx-auto mb-4"></div>
+						<div className="animate-spin w-16 h-16 border-4 border-highland border-t-transparent rounded-full mx-auto mb-4"></div>
 						<p className="text-oxfordBlue/70 font-poppins">
 							Loading blog post...
 						</p>
@@ -70,11 +70,17 @@ const BlogPostPage: React.FC = () => {
 
 	if (error || !post) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16">
+			<div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16">
 				<div className="max-w-4xl mx-auto px-4 py-20">
 					<div className="text-center">
-						<div className="bg-lace rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
-							<h2 className="text-2xl font-bold text-oxfordBlue font-poppins mb-4">
+						<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl p-8 max-w-2xl mx-auto border-2 border-oxfordBlue/10">
+							<div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+								<FontAwesomeIcon
+									icon={faArrowLeft}
+									className="text-2xl text-honeydew"
+								/>
+							</div>
+							<h2 className="text-2xl font-bold text-oxfordBlue font-delius mb-4">
 								{error || "Post Not Found"}
 							</h2>
 							<p className="text-oxfordBlue/70 font-poppins mb-6">
@@ -84,13 +90,13 @@ const BlogPostPage: React.FC = () => {
 							<div className="flex flex-col sm:flex-row gap-4 justify-center">
 								<button
 									onClick={() => navigate(-1)}
-									className="bg-skyBlue text-ghost px-6 py-3 rounded-lg hover:bg-skyBlue/80 transition-colors"
+									className="bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-3 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-fredoka font-semibold"
 								>
 									Go Back
 								</button>
 								<Link
 									to="/blog"
-									className="bg-oxfordBlue text-ghost px-6 py-3 rounded-lg hover:bg-oxfordBlue/80 transition-colors inline-block"
+									className="bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-6 py-3 rounded-full hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300 inline-block font-fredoka font-semibold"
 								>
 									View All Posts
 								</Link>
@@ -103,7 +109,7 @@ const BlogPostPage: React.FC = () => {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16">
+		<div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16">
 			<div className="max-w-4xl mx-auto px-4 py-20">
 				{/* Back Button */}
 				<motion.div
@@ -114,37 +120,37 @@ const BlogPostPage: React.FC = () => {
 				>
 					<button
 						onClick={() => navigate(-1)}
-						className="flex items-center space-x-2 text-skyBlue hover:text-skyBlue/80 transition-colors font-poppins"
+						className="group flex items-center space-x-2 text-highland hover:text-sark transition-colors font-poppins font-semibold"
 					>
-						<FontAwesomeIcon icon={faArrowLeft} />
+						<FontAwesomeIcon icon={faArrowLeft} className="group-hover:-translate-x-1 transition-transform duration-300" />
 						<span>Back to Blog</span>
 					</button>
 				</motion.div>
 
 				{/* Article */}
 				<motion.article
-					className="bg-lace rounded-2xl shadow-lg overflow-hidden"
+					className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl overflow-hidden border-2 border-oxfordBlue/10"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.2 }}
 				>
 					{/* Header */}
-					<div className="p-8 border-b border-gray-200">
+					<div className="p-8 border-b border-oxfordBlue/20">
 						<div className="flex flex-wrap gap-3 mb-4">
-							<span className="bg-skyBlue text-ghost px-3 py-1 rounded-full text-sm font-bold">
+							<span className="bg-gradient-to-r from-highland to-sark text-honeydew px-3 py-1 rounded-full text-sm font-bold font-poppins shadow-md">
 								{post.category}
 							</span>
 						</div>
 
-						<h1 className="text-3xl lg:text-4xl font-bold text-oxfordBlue font-poppins mb-4">
+						<h1 className="text-3xl lg:text-4xl font-bold text-oxfordBlue font-delius mb-4">
 							{post.title}
 						</h1>
 
-						<div className="flex items-center space-x-6 text-sm text-oxfordBlue/60">
+						<div className="flex items-center space-x-6 text-sm text-oxfordBlue/60 font-poppins">
 							<span className="flex items-center">
 								<FontAwesomeIcon
 									icon={faCalendar}
-									className="mr-2"
+									className="mr-2 text-highland"
 								/>
 								{formatDateLong(
 									post.published_at || post.created
@@ -156,18 +162,18 @@ const BlogPostPage: React.FC = () => {
 					{/* Content */}
 					<div className="p-8">
 						<div
-							className="prose prose-lg max-w-none text-oxfordBlue font-poppins"
+							className="prose prose-lg max-w-none text-oxfordBlue font-poppins leading-relaxed"
 							dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
 						/>
 					</div>
 
 					{/* Tags */}
 					{post.tag_list && post.tag_list.length > 0 && (
-						<div className="p-8 border-t border-gray-200">
-							<h3 className="text-lg font-semibold text-oxfordBlue mb-4 flex items-center">
+						<div className="p-8 border-t border-oxfordBlue/20">
+							<h3 className="text-lg font-semibold text-oxfordBlue mb-4 flex items-center font-poppins">
 								<FontAwesomeIcon
 									icon={faTag}
-									className="mr-2"
+									className="mr-2 text-highland"
 								/>
 								Tags
 							</h3>
@@ -176,7 +182,7 @@ const BlogPostPage: React.FC = () => {
 									<Link
 										key={tag}
 										to={`/blog?tags=${tag}`}
-										className="bg-gray-100 text-oxfordBlue/70 px-3 py-1 rounded-full text-sm hover:bg-skyBlue hover:text-ghost transition-colors"
+										className="bg-oxfordBlue/10 text-oxfordBlue px-3 py-1 rounded-full text-sm font-poppins font-medium border border-oxfordBlue/20 hover:bg-gradient-to-r hover:from-highland hover:to-sark hover:text-honeydew hover:border-highland transition-all duration-300"
 									>
 										#{tag}
 									</Link>
@@ -193,8 +199,8 @@ const BlogPostPage: React.FC = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.4 }}
 				>
-					<div className="bg-lace rounded-2xl shadow-lg p-8">
-						<h2 className="text-2xl font-bold text-oxfordBlue font-poppins mb-6">
+					<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl p-8 border-2 border-oxfordBlue/10">
+						<h2 className="text-2xl font-bold text-oxfordBlue font-delius mb-6">
 							More from Our Blog
 						</h2>
 						<p className="text-oxfordBlue/70 font-poppins mb-6">
@@ -203,12 +209,12 @@ const BlogPostPage: React.FC = () => {
 						</p>
 						<Link
 							to="/blog"
-							className="inline-flex items-center space-x-2 bg-gradient-to-r from-skyBlue to-aquamarine text-ghost px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+							className="group inline-flex items-center space-x-2 bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset"
 						>
 							<span>View All Posts</span>
 							<FontAwesomeIcon
 								icon={faArrowLeft}
-								className="rotate-180"
+								className="rotate-180 group-hover:translate-x-1 transition-transform duration-300"
 							/>
 						</Link>
 					</div>

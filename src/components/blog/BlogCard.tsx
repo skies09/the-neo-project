@@ -16,41 +16,44 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, index = 0 }) => {
 
   return (
     <motion.article
-      className="bg-lace rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+      className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
+      whileHover={{ scale: 1.02 }}
     >
       <Link to={`/blog/${post.public_id}`}>
         {/* Featured Image Placeholder */}
-        <div className="relative h-48 bg-gradient-to-br from-skyBlue/20 to-aquamarine/20 flex items-center justify-center">
-          <FontAwesomeIcon
-            icon={faCalendar}
-            className="text-4xl text-skyBlue/50"
-          />
+        <div className="relative h-48 bg-gradient-to-br from-highland/20 to-sark/20 flex items-center justify-center">
+          <div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center shadow-lg">
+            <FontAwesomeIcon
+              icon={faCalendar}
+              className="text-2xl text-honeydew"
+            />
+          </div>
         </div>
 
         {/* Content */}
         <div className="p-6">
           {/* Category Badge */}
           <div className="mb-3">
-            <span className="bg-skyBlue text-ghost px-3 py-1 rounded-full text-xs font-bold">
+            <span className="bg-gradient-to-r from-highland to-sark text-honeydew px-3 py-1 rounded-full text-xs font-bold font-poppins shadow-md">
               {post.category}
             </span>
           </div>
 
-          <h3 className="text-xl font-bold text-oxfordBlue mb-3 line-clamp-2">
+          <h3 className="text-xl font-bold text-oxfordBlue mb-3 line-clamp-2 font-delius group-hover:text-highland transition-colors">
             {post.title}
           </h3>
 
-          <p className="text-oxfordBlue/70 mb-4 line-clamp-3">
+          <p className="text-oxfordBlue/70 mb-4 line-clamp-3 font-poppins">
             {post.excerpt}
           </p>
 
           {/* Meta Information */}
-          <div className="flex items-center text-sm text-oxfordBlue/60 mb-4">
+          <div className="flex items-center text-sm text-oxfordBlue/60 mb-4 font-poppins">
             <span className="flex items-center">
-              <FontAwesomeIcon icon={faCalendar} className="mr-1" />
+              <FontAwesomeIcon icon={faCalendar} className="mr-2 text-highland" />
               {formatDateShort(post.published_at || post.created)}
             </span>
           </div>
@@ -61,13 +64,13 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, index = 0 }) => {
               {post.tag_list.slice(0, 3).map((tag: string) => (
                 <span
                   key={tag}
-                  className="bg-gray-100 text-oxfordBlue/70 px-2 py-1 rounded text-xs"
+                  className="bg-oxfordBlue/10 text-oxfordBlue px-2 py-1 rounded-full text-xs font-poppins font-medium border border-oxfordBlue/20"
                 >
                   #{tag}
                 </span>
               ))}
               {post.tag_list.length > 3 && (
-                <span className="text-oxfordBlue/50 text-xs">
+                <span className="text-oxfordBlue/50 text-xs font-poppins">
                   +{post.tag_list.length - 3} more
                 </span>
               )}
