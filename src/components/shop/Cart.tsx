@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Cart as CartType } from "../../services/shopApi";
+import ConfirmModal from "../modals/ConfirmModal";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 interface CartProps {
-	cart: CartType;
+	cart: {
+		items: any[];
+		totalItems?: number;
+		totalPrice?: string;
+		total_items?: number;
+		total_price?: string;
+		loading?: boolean;
+		error?: any;
+	};
 	loading?: boolean;
 	onUpdateQuantity?: (productId: number, quantity: number) => void;
 	onRemoveItem?: (productId: number) => void;
@@ -17,6 +26,8 @@ const Cart: React.FC<CartProps> = ({
 	onRemoveItem,
 	onClearCart,
 }) => {
+	const [showClearModal, setShowClearModal] = useState(false);
+
 	const formatPrice = (price: string | number) => {
 		const numPrice = typeof price === "string" ? parseFloat(price) : price;
 		if (isNaN(numPrice)) return "£0.00";
@@ -36,10 +47,11 @@ const Cart: React.FC<CartProps> = ({
 	};
 
 	const handleClearCart = () => {
-		if (
-			onClearCart &&
-			window.confirm("Are you sure you want to clear your cart?")
-		) {
+		setShowClearModal(true);
+	};
+
+	const handleConfirmClear = () => {
+		if (onClearCart) {
 			onClearCart();
 		}
 	};
@@ -47,7 +59,7 @@ const Cart: React.FC<CartProps> = ({
 	if (loading) {
 		return (
 			<div className="flex justify-center items-center py-12">
-				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-skyBlue"></div>
+				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-highland border-t-transparent"></div>
 			</div>
 		);
 	}
@@ -56,18 +68,20 @@ const Cart: React.FC<CartProps> = ({
 		return (
 			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				<div className="text-center py-12">
-					<div className="text-gray-500 text-lg mb-4">
-						Your cart is empty
+					<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl p-8 max-w-2xl mx-auto border-2 border-oxfordBlue/10">
+						<div className="text-oxfordBlue text-lg mb-4 font-delius font-bold">
+							Your cart is empty
+						</div>
+						<p className="text-oxfordBlue/70 mb-8 font-poppins">
+							Add some products to get started!
+						</p>
+						<Link
+							to="/shop"
+							className="inline-block bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-3 rounded-full font-fredoka font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:text-sunset"
+						>
+							Continue Shopping
+						</Link>
 					</div>
-					<p className="text-gray-400 mb-8">
-						Add some products to get started!
-					</p>
-					<Link
-						to="/shop"
-						className="inline-block bg-skyBlue text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-600 transition-colors duration-200"
-					>
-						Continue Shopping
-					</Link>
 				</div>
 			</div>
 		);
@@ -76,12 +90,12 @@ const Cart: React.FC<CartProps> = ({
 	return (
 		<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 			<div className="flex justify-between items-center mb-8">
-				<h1 className="text-3xl font-bold text-gray-800">
+				<h1 className="text-3xl font-bold text-oxfordBlue font-delius">
 					Shopping Cart
 				</h1>
 				<button
 					onClick={handleClearCart}
-					className="text-red-600 hover:text-red-700 font-medium"
+					className="text-red-600 hover:text-red-700 font-medium font-poppins transition-colors"
 				>
 					Clear Cart
 				</button>
@@ -90,11 +104,11 @@ const Cart: React.FC<CartProps> = ({
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 				{/* Cart Items */}
 				<div className="lg:col-span-2">
-					<div className="bg-white rounded-lg shadow-md overflow-hidden">
+					<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl overflow-hidden border-2 border-oxfordBlue/10">
 						{cart.items.map((item: any, index: number) => (
 							<div
 								key={item.product || index}
-								className="border-b border-gray-200 last:border-b-0"
+								className="border-b border-oxfordBlue/20 last:border-b-0"
 							>
 								<div className="p-6">
 									<div className="flex items-center space-x-4">
@@ -112,7 +126,7 @@ const Cart: React.FC<CartProps> = ({
 
 										{/* Product Info */}
 										<div className="flex-1 min-w-0">
-											<div className="text-lg font-semibold text-gray-800">
+											<div className="text-lg font-semibold text-oxfordBlue font-delius">
 												{item.product_name || "Product"}
 											</div>
 										</div>
@@ -128,16 +142,16 @@ const Cart: React.FC<CartProps> = ({
 															item.quantity - 1
 														)
 													}
-													className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors duration-200"
+													className="w-8 h-8 rounded-full border-2 border-oxfordBlue/20 flex items-center justify-center hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300"
 													disabled={
 														item.quantity <= 1
 													}
 												>
-													<span className="text-gray-600">
+													<span className="text-oxfordBlue font-poppins">
 														-
 													</span>
 												</button>
-												<span className="w-8 text-center font-medium">
+												<span className="w-8 text-center font-medium font-poppins text-oxfordBlue">
 													{item.quantity || 0}
 												</span>
 												<button
@@ -147,9 +161,9 @@ const Cart: React.FC<CartProps> = ({
 															item.quantity + 1
 														)
 													}
-													className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors duration-200"
+													className="w-8 h-8 rounded-full border-2 border-oxfordBlue/20 flex items-center justify-center hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300"
 												>
-													<span className="text-gray-600">
+													<span className="text-oxfordBlue font-poppins">
 														+
 													</span>
 												</button>
@@ -157,12 +171,12 @@ const Cart: React.FC<CartProps> = ({
 
 											{/* Price */}
 											<div className="text-right">
-												<div className="text-lg font-semibold text-gray-800">
+												<div className="text-lg font-semibold text-oxfordBlue font-poppins">
 													{formatPrice(
 														item.total_price
 													)}
 												</div>
-												<div className="text-sm text-gray-500">
+												<div className="text-sm text-oxfordBlue/60 font-poppins">
 													{formatPrice(item.price)}{" "}
 													each
 												</div>
@@ -175,7 +189,7 @@ const Cart: React.FC<CartProps> = ({
 														item.product
 													)
 												}
-												className="text-red-600 hover:text-red-700 p-2"
+												className="text-red-600 hover:text-red-700 p-2 transition-colors"
 												title="Remove item"
 											>
 												<svg
@@ -202,18 +216,18 @@ const Cart: React.FC<CartProps> = ({
 
 				{/* Order Summary */}
 				<div className="lg:col-span-1">
-					<div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
-						<h2 className="text-xl font-semibold text-gray-800 mb-4">
+					<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl p-6 sticky top-4 border-2 border-oxfordBlue/10">
+						<h2 className="text-xl font-semibold text-oxfordBlue mb-4 font-delius">
 							Order Summary
 						</h2>
 
 						<div className="space-y-3 mb-6">
 							<div className="flex justify-between">
-								<span className="text-gray-600">
+								<span className="text-oxfordBlue/70 font-poppins">
 									Items (
 									{cart.total_items || cart.totalItems || 0})
 								</span>
-								<span className="font-medium">
+								<span className="font-medium font-poppins text-oxfordBlue">
 									{formatPrice(
 										cart.total_price ||
 											cart.totalPrice ||
@@ -222,14 +236,14 @@ const Cart: React.FC<CartProps> = ({
 								</span>
 							</div>
 							<div className="flex justify-between">
-								<span className="text-gray-600">Shipping</span>
-								<span className="font-medium">£4.99</span>
+								<span className="text-oxfordBlue/70 font-poppins">Shipping</span>
+								<span className="font-medium font-poppins text-oxfordBlue">£4.99</span>
 							</div>
 							<div className="flex justify-between">
-								<span className="text-gray-600">
+								<span className="text-oxfordBlue/70 font-poppins">
 									Tax (20% VAT)
 								</span>
-								<span className="font-medium">
+								<span className="font-medium font-poppins text-oxfordBlue">
 									{formatPrice(
 										(
 											parseFloat(
@@ -241,12 +255,12 @@ const Cart: React.FC<CartProps> = ({
 									)}
 								</span>
 							</div>
-							<div className="border-t border-gray-200 pt-3">
+							<div className="border-t border-oxfordBlue/20 pt-3">
 								<div className="flex justify-between">
-									<span className="text-lg font-semibold text-gray-800">
+									<span className="text-lg font-semibold text-oxfordBlue font-delius">
 										Total
 									</span>
-									<span className="text-lg font-semibold text-gray-800">
+									<span className="text-lg font-semibold text-oxfordBlue font-poppins">
 										{formatPrice(
 											(
 												parseFloat(
@@ -270,20 +284,33 @@ const Cart: React.FC<CartProps> = ({
 
 						<Link
 							to="/shop/checkout"
-							className="w-full bg-skyBlue text-white py-3 px-4 rounded-md font-semibold text-center block hover:bg-blue-600 transition-colors duration-200 mb-4"
+							className="w-full bg-gradient-to-r from-highland to-sark text-honeydew py-3 px-4 rounded-full font-fredoka font-semibold text-center block hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:text-sunset mb-4"
 						>
 							Proceed to Checkout
 						</Link>
 
 						<Link
 							to="/shop"
-							className="w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-md font-semibold text-center block hover:bg-gray-50 transition-colors duration-200"
+							className="w-full border-2 border-oxfordBlue text-oxfordBlue py-3 px-4 rounded-full font-fredoka font-semibold text-center block hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300 bg-gradient-to-r from-tara to-mintCream"
 						>
 							Continue Shopping
 						</Link>
 					</div>
 				</div>
 			</div>
+
+			{/* Clear Cart Modal */}
+			<ConfirmModal
+				isOpen={showClearModal}
+				onClose={() => setShowClearModal(false)}
+				onConfirm={handleConfirmClear}
+				title="Clear Cart?"
+				message="Are you sure you want to clear your cart? This action cannot be undone."
+				icon={faExclamationTriangle}
+				confirmText="Clear Cart"
+				cancelText="Cancel"
+				confirmButtonStyle="danger"
+			/>
 		</div>
 	);
 };

@@ -9,6 +9,9 @@ import {
 	faPoundSign,
 	faShieldAlt,
 	faCheckCircle,
+	faCreditCard,
+	faCalendarAlt,
+	faLock,
 } from "@fortawesome/free-solid-svg-icons";
 import { useToast } from "../components/ToastContainer";
 
@@ -18,6 +21,10 @@ const Donate: React.FC = () => {
 	const [isDonating, setIsDonating] = useState(false);
 	const [donorName, setDonorName] = useState<string>("");
 	const [donorEmail, setDonorEmail] = useState<string>("");
+	const [cardNumber, setCardNumber] = useState<string>("");
+	const [expiryDate, setExpiryDate] = useState<string>("");
+	const [cvv, setCvv] = useState<string>("");
+	const [cardholderName, setCardholderName] = useState<string>("");
 	const { showToast } = useToast();
 
 	const sectionRef = useRef(null);
@@ -28,9 +35,92 @@ const Donate: React.FC = () => {
 
 	const presetAmounts = [25, 50, 100];
 
+	const formatCardNumber = (value: string) => {
+		const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
+		const matches = v.match(/\d{4,16}/g);
+		const match = (matches && matches[0]) || "";
+		const parts = [];
+		for (let i = 0, len = match.length; i < len; i += 4) {
+			parts.push(match.substring(i, i + 4));
+		}
+		if (parts.length) {
+			return parts.join(" ");
+		} else {
+			return v;
+		}
+	};
+
+	const formatExpiryDate = (value: string) => {
+		const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
+		if (v.length >= 2) {
+			return v.substring(0, 2) + "/" + v.substring(2, 4);
+		}
+		return v;
+	};
+
+	const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const formatted = formatCardNumber(e.target.value);
+		setCardNumber(formatted);
+	};
+
+	const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const formatted = formatExpiryDate(e.target.value);
+		setExpiryDate(formatted);
+	};
+
+	const handleCvvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const v = e.target.value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
+		if (v.length <= 4) {
+			setCvv(v);
+		}
+	};
+
 	const handleDonate = async () => {
 		const amount = selectedAmount || parseFloat(customAmount);
-		if (!amount || amount <= 0) return;
+		if (!amount || amount <= 0) {
+			showToast({
+				type: "error",
+				title: "Invalid Amount",
+				message: "Please select or enter a donation amount.",
+			});
+			return;
+		}
+
+		if (!cardNumber || cardNumber.replace(/\s/g, "").length < 16) {
+			showToast({
+				type: "error",
+				title: "Invalid Card",
+				message: "Please enter a valid card number.",
+			});
+			return;
+		}
+
+		if (!expiryDate || expiryDate.length < 5) {
+			showToast({
+				type: "error",
+				title: "Invalid Expiry",
+				message: "Please enter a valid expiry date (MM/YY).",
+			});
+			return;
+		}
+
+		if (!cvv || cvv.length < 3) {
+			showToast({
+				type: "error",
+				title: "Invalid CVV",
+				message: "Please enter a valid CVV.",
+			});
+			return;
+		}
+
+		if (!cardholderName.trim()) {
+			showToast({
+				type: "error",
+				title: "Missing Information",
+				message: "Please enter the cardholder name.",
+			});
+			return;
+		}
 
 		setIsDonating(true);
 
@@ -41,13 +131,17 @@ const Donate: React.FC = () => {
 				type: "success",
 				title: "Thank You!",
 				message: `Thank you ${
-					donorName || "for your donation"
+					donorName || cardholderName || "for your donation"
 				} of £${amount}! Your contribution helps rescue dogs find their forever homes.`,
 			});
 			setSelectedAmount(null);
 			setCustomAmount("");
 			setDonorName("");
 			setDonorEmail("");
+			setCardNumber("");
+			setExpiryDate("");
+			setCvv("");
+			setCardholderName("");
 		}, 2000);
 	};
 
@@ -186,8 +280,104 @@ const Donate: React.FC = () => {
 										placeholder="Enter amount"
 										min="1"
 										step="0.01"
-										className="w-full pl-10 pr-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:border-aquamarine focus:outline-none transition-colors"
+										className="w-full pl-10 pr-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:border-aquamarine focus:outline-none transition-colors bg-white/80"
 									/>
+								</div>
+							</div>
+
+							{/* Payment Details Section */}
+							<div className="mb-6 border-t-2 border-oxfordBlue/20 pt-6">
+								<h3 className="text-xl font-bold text-tara font-delius mb-4 flex items-center">
+									<FontAwesomeIcon
+										icon={faCreditCard}
+										className="mr-2"
+									/>
+									Payment Details
+								</h3>
+
+								<div className="space-y-4">
+									{/* Cardholder Name */}
+									<div>
+										<label className="block text-tara font-poppins font-semibold mb-2">
+											Cardholder Name <span className="text-red-500">*</span>
+										</label>
+										<input
+											type="text"
+											value={cardholderName}
+											onChange={(e) =>
+												setCardholderName(e.target.value)
+											}
+											placeholder="Name on card"
+											className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none focus:border-highland transition-colors bg-white/80"
+											required
+										/>
+									</div>
+
+									{/* Card Number */}
+									<div>
+										<label className="block text-tara font-poppins font-semibold mb-2">
+											Card Number <span className="text-red-500">*</span>
+										</label>
+										<div className="relative">
+											<FontAwesomeIcon
+												icon={faCreditCard}
+												className="absolute left-4 top-1/2 transform -translate-y-1/2 text-oxfordBlue/80"
+											/>
+											<input
+												type="text"
+												value={cardNumber}
+												onChange={handleCardNumberChange}
+												placeholder="1234 5678 9012 3456"
+												maxLength={19}
+												className="w-full pl-10 pr-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none focus:border-highland transition-colors bg-white/80"
+												required
+											/>
+										</div>
+									</div>
+
+									{/* Expiry and CVV */}
+									<div className="grid grid-cols-2 gap-4">
+										<div>
+											<label className="block text-tara font-poppins font-semibold mb-2">
+												Expiry Date <span className="text-red-500">*</span>
+											</label>
+											<div className="relative">
+												<FontAwesomeIcon
+													icon={faCalendarAlt}
+													className="absolute left-4 top-1/2 transform -translate-y-1/2 text-oxfordBlue/80"
+												/>
+												<input
+													type="text"
+													value={expiryDate}
+													onChange={handleExpiryChange}
+													placeholder="MM/YY"
+													maxLength={5}
+													className="w-full pl-10 pr-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none focus:border-highland transition-colors bg-white/80"
+													required
+												/>
+											</div>
+										</div>
+										<div>
+											<label className="block text-tara font-poppins font-semibold mb-2">
+												CVV <span className="text-red-500">*</span>
+											</label>
+											<div className="relative">
+												<FontAwesomeIcon
+													icon={faLock}
+													className="absolute left-4 top-1/2 transform -translate-y-1/2 text-oxfordBlue/80"
+												/>
+												<input
+													type="text"
+													value={cvv}
+													onChange={handleCvvChange}
+													placeholder="123"
+													maxLength={4}
+													className="w-full pl-10 pr-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none focus:border-highland transition-colors bg-white/80"
+													required
+												/>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 
@@ -197,7 +387,7 @@ const Donate: React.FC = () => {
 									icon={faShieldAlt}
 									className="text-lg"
 								/>
-								<span className="text-sm font-sans">
+								<span className="text-sm font-poppins">
 									Secure payment • 100% goes to rescue centers
 								</span>
 							</div>
@@ -207,9 +397,13 @@ const Donate: React.FC = () => {
 								onClick={handleDonate}
 								disabled={
 									isDonating ||
-									(!selectedAmount && !customAmount)
+									(!selectedAmount && !customAmount) ||
+									!cardNumber ||
+									!expiryDate ||
+									!cvv ||
+									!cardholderName
 								}
-								className="w-full group relative overflow-hidden  bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+								className="w-full group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:text-honeydew"
 							>
 								<div className="flex items-center justify-center space-x-3 relative z-10">
 									{isDonating ? (

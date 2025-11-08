@@ -31,10 +31,8 @@ import FloatingCartIcon from "./components/shop/FloatingCartIcon";
 import ScrollToTop from "./components/ScrollToTop";
 import Footer from "./components/homepage/Footer";
 
-const ShopOnlyFloatingIcon: React.FC = () => {
-	const location = useLocation();
-	const isShop = location.pathname.startsWith("/shop");
-	return isShop ? <FloatingCartIcon /> : null;
+const CartIcon: React.FC = () => {
+	return <FloatingCartIcon />;
 };
 
 const App: React.FC = () => (
@@ -76,7 +74,7 @@ const App: React.FC = () => (
 					}
 				/>
 			</Routes>
-			<ShopOnlyFloatingIcon />
+			<CartIcon />
 			<Footer />
 		</Router>
 	</ToastContainer>

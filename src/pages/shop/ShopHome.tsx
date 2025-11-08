@@ -178,7 +178,7 @@ const ShopHome: React.FC = () => {
 	};
 
 	return (
-		<div className="min-h-screen bg-mintCream pt-16">
+		<div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16">
 			{/* Hero Section */}
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-4">
 				<div className="flex justify-center items-center my-4">
@@ -189,19 +189,19 @@ const ShopHome: React.FC = () => {
 				<p className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto mb-8">
 					Premium products for your beloved pets
 				</p>
-				<div className="flex justify-center space-x-4">
-					<div className="bg-white bg-opacity-20 rounded-lg px-6 py-3">
-						<span className="text-sm font-medium">
+				<div className="flex justify-center space-x-4 flex-wrap gap-4">
+					<div className="bg-gradient-to-br from-tara to-mintCream rounded-full px-6 py-3 border-2 border-oxfordBlue/20 shadow-md">
+						<span className="text-sm font-medium font-poppins text-oxfordBlue">
 							Free UK Shipping
 						</span>
 					</div>
-					<div className="bg-white bg-opacity-20 rounded-lg px-6 py-3">
-						<span className="text-sm font-medium">
+					<div className="bg-gradient-to-br from-tara to-mintCream rounded-full px-6 py-3 border-2 border-oxfordBlue/20 shadow-md">
+						<span className="text-sm font-medium font-poppins text-oxfordBlue">
 							Premium Quality
 						</span>
 					</div>
-					<div className="bg-white bg-opacity-20 rounded-lg px-6 py-3">
-						<span className="text-sm font-medium">
+					<div className="bg-gradient-to-br from-tara to-mintCream rounded-full px-6 py-3 border-2 border-oxfordBlue/20 shadow-md">
+						<span className="text-sm font-medium font-poppins text-oxfordBlue">
 							Expert Curated
 						</span>
 					</div>
@@ -213,10 +213,10 @@ const ShopHome: React.FC = () => {
 				<div className="py-16">
 					<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 						<div className="text-center mb-12">
-							<h2 className="text-3xl font-bold text-gray-800 mb-4">
+							<h2 className="text-3xl font-bold text-oxfordBlue font-delius mb-4">
 								Bestseller Products
 							</h2>
-							<p className="text-lg text-gray-600">
+							<p className="text-lg text-highland font-fredoka">
 								Our most popular and best-selling items
 							</p>
 						</div>
@@ -227,7 +227,7 @@ const ShopHome: React.FC = () => {
 								.map((product) => (
 									<div
 										key={product.id}
-										className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+										className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
 									>
 										<div className="relative">
 											{/* <img
@@ -238,30 +238,30 @@ const ShopHome: React.FC = () => {
 												alt={product.name}
 												className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
 											/> */}
-											<div className="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded-md text-sm font-semibold">
+											<div className="absolute top-2 right-2 bg-gradient-to-r from-highland to-sark text-honeydew px-3 py-1 rounded-full text-xs font-bold font-poppins shadow-md">
 												Bestseller
 											</div>
 										</div>
 										<div className="p-4">
 											{product.brand && (
 												<div className="mb-2">
-													<span className="text-sm text-gray-500 font-medium">
+													<span className="text-sm text-oxfordBlue/70 font-medium font-poppins">
 														{product.brand}
 													</span>
 												</div>
 											)}
-											<h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
+											<h3 className="text-lg font-semibold text-oxfordBlue mb-2 line-clamp-2 font-delius group-hover:text-highland transition-colors">
 												{product.name}
 											</h3>
 											<div className="flex items-center gap-2 mb-4">
-												<span className="text-xl font-bold text-gray-900">
+												<span className="text-xl font-bold text-oxfordBlue font-poppins">
 													£
 													{parseFloat(
 														product.price
 													).toFixed(2)}
 												</span>
 												{product.compare_price && (
-													<span className="text-sm text-gray-500 line-through">
+													<span className="text-sm text-oxfordBlue/50 line-through font-poppins">
 														£
 														{parseFloat(
 															product.compare_price
@@ -277,9 +277,9 @@ const ShopHome: React.FC = () => {
 													)
 												}
 												disabled={!product.is_in_stock}
-												className={`w-full py-2 px-4 rounded-md font-semibold transition-colors duration-200 ${
+												className={`w-full py-2 px-4 rounded-full font-semibold transition-all duration-300 font-fredoka ${
 													product.is_in_stock
-														? "bg-skyBlue text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-skyBlue focus:ring-offset-2"
+														? "bg-gradient-to-r from-highland to-sark text-honeydew hover:shadow-lg transform hover:scale-105 hover:text-sunset"
 														: "bg-gray-300 text-gray-500 cursor-not-allowed"
 												}`}
 											>
@@ -296,7 +296,7 @@ const ShopHome: React.FC = () => {
 			)}
 
 			{/* Main Content */}
-			<div className="py-16">
+			<div className="py-4">
 				{!selectedCategory || selectedCategory === null ? (
 					/* Show Categories */
 					<>
@@ -313,10 +313,10 @@ const ShopHome: React.FC = () => {
 						<div className="mb-8">
 							<button
 								onClick={handleBackToCategories}
-								className="flex items-center space-x-2 text-skyBlue hover:text-blue-600 font-medium transition-colors duration-200"
+								className="group flex items-center space-x-2 text-highland hover:text-sark font-medium font-poppins transition-colors duration-200"
 							>
 								<svg
-									className="w-5 h-5"
+									className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300"
 									fill="none"
 									stroke="currentColor"
 									viewBox="0 0 24 24"
@@ -333,8 +333,8 @@ const ShopHome: React.FC = () => {
 						</div>
 
 						{/* Category Title */}
-						<div className="text-center mb-12">
-							<h2 className="text-3xl font-bold text-gray-800 mb-4">
+						<div className="text-center mb-4">
+							<h2 className="text-3xl font-bold text-oxfordBlue font-delius mb-4">
 								{selectedCategory === "all"
 									? "All Products"
 									: selectedCategory
@@ -344,7 +344,7 @@ const ShopHome: React.FC = () => {
 									  )?.name || "Products"
 									: "All Products"}
 							</h2>
-							<p className="text-lg text-gray-600">
+							<p className="text-lg text-highland font-fredoka">
 								{selectedCategory === "all"
 									? "Browse our complete collection of pet products"
 									: selectedCategory
@@ -371,34 +371,6 @@ const ShopHome: React.FC = () => {
 					</div>
 				)}
 			</div>
-
-			{/* Cart Summary (if items in cart) */}
-			{cart && cart.totalItems > 0 && (
-				<div className="fixed bottom-4 right-4 z-50">
-					<div className="bg-skyBlue text-white rounded-full px-6 py-3 shadow-lg hover:bg-blue-600 transition-colors duration-200 cursor-pointer">
-						<div className="flex items-center space-x-2">
-							<svg
-								className="w-6 h-6"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 11-4 0v-6m4 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
-								/>
-							</svg>
-							<span className="font-semibold">
-								{cart.totalItems} item
-								{cart.totalItems !== 1 ? "s" : ""} - £
-								{parseFloat(cart.totalPrice).toFixed(2)}
-							</span>
-						</div>
-					</div>
-				</div>
-			)}
 		</div>
 	);
 };

@@ -19,7 +19,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 	if (loading) {
 		return (
 			<div className="flex justify-center items-center py-12">
-				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-skyBlue"></div>
+				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-highland border-t-transparent"></div>
 			</div>
 		);
 	}
@@ -36,8 +36,8 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 					ease: "easeOut",
 				}}
 			>
-				<div className="flex flex-col justify-center items-center py-12 bg-sark rounded-3xl shadow-xl">
-					<p className="text-lg lg:text-xl text-mintCream font-fredoka max-w-5xl mx-auto text-center">
+				<div className="flex flex-col justify-center items-center py-12 bg-gradient-to-br from-tara to-mintCream rounded-3xl shadow-xl border-2 border-oxfordBlue/20">
+					<p className="text-lg lg:text-xl text-oxfordBlue font-poppins max-w-5xl mx-auto text-center">
 						Shop currently unavailable, please try again later
 					</p>
 				</div>
@@ -48,10 +48,10 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 	return (
 		<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 			<div className="text-center mb-12">
-				<h2 className="text-3xl font-bold text-gray-800 mb-4">
+				<h2 className="text-3xl font-bold text-oxfordBlue font-delius mb-4">
 					Shop by Category
 				</h2>
-				<p className="text-lg text-gray-600">
+				<p className="text-lg text-highland font-fredoka">
 					Choose a category to browse our products
 				</p>
 			</div>
@@ -61,18 +61,18 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 					<button
 						key={category.code}
 						onClick={() => onCategorySelect?.(category.code)}
-						className="group relative overflow-hidden bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+						className="group relative overflow-hidden bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
 					>
 						<div className="p-8 text-center">
 							{/* Category visual removed (emoji icons removed) */}
 
 							{/* Category Name */}
-							<h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-skyBlue transition-colors duration-200">
+							<h3 className="text-xl font-semibold text-oxfordBlue mb-2 group-hover:text-highland transition-colors duration-200 font-delius">
 								{category.name}
 							</h3>
 
 							{/* Product Count */}
-							<p className="text-sm text-gray-500">
+							<p className="text-sm text-oxfordBlue/60 font-poppins">
 								{category.product_count}{" "}
 								{category.product_count === 1
 									? "product"
@@ -80,7 +80,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 							</p>
 
 							{/* Hover Effect */}
-							<div className="absolute inset-0 bg-gradient-to-br from-skyBlue/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+							<div className="absolute inset-0 bg-gradient-to-br from-highland/10 to-sark/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
 						</div>
 					</button>
 				))}
@@ -90,7 +90,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 			<div className="text-center mt-12">
 				<button
 					onClick={() => onCategorySelect?.("")}
-					className="group relative overflow-hidden bg-gradient-to-r from-skyBlue to-blue-600 text-white px-8 py-4 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+					className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset"
 				>
 					<div className="flex items-center space-x-3 relative z-10">
 						<span>View All Products</span>
@@ -108,7 +108,6 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 							/>
 						</svg>
 					</div>
-					<div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-aquamarine opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 				</button>
 			</div>
 		</div>

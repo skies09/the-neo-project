@@ -68,7 +68,7 @@ const ProductList: React.FC<ProductListProps> = ({
 	if (loading) {
 		return (
 			<div className="flex justify-center items-center py-12">
-				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-skyBlue"></div>
+				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-highland border-t-transparent"></div>
 			</div>
 		);
 	}
@@ -77,14 +77,14 @@ const ProductList: React.FC<ProductListProps> = ({
 		<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 			{/* Filters at the top */}
 			{showFilters && (
-				<div className="bg-white rounded-lg shadow-md p-6 mb-8">
+				<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl p-6 mb-8 border-2 border-oxfordBlue/10">
 					<div className="flex justify-between items-center mb-6">
-						<h3 className="text-lg font-semibold text-gray-800">
+						<h3 className="text-lg font-semibold text-oxfordBlue font-delius">
 							Filters
 						</h3>
 						<button
 							onClick={clearFilters}
-							className="text-sm text-skyBlue hover:text-blue-600"
+							className="text-sm text-highland hover:text-sark font-poppins font-semibold transition-colors"
 						>
 							Clear All
 						</button>
@@ -93,7 +93,7 @@ const ProductList: React.FC<ProductListProps> = ({
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 						{/* Search */}
 						<div>
-							<label className="block text-sm font-medium text-gray-700 mb-2">
+							<label className="block text-sm font-medium text-oxfordBlue mb-2 font-poppins">
 								Search
 							</label>
 							<input
@@ -103,13 +103,13 @@ const ProductList: React.FC<ProductListProps> = ({
 									handleSearchChange(e.target.value)
 								}
 								placeholder="Search products..."
-								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-skyBlue focus:border-transparent"
+								className="w-full px-3 py-2 border-2 border-oxfordBlue/20 rounded-full focus:outline-none focus:ring-2 focus:ring-highland focus:border-highland bg-white/80 font-poppins"
 							/>
 						</div>
 
 						{/* Categories */}
 						<div>
-							<label className="block text-sm font-medium text-gray-700 mb-2">
+							<label className="block text-sm font-medium text-oxfordBlue mb-2 font-poppins">
 								Category
 							</label>
 							<select
@@ -117,7 +117,7 @@ const ProductList: React.FC<ProductListProps> = ({
 								onChange={(e) =>
 									handleCategoryChange(e.target.value)
 								}
-								className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-skyBlue focus:border-transparent"
+								className="w-full px-3 py-2 border-2 border-oxfordBlue/20 rounded-full focus:outline-none focus:ring-2 focus:ring-highland focus:border-highland bg-white/80 font-poppins"
 							>
 								<option value="">All Categories</option>
 								{safeCategories.map((category) => (
@@ -134,7 +134,7 @@ const ProductList: React.FC<ProductListProps> = ({
 
 						{/* Bestseller Products */}
 						<div className="flex items-center">
-							<label className="flex items-center">
+							<label className="flex items-center cursor-pointer">
 								<input
 									type="checkbox"
 									checked={
@@ -143,9 +143,9 @@ const ProductList: React.FC<ProductListProps> = ({
 									onChange={(e) =>
 										handleBestsellerToggle(e.target.checked)
 									}
-									className="rounded border-gray-300 text-skyBlue focus:ring-skyBlue"
+									className="rounded border-oxfordBlue/30 text-highland focus:ring-highland w-5 h-5"
 								/>
-								<span className="ml-2 text-sm text-gray-700">
+								<span className="ml-2 text-sm text-oxfordBlue font-poppins">
 									Bestseller Products
 								</span>
 							</label>
@@ -153,16 +153,16 @@ const ProductList: React.FC<ProductListProps> = ({
 
 						{/* In Stock Only */}
 						<div className="flex items-center">
-							<label className="flex items-center">
+							<label className="flex items-center cursor-pointer">
 								<input
 									type="checkbox"
 									checked={currentFilters?.in_stock || false}
 									onChange={(e) =>
 										handleInStockToggle(e.target.checked)
 									}
-									className="rounded border-gray-300 text-skyBlue focus:ring-skyBlue"
+									className="rounded border-oxfordBlue/30 text-highland focus:ring-highland w-5 h-5"
 								/>
-								<span className="ml-2 text-sm text-gray-700">
+								<span className="ml-2 text-sm text-oxfordBlue font-poppins">
 									In Stock Only
 								</span>
 							</label>
@@ -175,12 +175,14 @@ const ProductList: React.FC<ProductListProps> = ({
 			<div>
 				{safeProducts.length === 0 ? (
 					<div className="text-center py-12">
-						<div className="text-gray-500 text-lg mb-4">
-							No products found
+						<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl p-8 max-w-2xl mx-auto border-2 border-oxfordBlue/10">
+							<div className="text-oxfordBlue text-lg mb-4 font-delius font-bold">
+								No products found
+							</div>
+							<p className="text-oxfordBlue/70 font-poppins">
+								Try adjusting your filters or search terms.
+							</p>
 						</div>
-						<p className="text-gray-400">
-							Try adjusting your filters or search terms.
-						</p>
 					</div>
 				) : (
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

@@ -74,7 +74,7 @@ const CartPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
+    <div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16">
       <Cart
         cart={cart}
         loading={cart.loading}
