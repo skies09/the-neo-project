@@ -21,6 +21,12 @@ const CartPage: React.FC = () => {
   const handleUpdateQuantity = async (productId: number, quantity: number) => {
     dispatch(updateCartItemRequest());
     try {
+      // If quantity is 0 or less, remove the item
+      if (quantity <= 0) {
+        handleRemoveItem(productId);
+        return;
+      }
+
       // Update cart item in Redux state
       const updatedItems = cart.items.map((item: any) => 
         item.product === productId 

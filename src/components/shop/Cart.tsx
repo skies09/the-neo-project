@@ -35,7 +35,7 @@ const Cart: React.FC<CartProps> = ({
 	};
 
 	const handleQuantityChange = (productId: number, newQuantity: number) => {
-		if (onUpdateQuantity && newQuantity > 0) {
+		if (onUpdateQuantity) {
 			onUpdateQuantity(productId, newQuantity);
 		}
 	};
@@ -107,7 +107,7 @@ const Cart: React.FC<CartProps> = ({
 					<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl overflow-hidden border-2 border-oxfordBlue/10">
 						{cart.items.map((item: any, index: number) => (
 							<div
-								key={item.product || index}
+								key={item.id || `${item.product}-${index}` || index}
 								className="border-b border-oxfordBlue/20 last:border-b-0"
 							>
 								<div className="p-6">
@@ -143,9 +143,6 @@ const Cart: React.FC<CartProps> = ({
 														)
 													}
 													className="w-8 h-8 rounded-full border-2 border-oxfordBlue/20 flex items-center justify-center hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300"
-													disabled={
-														item.quantity <= 1
-													}
 												>
 													<span className="text-oxfordBlue font-poppins">
 														-

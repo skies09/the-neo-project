@@ -111,27 +111,63 @@ export const useShop = () => {
 				(p: any) => p.id === productId
 			);
 			if (product) {
-				// Create a cart item object
-				const cartItem = {
-					product: productId,
-					product_name: product.name,
-					product_sku: product.sku,
-					price: product.price,
-					quantity: quantity,
-					total_price: (parseFloat(product.price) * quantity).toFixed(
-						2
-					),
-				};
+				// Check if product already exists in cart
+				const existingItemIndex = shopState.cart.items.findIndex(
+					(item: any) => item.product === productId
+				);
+
+				let updatedItems;
+				let newTotalItems;
+				let newTotalPrice;
+
+				if (existingItemIndex >= 0) {
+					// Update existing item quantity
+					updatedItems = shopState.cart.items.map(
+						(item: any, index: number) => {
+							if (index === existingItemIndex) {
+								const newQuantity = item.quantity + quantity;
+								return {
+									...item,
+									quantity: newQuantity,
+									total_price: (
+										parseFloat(item.price) * newQuantity
+									).toFixed(2),
+								};
+							}
+							return item;
+						}
+					);
+					newTotalItems = shopState.cart.totalItems + quantity;
+					newTotalPrice = (
+						parseFloat(shopState.cart.totalPrice) +
+						parseFloat(product.price) * quantity
+					).toFixed(2);
+				} else {
+					// Add new item
+					const cartItem = {
+						product: productId,
+						product_name: product.name,
+						product_sku: product.sku,
+						price: product.price,
+						quantity: quantity,
+						total_price: (parseFloat(product.price) * quantity).toFixed(
+							2
+						),
+					};
+					updatedItems = [...shopState.cart.items, cartItem];
+					newTotalItems = shopState.cart.totalItems + quantity;
+					newTotalPrice = (
+						parseFloat(shopState.cart.totalPrice) +
+						parseFloat(cartItem.total_price)
+					).toFixed(2);
+				}
 
 				// Update Redux state directly
 				dispatch(
 					addToCartSuccess({
-						items: [...shopState.cart.items, cartItem],
-						total_items: shopState.cart.totalItems + quantity,
-						total_price: (
-							parseFloat(shopState.cart.totalPrice) +
-							parseFloat(cartItem.total_price)
-						).toFixed(2),
+						items: updatedItems,
+						total_items: newTotalItems,
+						total_price: newTotalPrice,
 					})
 				);
 			}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import ProductList from "../../components/shop/ProductList";
@@ -53,14 +53,7 @@ const ShopHome: React.FC = () => {
 		error: null,
 	};
 
-	useEffect(() => {
-		// Fetch initial data
-		fetchProducts();
-		fetchFeaturedProducts();
-		fetchCategories();
-	}, []);
-
-	const fetchProducts = async (filters?: any) => {
+	const fetchProducts = useCallback(async (filters?: any) => {
 		dispatch(fetchProductsRequest());
 		try {
 			const response = await shopAPI.getProducts(filters);
@@ -72,9 +65,9 @@ const ShopHome: React.FC = () => {
 				)
 			);
 		}
-	};
+	}, [dispatch]);
 
-	const fetchFeaturedProducts = async () => {
+	const fetchFeaturedProducts = useCallback(async () => {
 		dispatch(fetchFeaturedProductsRequest());
 		try {
 			const response = await shopAPI.getBestsellerProducts();
@@ -86,9 +79,9 @@ const ShopHome: React.FC = () => {
 				)
 			);
 		}
-	};
+	}, [dispatch]);
 
-	const fetchCategories = async () => {
+	const fetchCategories = useCallback(async () => {
 		dispatch(fetchCategoriesRequest());
 		try {
 			const response = await shopAPI.getProductCategories();
@@ -100,7 +93,14 @@ const ShopHome: React.FC = () => {
 				)
 			);
 		}
-	};
+	}, [dispatch]);
+
+	useEffect(() => {
+		// Fetch initial data
+		fetchProducts();
+		fetchFeaturedProducts();
+		fetchCategories();
+	}, [fetchProducts, fetchFeaturedProducts, fetchCategories]);
 
 	const handleAddToCart = async (productId: number, quantity: number) => {
 		// Cart is handled entirely with Redux - no API calls needed
@@ -109,27 +109,61 @@ const ShopHome: React.FC = () => {
 			// Find the product in the current products list
 			const product = products.items.find((p) => p.id === productId);
 			if (product) {
-				// Create a cart item object
-				const cartItem = {
-					product: productId,
-					product_name: product.name,
-					product_sku: product.sku,
-					price: product.price,
-					quantity: quantity,
-					total_price: (parseFloat(product.price) * quantity).toFixed(
-						2
-					),
-				};
+				// Check if product already exists in cart
+				const existingItemIndex = cart.items.findIndex(
+					(item: any) => item.product === productId
+				);
+
+				let updatedItems;
+				let newTotalItems;
+				let newTotalPrice;
+
+				if (existingItemIndex >= 0) {
+					// Update existing item quantity
+					updatedItems = cart.items.map((item: any, index: number) => {
+						if (index === existingItemIndex) {
+							const newQuantity = item.quantity + quantity;
+							return {
+								...item,
+								quantity: newQuantity,
+								total_price: (
+									parseFloat(item.price) * newQuantity
+								).toFixed(2),
+							};
+						}
+						return item;
+					});
+					newTotalItems = cart.totalItems + quantity;
+					newTotalPrice = (
+						parseFloat(cart.totalPrice) +
+						parseFloat(product.price) * quantity
+					).toFixed(2);
+				} else {
+					// Add new item
+					const cartItem = {
+						product: productId,
+						product_name: product.name,
+						product_sku: product.sku,
+						price: product.price,
+						quantity: quantity,
+						total_price: (
+							parseFloat(product.price) * quantity
+						).toFixed(2),
+					};
+					updatedItems = [...cart.items, cartItem];
+					newTotalItems = cart.totalItems + quantity;
+					newTotalPrice = (
+						parseFloat(cart.totalPrice) +
+						parseFloat(cartItem.total_price)
+					).toFixed(2);
+				}
 
 				// Update Redux state directly
 				dispatch(
 					addToCartSuccess({
-						items: [...cart.items, cartItem],
-						total_items: cart.totalItems + quantity,
-						total_price: (
-							parseFloat(cart.totalPrice) +
-							parseFloat(cartItem.total_price)
-						).toFixed(2),
+						items: updatedItems,
+						total_items: newTotalItems,
+						total_price: newTotalPrice,
 					})
 				);
 			}

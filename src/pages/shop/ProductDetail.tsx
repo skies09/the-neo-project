@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
@@ -22,13 +22,7 @@ const ProductDetail: React.FC = () => {
 	const [selectedImage, setSelectedImage] = useState(0);
 	const [quantity, setQuantity] = useState(1);
 
-	useEffect(() => {
-		if (id) {
-			fetchProduct(parseInt(id));
-		}
-	}, [id]);
-
-	const fetchProduct = async (productId: number) => {
+	const fetchProduct = useCallback(async (productId: number) => {
 		dispatch(fetchProductRequest());
 		try {
 			const response = await shopAPI.getProduct(productId);
@@ -38,7 +32,13 @@ const ProductDetail: React.FC = () => {
 				fetchProductFailure(error.message || "Failed to fetch product")
 			);
 		}
-	};
+	}, [dispatch]);
+
+	useEffect(() => {
+		if (id) {
+			fetchProduct(parseInt(id));
+		}
+	}, [id, fetchProduct]);
 
 	const handleAddToCart = async () => {
 		if (!currentProduct.item) return;
@@ -48,27 +48,61 @@ const ProductDetail: React.FC = () => {
 			// Find the product in the current products list
 			const product = currentProduct.item;
 			if (product) {
-				// Create a cart item object
-				const cartItem = {
-					product: product.id,
-					product_name: product.name,
-					product_sku: product.sku,
-					price: product.price,
-					quantity: quantity,
-					total_price: (parseFloat(product.price) * quantity).toFixed(
-						2
-					),
-				};
+				// Check if product already exists in cart
+				const existingItemIndex = cart.items.findIndex(
+					(item: any) => item.product === product.id
+				);
+
+				let updatedItems;
+				let newTotalItems;
+				let newTotalPrice;
+
+				if (existingItemIndex >= 0) {
+					// Update existing item quantity
+					updatedItems = cart.items.map((item: any, index: number) => {
+						if (index === existingItemIndex) {
+							const newQuantity = item.quantity + quantity;
+							return {
+								...item,
+								quantity: newQuantity,
+								total_price: (
+									parseFloat(item.price) * newQuantity
+								).toFixed(2),
+							};
+						}
+						return item;
+					});
+					newTotalItems = cart.totalItems + quantity;
+					newTotalPrice = (
+						parseFloat(cart.totalPrice) +
+						parseFloat(product.price) * quantity
+					).toFixed(2);
+				} else {
+					// Add new item
+					const cartItem = {
+						product: product.id,
+						product_name: product.name,
+						product_sku: product.sku,
+						price: product.price,
+						quantity: quantity,
+						total_price: (
+							parseFloat(product.price) * quantity
+						).toFixed(2),
+					};
+					updatedItems = [...cart.items, cartItem];
+					newTotalItems = cart.totalItems + quantity;
+					newTotalPrice = (
+						parseFloat(cart.totalPrice) +
+						parseFloat(cartItem.total_price)
+					).toFixed(2);
+				}
 
 				// Update Redux state directly
 				dispatch(
 					addToCartSuccess({
-						items: [...cart.items, cartItem],
-						total_items: cart.totalItems + quantity,
-						total_price: (
-							parseFloat(cart.totalPrice) +
-							parseFloat(cartItem.total_price)
-						).toFixed(2),
+						items: updatedItems,
+						total_items: newTotalItems,
+						total_price: newTotalPrice,
 					})
 				);
 			}

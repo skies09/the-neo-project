@@ -1,6 +1,5 @@
 // src/store/store.js
 import { createStore, combineReducers } from "redux";
-import breedReducer from "./breeds/reducers";
 import dogOfTheDayReducer from "./dogOfTheDay/reducers";
 import shopReducer from "./shop/reducers";
 import {
@@ -9,6 +8,8 @@ import {
 	saveDogOfTheDayState,
 } from "./dogOfTheDay/persistence";
 import { setDogOfTheDay, setDogsOfTheDay, setLastFetchDate } from "./dogOfTheDay/actions";
+import { loadCartState, saveCartState } from "./shop/persistence";
+import { fetchCartSuccess } from "./shop/actions";
 
 // Combine reducers to handle multiple slices of state
 const rootReducer = combineReducers({
@@ -39,11 +40,30 @@ if (
     store.dispatch(setLastFetchDate(persistedDogOfTheDayState.lastFetchDate));
 }
 
-// Subscribe to store changes to persist dog of the day state
+// Load persisted cart state
+const persistedCartState = loadCartState();
+if (persistedCartState && persistedCartState.items && persistedCartState.items.length > 0) {
+	store.dispatch(
+		fetchCartSuccess({
+			items: persistedCartState.items,
+			total_items: persistedCartState.totalItems,
+			total_price: persistedCartState.totalPrice,
+		})
+	);
+}
+
+// Subscribe to store changes to persist state
 store.subscribe(() => {
 	const state = store.getState();
 	if (state.dogOfTheDay) {
 		saveDogOfTheDayState(state.dogOfTheDay);
+	}
+	if (state.shop && state.shop.cart) {
+		saveCartState({
+			items: state.shop.cart.items,
+			totalItems: state.shop.cart.totalItems,
+			totalPrice: state.shop.cart.totalPrice,
+		});
 	}
 });
 
