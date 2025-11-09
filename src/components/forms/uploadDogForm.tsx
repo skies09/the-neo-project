@@ -218,15 +218,11 @@ const UploadDogForm = ({
 						{/* Basic Information */}
 						<div className="rounded-2xl p-6">
 							<h3 className="text-xl font-semibold text-tara font-poppins mb-6 flex items-center">
-								<FontAwesomeIcon
-									icon={faDog}
-									className="mr-3 text-tara"
-								/>
 								Basic Information
 							</h3>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 								<div>
-									<label className="block text-tara font-poppins font-semibold mb-2 flex items-center">
+									<label className="text-tara font-poppins font-semibold mb-2 flex items-center">
 										<FontAwesomeIcon
 											icon={faUser}
 											className="mr-2 text-tara"
@@ -355,16 +351,12 @@ const UploadDogForm = ({
 						{/* Characteristics */}
 						<div className="rounded-2xl p-6">
 							<h3 className="text-xl font-semibold text-tara font-poppins mb-6 flex items-center">
-								<FontAwesomeIcon
-									icon={faQuestionCircle}
-									className="mr-3 text-tara"
-								/>
 								Characteristics
 							</h3>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 								<div className="space-y-6">
 									<div>
-										<label className="block text-tara font-poppins font-semibold mb-3 flex items-center">
+										<label className="text-tara font-poppins font-semibold mb-3 flex items-center">
 											<FontAwesomeIcon
 												icon={faVenusMars}
 												className="mr-2 text-tara"
@@ -595,14 +587,10 @@ const UploadDogForm = ({
 						{/* Additional Information */}
 						<div className="rounded-2xl p-6">
 							<h3 className="text-xl font-semibold text-tara font-poppins mb-6 flex items-center">
-								<FontAwesomeIcon
-									icon={faFileAlt}
-									className="mr-3 text-tara"
-								/>
 								Additional Information
 							</h3>
 							<div>
-								<label className="block text-tara font-poppins font-semibold mb-2 flex items-center">
+								<label className="text-tara font-poppins font-semibold mb-2 flex items-center">
 									<FontAwesomeIcon
 										icon={faFileAlt}
 										className="mr-2 text-tara"
@@ -652,7 +640,9 @@ const UploadDogForm = ({
 										icon={dogToEdit ? faSave : faPlus}
 										className="text-lg"
 									/>
-									<span>{dogToEdit ? "Update Dog" : "Add Dog"}</span>
+									<span>
+										{dogToEdit ? "Update Dog" : "Add Dog"}
+									</span>
 								</div>
 								<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 							</button>

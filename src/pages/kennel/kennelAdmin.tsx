@@ -611,28 +611,26 @@ const KennelAdmin = () => {
 									animate={{ opacity: 1, y: 0 }}
 									transition={{ duration: 0.3 }}
 								>
-									<div className="flex text-center mt-2 w-full justify-center items-center mb-4">
-										<p
-											className="text-sm lg:text-lg text-center font-poppins font-medium text-red-500 !text-red-500"
-											style={{ color: "#ef4444" }}
-										>
-											{errorMessage}
-										</p>
+									<div className="w-full max-w-md mb-4">
+										<div className="px-4 py-3">
+											<p className="text-sm lg:text-base text-center font-poppins font-medium text-tara">
+												{errorMessage}
+											</p>
+										</div>
 									</div>
-									<div className="bg-gradient-to-br from-skyBlue to-aquamarine backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 w-full max-w-md">
-										<p className="text-sm lg:text-base text-center font-poppins font-medium text-oxfordBlue mb-4">
+									<div className="bg-gradient-to-br from-tara to-mintCream backdrop-blur-sm rounded-2xl p-4 shadow-lg border-2 border-oxfordBlue w-full max-w-md">
+										<p className="text-sm lg:text-base text-center font-poppins font-semibold text-oxfordBlue mb-4">
 											Trouble logging in?
 										</p>
 										<Link
 											to="/Contact"
-											className="group relative overflow-hidden bg-gradient-to-r from-oxfordBlue to-skyBlue text-honeydew px-8 py-3 rounded-xl font-poppins font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-oxfordBlue/30 flex items-center justify-center space-x-2"
+											className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-3 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2"
 										>
 											<FontAwesomeIcon
 												icon={faEnvelope}
 												className="text-lg"
 											/>
 											<span>Contact us</span>
-											<div className="absolute inset-0 bg-gradient-to-r from-skyBlue to-aquamarine opacity-0 transition-opacity duration-300"></div>
 										</Link>
 									</div>
 								</motion.div>

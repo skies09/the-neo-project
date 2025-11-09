@@ -30,7 +30,7 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 	return (
 		<div className="flex items-center justify-center p-2 w-full">
 			<div
-				className="relative w-full max-w-xs cursor-pointer perspective-1000"
+				className="relative w-full max-w-4xl cursor-pointer perspective-1000"
 				onClick={() => setIsFlipped(!isFlipped)}
 			>
 				{/* Front and Back Container */}
@@ -49,14 +49,14 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 						}}
 					>
 						<motion.div
-							className="max-w-md overflow-hidden shadow-lg rounded-2xl bg-gradient-to-br from-tara to-mintCream w-full hover:shadow-xl transition-all duration-200"
+							className="overflow-hidden shadow-lg rounded-2xl bg-gradient-to-br from-tara to-mintCream w-full hover:shadow-xl transition-all duration-200"
 							whileHover={{ scale: 1.01 }}
 							transition={{ duration: 0.2 }}
 						>
 							{dog.image && (
 								<div className="relative overflow-hidden">
 									<img
-										className="w-full h-36 object-cover rounded-t-2xl transition-transform duration-300 hover:scale-105"
+										className="w-full h-64 md:h-80 object-cover rounded-t-2xl transition-transform duration-300 hover:scale-105"
 										src={
 											process.env.REACT_APP_LOCAL +
 											dog.image
@@ -66,8 +66,8 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 									<div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-t-2xl"></div>
 								</div>
 							)}
-							<div className="p-6">
-								<p className="font-delius font-bold text-xl mb-3 text-oxfordBlue text-center">
+							<div className="p-6 md:p-8">
+								<p className="font-delius font-bold text-2xl md:text-3xl mb-4 text-oxfordBlue text-center">
 									{getDogName(dog.name)}
 								</p>
 								<div className="space-y-2 mb-4">
@@ -144,14 +144,14 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 						}}
 					>
 						<motion.div
-							className="max-w-md overflow-hidden shadow-lg rounded-2xl bg-gradient-to-br from-tara to-mintCream w-full hover:shadow-xl transition-all duration-200"
+							className="overflow-hidden shadow-lg rounded-2xl bg-gradient-to-br from-tara to-mintCream w-full hover:shadow-xl transition-all duration-200"
 							whileHover={{ scale: 1.01 }}
 							transition={{ duration: 0.2 }}
 						>
 							{dog.image && (
 								<div className="relative overflow-hidden">
 									<img
-										className="w-full h-36 object-cover rounded-t-2xl transition-transform duration-300 hover:scale-105"
+										className="w-full h-64 md:h-80 object-cover rounded-t-2xl transition-transform duration-300 hover:scale-105"
 										src={
 											process.env.REACT_APP_LOCAL +
 											dog.image
@@ -161,8 +161,8 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 									<div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-t-2xl"></div>
 								</div>
 							)}
-							<div className="p-6">
-								<p className="font-delius font-bold text-xl mb-3 text-oxfordBlue text-center">
+							<div className="p-6 md:p-8">
+								<p className="font-delius font-bold text-2xl md:text-3xl mb-4 text-oxfordBlue text-center">
 									{dog.kennel.name}
 								</p>
 								<div className="space-y-2 mb-4">

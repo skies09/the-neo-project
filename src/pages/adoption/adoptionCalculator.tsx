@@ -10,133 +10,258 @@ import {
 	faBaby,
 	faDog,
 	faArrowRight,
+	faRuler,
+	faCalendarAlt,
+	faDna,
 } from "@fortawesome/free-solid-svg-icons";
 import AdoptionCard from "../../components/cards/adoptCard";
-
-interface DogFilter {
-	gender?: string;
-	goodWithDogs?: string | boolean;
-	goodWithCats?: string | boolean;
-	goodWithChildren?: string | boolean;
-}
+import { useToast } from "../../components/ToastContainer";
 
 interface Question {
 	id: string;
 	label: string;
+	helpText?: string;
 	icon: any;
-	type: "radio";
-	options: { value: string; label: string; icon?: any }[];
-	field: keyof DogFilter;
+	type: "select" | "boolean" | "text";
+	options?: {
+		value: string | boolean | null;
+		label: string;
+		age_min?: number | null;
+		age_max?: number | null;
+		weight_min?: number | null;
+		weight_max?: number | null;
+		icon?: any;
+	}[];
+	field: string;
+	field2?: string; // For age/weight ranges
+	placeholder?: string;
 }
 
 export default function Adoption() {
 	const [hasStarted, setHasStarted] = useState(false);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-	const [gender, setGender] = useState("");
-	const [goodWithDogs, setGoodWithDogs] = useState("");
-	const [goodWithCats, setGoodWithCats] = useState("");
-	const [goodWithChildren, setGoodWithChildren] = useState("");
-	const [dog, setDog] = useState<Dog | null>(null);
+
+	// Store all answers in a single object
+	const [answers, setAnswers] = useState<Record<string, any>>({
+		size: "",
+		gender: "",
+		age_min: undefined,
+		age_max: undefined,
+		good_with_dogs: undefined,
+		good_with_cats: undefined,
+		good_with_children: undefined,
+		breed: "",
+		is_crossbreed: undefined,
+	});
+
+	const [dogs, setDogs] = useState<Dog[]>([]);
+	const [matchRates, setMatchRates] = useState<Record<string, number>>({});
+	const [currentDogIndex, setCurrentDogIndex] = useState(0);
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 	const resultsRef = useRef<HTMLDivElement>(null);
+	const { showToast } = useToast();
 
-	// Questions array
+	// Questions array - matching the new questionnaire (8 questions)
 	const questions: Question[] = [
+		// Section 1: Basic Preferences
+		{
+			id: "size",
+			label: "What size dog would best fit your living situation and lifestyle?",
+			icon: faRuler,
+			type: "select",
+			field: "size",
+			options: [
+				{
+					value: "XS",
+					label: "XS - Extra Small (Under 10 kg / 20 lbs)",
+				},
+				{ value: "S", label: "S - Small (10-15 kg / 20-30 lbs)" },
+				{ value: "M", label: "M - Medium (15-25 kg / 30-55 lbs)" },
+				{ value: "L", label: "L - Large (25-40 kg / 55-90 lbs)" },
+				{
+					value: "XL",
+					label: "XL - Extra Large (Over 40 kg / 90 lbs)",
+				},
+			],
+		},
 		{
 			id: "gender",
-			label: "What gender are you looking for?",
+			label: "Do you have a preference for a male or female dog?",
+			helpText: "Leave blank if you have no preference",
 			icon: faVenusMars,
-			type: "radio",
+			type: "select",
 			field: "gender",
 			options: [
 				{ value: "Male", label: "Male" },
 				{ value: "Female", label: "Female" },
-				{ value: "notBothered", label: "Not bothered" },
+				{ value: "", label: "No preference" },
 			],
 		},
+		// Section 2: Age
 		{
-			id: "goodWithDogs",
-			label: "Does the dog need to be good with other dogs?",
+			id: "age_range",
+			label: "What age range are you interested in? Puppies, young dogs, adults, or seniors?",
+			helpText: "You can also specify a custom age range if needed",
+			icon: faCalendarAlt,
+			type: "select",
+			field: "age_min",
+			field2: "age_max",
+			options: [
+				{
+					value: "puppy",
+					label: "Puppy (0-1 years)",
+					age_min: 0,
+					age_max: 1,
+				},
+				{
+					value: "young",
+					label: "Young (1-3 years)",
+					age_min: 1,
+					age_max: 3,
+				},
+				{
+					value: "adult",
+					label: "Adult (3-7 years)",
+					age_min: 3,
+					age_max: 7,
+				},
+				{
+					value: "senior",
+					label: "Senior (7+ years)",
+					age_min: 7,
+					age_max: 30,
+				},
+				{
+					value: "any",
+					label: "Any age",
+					age_min: null,
+					age_max: null,
+				},
+			],
+		},
+		// Section 3: Compatibility
+		{
+			id: "good_with_dogs",
+			label: "Do you have other dogs? Do you need a dog that gets along with other dogs?",
 			icon: faDog,
-			type: "radio",
-			field: "goodWithDogs",
+			type: "boolean",
+			field: "good_with_dogs",
 			options: [
-				{ value: "yes", label: "Yes" },
-				{ value: "no", label: "No" },
-				{ value: "notBothered", label: "Not bothered" },
+				{ value: true, label: "Yes, I have other dogs" },
+				{ value: false, label: "No other dogs" },
 			],
 		},
 		{
-			id: "goodWithCats",
-			label: "Does the dog need to be good with cats?",
+			id: "good_with_cats",
+			label: "Do you have cats? Do you need a dog that gets along with cats?",
 			icon: faCat,
-			type: "radio",
-			field: "goodWithCats",
+			type: "boolean",
+			field: "good_with_cats",
 			options: [
-				{ value: "yes", label: "Yes" },
-				{ value: "no", label: "No" },
-				{ value: "notBothered", label: "Not bothered" },
+				{ value: true, label: "Yes, I have cats" },
+				{ value: false, label: "No cats" },
 			],
 		},
 		{
-			id: "goodWithChildren",
-			label: "Does the dog need to be good with children?",
+			id: "good_with_children",
+			label: "Will the dog be around children? Do you need a dog that's good with children?",
 			icon: faBaby,
-			type: "radio",
-			field: "goodWithChildren",
+			type: "boolean",
+			field: "good_with_children",
 			options: [
-				{ value: "yes", label: "Yes" },
-				{ value: "no", label: "No" },
-				{ value: "notBothered", label: "Not bothered" },
+				{
+					value: true,
+					label: "Yes, I have children or children visit regularly",
+				},
+				{ value: false, label: "No children" },
+			],
+		},
+		// Section 4: Breed Preferences
+		{
+			id: "breed",
+			label: "Do you have a specific breed in mind?",
+			helpText:
+				"Leave blank if no preference. The system will match partial breed names, so 'Retriever' will match 'Golden Retriever' and 'Labrador Retriever'.",
+			icon: faDog,
+			type: "text",
+			field: "breed",
+			placeholder: "e.g., Golden Retriever, Labrador, German Shepherd",
+		},
+		{
+			id: "is_crossbreed",
+			label: "Are you open to crossbreeds (mixed breeds), or do you prefer purebred dogs?",
+			icon: faDna,
+			type: "select",
+			field: "is_crossbreed",
+			options: [
+				{ value: null, label: "Yes, open to crossbreeds" },
+				{ value: false, label: "Prefer purebred only" },
+				{ value: true, label: "Prefer crossbreeds only" },
 			],
 		},
 	];
 
-	// Auto-scroll to results when dog is found
+	// Auto-scroll to results when dogs are found
 	useEffect(() => {
-		if (dog && resultsRef.current) {
+		if (dogs.length > 0 && resultsRef.current) {
 			resultsRef.current.scrollIntoView({
 				behavior: "smooth",
 				block: "start",
 			});
 		}
-	}, [dog]);
+	}, [dogs]);
 
-	const getCurrentValue = (field: keyof DogFilter): string => {
-		switch (field) {
-			case "gender":
-				return gender;
-			case "goodWithDogs":
-				return goodWithDogs;
-			case "goodWithCats":
-				return goodWithCats;
-			case "goodWithChildren":
-				return goodWithChildren;
-			default:
-				return "";
-		}
+	const getCurrentValue = (field: string): any => {
+		return answers[field];
 	};
 
 	const isQuestionAnswered = (question: Question): boolean => {
 		const value = getCurrentValue(question.field);
-		return value !== "";
+		if (question.type === "text") {
+			// Text questions are optional, always allow skipping
+			return true;
+		}
+		if (question.type === "boolean") {
+			return value !== undefined;
+		}
+		if (question.type === "select") {
+			// For select with null option (is_crossbreed), undefined means not answered
+			if (question.field === "is_crossbreed") {
+				return value !== undefined;
+			}
+			return value !== "" && value !== undefined;
+		}
+		return false;
 	};
 
-	const handleAnswer = (question: Question, value: string) => {
-		switch (question.field) {
-			case "gender":
-				setGender(value === "notBothered" ? "" : value);
-				break;
-			case "goodWithDogs":
-				setGoodWithDogs(value);
-				break;
-			case "goodWithCats":
-				setGoodWithCats(value);
-				break;
-			case "goodWithChildren":
-				setGoodWithChildren(value);
-				break;
+	const handleAnswer = (question: Question, value: any) => {
+		if (question.type === "select" && question.field2) {
+			// Handle range questions (age)
+			const option = question.options?.find((opt) => opt.value === value);
+			if (option) {
+				if (question.field === "age_min") {
+					setAnswers((prev) => ({
+						...prev,
+						age_min: option.age_min ?? undefined,
+						age_max: option.age_max ?? undefined,
+					}));
+				}
+			}
+		} else {
+			// Handle regular select, boolean, and text questions
+			// For empty string values (like "No preference"), set to empty string
+			if (value === "") {
+				setAnswers((prev) => ({
+					...prev,
+					[question.field]: "",
+				}));
+			} else {
+				setAnswers((prev) => ({
+					...prev,
+					[question.field]: value,
+				}));
+			}
 		}
 	};
 
@@ -159,40 +284,84 @@ export default function Adoption() {
 		setError("");
 
 		try {
-			const filters = {
-				gender: gender || undefined,
-				goodWithDogs:
-					goodWithDogs === "yes"
-						? true
-						: goodWithDogs === "no"
-						? false
-						: undefined,
-				goodWithCats:
-					goodWithCats === "yes"
-						? true
-						: goodWithCats === "no"
-						? false
-						: undefined,
-				goodWithChildren:
-					goodWithChildren === "yes"
-						? true
-						: goodWithChildren === "no"
-						? false
-						: undefined,
-			};
-			const matchedDog = await dogAPI.filterDogs(filters);
+			// Build preferences object, only including non-empty/non-undefined values
+			const preferences: Record<string, any> = {};
 
-			if (!matchedDog) {
-				throw new Error("No dog returned from API");
+			if (answers.size) preferences.size = answers.size;
+			if (answers.gender) preferences.gender = answers.gender;
+			if (answers.age_min !== undefined)
+				preferences.age_min = answers.age_min;
+			if (answers.age_max !== undefined)
+				preferences.age_max = answers.age_max;
+			if (answers.good_with_dogs !== undefined)
+				preferences.good_with_dogs = answers.good_with_dogs;
+			if (answers.good_with_cats !== undefined)
+				preferences.good_with_cats = answers.good_with_cats;
+			if (answers.good_with_children !== undefined)
+				preferences.good_with_children = answers.good_with_children;
+			if (answers.breed) preferences.breed = answers.breed;
+			if (answers.is_crossbreed !== undefined)
+				preferences.is_crossbreed = answers.is_crossbreed;
+
+			// Check if at least one preference is provided
+			if (Object.keys(preferences).length === 0) {
+				throw new Error("Please answer at least one question");
 			}
 
-			setDog(matchedDog);
-		} catch (err) {
+			const response = await dogAPI.matchDogs(preferences);
+
+			if (!response || !response.matches) {
+				throw new Error("Invalid response from server");
+			}
+
+			const matchedDogs = response.matches.map((match) => match.dog);
+			const rates: Record<string, number> = {};
+
+			response.matches.forEach((match) => {
+				// Use dog id as key for match rate
+				rates[match.dog.id] = match.match_rate;
+			});
+
+			setDogs(matchedDogs);
+			setMatchRates(rates);
+			setCurrentDogIndex(0); // Reset to first dog
+
+			if (matchedDogs.length > 0) {
+				showToast({
+					type: "success",
+					title: "Dogs Found!",
+					message: `Found ${matchedDogs.length} dog${
+						matchedDogs.length === 1 ? "" : "s"
+					} that match your criteria.`,
+					duration: 4000,
+				});
+			} else {
+				setError(
+					"No dogs found with a match rate greater than 0%. Try adjusting your preferences to be less specific."
+				);
+				showToast({
+					type: "info",
+					title: "No Matches Found",
+					message:
+						"No dogs matched your criteria. Try adjusting your preferences.",
+					duration: 5000,
+				});
+			}
+		} catch (err: any) {
 			console.error("Search error:", err);
-			setDog(null);
-			setError(
-				"No matching dog found. Try adjusting your search criteria."
-			);
+			setDogs([]);
+			setMatchRates({});
+			const errorMessage =
+				err.response?.data?.error ||
+				err.message ||
+				"No matching dogs found. Try adjusting your search criteria.";
+			setError(errorMessage);
+			showToast({
+				type: "error",
+				title: "Search Failed",
+				message: errorMessage,
+				duration: 5000,
+			});
 		} finally {
 			setLoading(false);
 		}
@@ -247,7 +416,7 @@ export default function Adoption() {
 						>
 							Tell us what you're looking for and we'll find your
 							ideal companion. <br></br>This will only take a few
-							moments!
+							moments!{" "}
 						</motion.p>
 						<motion.button
 							onClick={() => setHasStarted(true)}
@@ -268,7 +437,7 @@ export default function Adoption() {
 				)}
 
 				{/* Question Flow */}
-				{hasStarted && !loading && !dog && (
+				{hasStarted && !loading && dogs.length === 0 && (
 					<>
 						{/* Progress Bar */}
 						<motion.div
@@ -325,66 +494,168 @@ export default function Adoption() {
 										</h2>
 									</div>
 
+									{/* Question Help Text */}
+									{currentQuestion.helpText && (
+										<p className="text-sm text-tara/80 font-poppins text-center mb-6 max-w-2xl mx-auto">
+											{currentQuestion.helpText}
+										</p>
+									)}
+
 									{/* Question Options */}
 									<div className="space-y-4">
-										<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-											{currentQuestion.options.map(
-												(option) => {
-													const isSelected =
+										{currentQuestion.type === "text" ? (
+											// Text input
+											<div className="max-w-2xl mx-auto">
+												<input
+													type="text"
+													value={
 														getCurrentValue(
 															currentQuestion.field
-														) === option.value ||
-														(currentQuestion.field ===
-															"gender" &&
-															option.value ===
-																"notBothered" &&
+														) || ""
+													}
+													onChange={(e) =>
+														handleAnswer(
+															currentQuestion,
+															e.target.value
+														)
+													}
+													placeholder={
+														currentQuestion.placeholder ||
+														""
+													}
+													className="w-full px-6 py-4 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none focus:ring-2 focus:ring-highland transition-colors text-center"
+												/>
+											</div>
+										) : currentQuestion.type ===
+										  "boolean" ? (
+											// Boolean options (Yes/No)
+											<div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+												{currentQuestion.options?.map(
+													(option, optionIndex) => {
+														const currentValue =
 															getCurrentValue(
 																currentQuestion.field
-															) === "");
-													return (
-														<label
-															key={option.value}
-															className={`flex items-center justify-center space-x-3 cursor-pointer group p-4 rounded-2xl border-2 transition-all duration-300 ${
-																isSelected
-																	? "bg-gradient-to-r from-highland to-sark text-honeydew border-highland shadow-lg transform scale-105"
-																	: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew"
-															}`}
-														>
-															<input
-																type="radio"
-																name={
-																	currentQuestion.id
-																}
-																value={
-																	option.value
-																}
-																checked={
+															);
+														const isSelected =
+															currentValue ===
+															option.value;
+														return (
+															<label
+																key={`${currentQuestion.id}-${optionIndex}`}
+																className={`flex items-center justify-center space-x-3 cursor-pointer group p-4 rounded-2xl border-2 transition-all duration-300 ${
 																	isSelected
-																}
-																onChange={() =>
-																	handleAnswer(
-																		currentQuestion,
-																		option.value
-																	)
-																}
-																className="sr-only"
-															/>
-															{option.icon && (
-																<FontAwesomeIcon
-																	icon={
-																		option.icon
+																		? "bg-gradient-to-r from-highland to-sark text-honeydew border-highland shadow-lg transform scale-105"
+																		: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew"
+																}`}
+															>
+																<input
+																	type="radio"
+																	name={
+																		currentQuestion.id
 																	}
-																	className="text-lg"
+																	checked={
+																		isSelected
+																	}
+																	onChange={() =>
+																		handleAnswer(
+																			currentQuestion,
+																			option.value
+																		)
+																	}
+																	className="sr-only"
 																/>
-															)}
-															<span className="font-poppins font-semibold text-center">
-																{option.label}
-															</span>
-														</label>
-													);
-												}
-											)}
-										</div>
+																<span className="font-poppins font-semibold text-center text-sm md:text-base">
+																	{
+																		option.label
+																	}
+																</span>
+															</label>
+														);
+													}
+												)}
+											</div>
+										) : (
+											// Select options
+											<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+												{currentQuestion.options?.map(
+													(option, optionIndex) => {
+														const currentValue =
+															getCurrentValue(
+																currentQuestion.field
+															);
+														// For range questions, check if the range matches
+														let isSelected = false;
+														if (
+															currentQuestion.field2
+														) {
+															// Check if age range matches
+															if (
+																currentQuestion.field ===
+																"age_min"
+															) {
+																const ageMin =
+																	getCurrentValue(
+																		"age_min"
+																	);
+																const ageMax =
+																	getCurrentValue(
+																		"age_max"
+																	);
+																isSelected =
+																	ageMin ===
+																		option.age_min &&
+																	ageMax ===
+																		option.age_max;
+															}
+														} else {
+															isSelected =
+																currentValue ===
+																option.value;
+														}
+														return (
+															<label
+																key={`${currentQuestion.id}-${optionIndex}`}
+																className={`flex items-start justify-start space-x-3 cursor-pointer group p-4 rounded-2xl border-2 transition-all duration-300 ${
+																	isSelected
+																		? "bg-gradient-to-r from-highland to-sark text-honeydew border-highland shadow-lg transform scale-105"
+																		: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew"
+																}`}
+															>
+																<input
+																	type="radio"
+																	name={
+																		currentQuestion.id
+																	}
+																	checked={
+																		isSelected
+																	}
+																	onChange={() =>
+																		handleAnswer(
+																			currentQuestion,
+																			option.value
+																		)
+																	}
+																	className="sr-only"
+																/>
+																{option.icon && (
+																	<FontAwesomeIcon
+																		icon={
+																			option.icon
+																		}
+																		className="text-lg mt-1 flex-shrink-0"
+																	/>
+																)}
+																<span className="font-poppins font-semibold text-left text-sm md:text-base">
+																	{
+																		option.label
+																	}
+																</span>
+															</label>
+														);
+													}
+												)}
+											</div>
+										)}
 									</div>
 
 									{/* Navigation Buttons */}
@@ -401,19 +672,18 @@ export default function Adoption() {
 
 										<button
 											onClick={handleNext}
-											disabled={
-												!isQuestionAnswered(
-													currentQuestion
-												)
-											}
-											className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100"
+											className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset"
 										>
 											<div className="flex items-center justify-center space-x-3 relative z-10">
 												<span>
 													{currentQuestionIndex ===
 													questions.length - 1
-														? "Find My Dog"
-														: "Next"}
+														? "Find My Dogs"
+														: isQuestionAnswered(
+																currentQuestion
+														  )
+														? "Next"
+														: "Skip"}
 												</span>
 												{currentQuestionIndex !==
 													questions.length - 1 && (
@@ -440,16 +710,16 @@ export default function Adoption() {
 					>
 						<div className="animate-spin w-16 h-16 border-4 border-skyBlue border-t-transparent rounded-full mx-auto mb-4"></div>
 						<p className="text-tara font-poppins text-lg">
-							Finding your perfect dog...
+							Finding your perfect dogs...
 						</p>
 					</motion.div>
 				)}
 
 				{/* Results Section */}
-				{dog && (
+				{dogs.length > 0 && currentDogIndex < dogs.length && (
 					<motion.div
 						ref={resultsRef}
-						className="max-w-4xl mx-auto py-10"
+						className="w-full max-w-7xl mx-auto py-10 px-4"
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{
@@ -472,21 +742,71 @@ export default function Adoption() {
 								/>
 							</div>
 							<h2 className="font-delius text-4xl md:text-5xl font-bold text-oxfordBlue drop-shadow-md mb-3">
-								Your Chosen One!
+								Your Perfect Match!
 							</h2>
-							<p className="text-lg text-highland font-fredoka max-w-2xl mx-auto">
-								We found your perfect dog.
+							<p className="text-lg text-highland font-fredoka max-w-2xl mx-auto mb-4">
+								{dogs.length > 1 && (
+									<span>
+										Match {currentDogIndex + 1} of {dogs.length} -{" "}
+									</span>
+								)}
+								{matchRates[dogs[currentDogIndex].id] && (
+									<span>
+										{matchRates[dogs[currentDogIndex].id].toFixed(1)}% Match
+									</span>
+								)}
 							</p>
 						</motion.div>
 
-						{/* Dog Card */}
+						{/* Single Dog Card - Full Width */}
+						<AnimatePresence mode="wait">
+							<motion.div
+								key={dogs[currentDogIndex].id || `dog-${currentDogIndex}`}
+								initial={{ opacity: 0, scale: 0.95 }}
+								animate={{ opacity: 1, scale: 1 }}
+								exit={{ opacity: 0, scale: 0.95 }}
+								transition={{
+									duration: 0.4,
+									ease: "easeInOut",
+								}}
+								className="w-full"
+							>
+								<AdoptionCard dog={dogs[currentDogIndex]} />
+							</motion.div>
+						</AnimatePresence>
+
+						{/* Not Available Button */}
 						<motion.div
-							className="flex justify-center"
-							initial={{ opacity: 0, scale: 0.9 }}
-							animate={{ opacity: 1, scale: 1 }}
-							transition={{ duration: 0.6, delay: 0.4 }}
+							className="text-center mt-8"
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ duration: 0.6, delay: 0.5 }}
 						>
-							<AdoptionCard dog={dog} />
+							<button
+								onClick={() => {
+									if (currentDogIndex < dogs.length - 1) {
+										setCurrentDogIndex(currentDogIndex + 1);
+									} else {
+										// No more matches
+										setDogs([]);
+										setMatchRates({});
+										setCurrentDogIndex(0);
+										setError(
+											"No more matches available. Try adjusting your preferences to see more options."
+										);
+										showToast({
+											type: "info",
+											title: "No More Matches",
+											message:
+												"All available matches have been shown. Try adjusting your preferences.",
+											duration: 5000,
+										});
+									}
+								}}
+								className="text-oxfordBlue/70 hover:text-oxfordBlue font-poppins font-semibold underline transition-colors duration-300"
+							>
+								This dog has been adopted / Not available - Show next match
+							</button>
 						</motion.div>
 					</motion.div>
 				)}
@@ -530,12 +850,21 @@ export default function Adoption() {
 								onClick={() => {
 									setHasStarted(false);
 									setCurrentQuestionIndex(0);
-									setGender("");
-									setGoodWithDogs("");
-									setGoodWithCats("");
-									setGoodWithChildren("");
+									setAnswers({
+										size: "",
+										gender: "",
+										age_min: undefined,
+										age_max: undefined,
+										good_with_dogs: undefined,
+										good_with_cats: undefined,
+										good_with_children: undefined,
+										breed: "",
+										is_crossbreed: undefined,
+									});
 									setError("");
-									setDog(null);
+									setDogs([]);
+									setMatchRates({});
+									setCurrentDogIndex(0);
 								}}
 								className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset"
 							>

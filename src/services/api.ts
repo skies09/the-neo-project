@@ -134,6 +134,25 @@ export const dogAPI = {
 			});
 	},
 
+	// Match dogs based on preferences (returns up to 20 dogs with match rates)
+	matchDogs: (preferences: {
+		size?: string;
+		gender?: string;
+		age_min?: number;
+		age_max?: number;
+		good_with_dogs?: boolean;
+		good_with_cats?: boolean;
+		good_with_children?: boolean;
+		breed?: string;
+		is_crossbreed?: boolean;
+	}): Promise<{
+		matches: Array<{ dog: Dog; match_rate: number }>;
+		total_dogs_compared: number;
+		preferences_used: Record<string, any>;
+	}> => {
+		return axiosService.post(`/api/dogs/match/`, preferences).then((response) => response.data);
+	},
+
 	// Get kennel's own dogs
 	getMyDogs: (): Promise<Dog[]> => {
 		return axiosService.get(`/api/kennel-dogs/`).then((response) => {
@@ -244,6 +263,34 @@ export const breedsAPI = {
 	// Get breed details
 	getBreedDetails: (breedName: string): Promise<Breed> => {
 		return axiosService.post(`/api/breeds/detail/`, { breed: breedName });
+	},
+
+	// Match breeds based on preferences
+	matchBreeds: (preferences: {
+		size?: string;
+		pet_friendly?: number;
+		apartment_dog?: number;
+		easy_to_groom?: number;
+		family_friendly?: number;
+		child_friendly?: number;
+		energy_levels?: number;
+		easy_to_train?: number;
+		can_be_alone?: number;
+		good_for_busy_owners?: number;
+		good_for_new_owners?: number;
+		shedding_amount?: number;
+		barks_howls?: number;
+		playfulness?: number;
+		friendliness?: number;
+		stranger_friendly?: number;
+		guard_dog?: number;
+		health?: number;
+	}): Promise<{
+		matches: Array<{ breed: Breed; match_rate: number }>;
+		total_breeds_compared: number;
+		preferences_used: Record<string, any>;
+	}> => {
+		return axiosService.post(`/api/breeds/match/`, preferences).then((response) => response.data);
 	},
 };
 
