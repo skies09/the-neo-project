@@ -47,7 +47,7 @@ export default function AllDogs() {
 	if (loading) {
 		return (
 			<motion.div
-				className="min-h-screen pt-16 pb-16 px-4"
+				className="min-h-screen pt-24 pb-16 px-4"
 				initial={{ opacity: 0 }}
 				animate={{ opacity: 1 }}
 				transition={{ duration: 0.8, ease: "easeOut" }}
