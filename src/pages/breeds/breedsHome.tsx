@@ -87,7 +87,7 @@ export default function Breeds() {
 	if (loading && groups.length === 0 && breeds.length === 0) {
 		return (
 			<motion.div
-				className="min-h-screen pt-16 pb-8 px-4"
+				className="min-h-screen pt-24 pb-8 px-4"
 				initial={{ opacity: 0 }}
 				animate={{ opacity: 1 }}
 				transition={{ duration: 0.8, ease: "easeOut" }}
@@ -205,7 +205,7 @@ export default function Breeds() {
 				transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
 			>
 				{loading && breeds.length === 0 ? (
-					<div className="flex justify-center items-center py-12">
+					<div className="flex justify-center items-center py-12 mt-8">
 						<p className="text-lg text-oxfordBlue">
 							Loading breeds...
 						</p>
