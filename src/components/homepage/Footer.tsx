@@ -29,9 +29,9 @@ const Footer: React.FC = () => {
 	};
 
 	const quickLinks = [
-		{ name: "Browse Dogs", href: "/allDogs" },
+		{ name: "Browse Dogs", href: "/all-dogs" },
 		{ name: "Adoption Process", href: "/adopt" },
-		{ name: "Breed Calculator", href: "/breedCalculator" },
+		{ name: "Breed Calculator", href: "/breed-calculator" },
 		{ name: "Dog Breeds", href: "/breeds" },
 		{ name: "Shop", href: "/shop" },
 		{ name: "Blog", href: "/blog" },

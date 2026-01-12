@@ -49,7 +49,7 @@ function useKennelActions() {
 				if (responseData.requires_password_reset) {
 					navigate("/password-reset");
 				} else {
-					navigate("/KennelAccount");
+					navigate("/kennel-account");
 				}
 			})
 			.catch((err) => {
@@ -66,7 +66,7 @@ function useKennelActions() {
 			.post(`/api/auth/first-time-password-reset/`, data)
 			.then((res) => {
 				// After successful password reset, navigate to kennel account
-				navigate("/KennelAccount");
+				navigate("/kennel-account");
 				return res.data;
 			})
 			.catch((err) => {
@@ -106,7 +106,7 @@ function useKennelActions() {
 		const refresh = getRefreshToken();
 		if (!refresh) {
 			localStorage.removeItem("auth");
-			navigate("/kennelAdmin");
+			navigate("/kennel-admin");
 			return Promise.resolve();
 		}
 
@@ -114,11 +114,11 @@ function useKennelActions() {
 			.post(`/api/auth/logout/`, { refresh })
 			.then(() => {
 				localStorage.removeItem("auth");
-				navigate("/kennelAdmin");
+				navigate("/kennel-admin");
 			})
 			.catch(() => {
 				localStorage.removeItem("auth");
-				navigate("/kennelAdmin");
+				navigate("/kennel-admin");
 			});
 	}
 }

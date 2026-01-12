@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 
 function ProtectedRoute({ children }: ProtectedRouteProps): React.JSX.Element {
 	const kennel = getKennel();
-	return kennel ? <>{children}</> : <Navigate to="/kennelAdmin" />;
+	return kennel ? <>{children}</> : <Navigate to="/kennel-admin" />;
 }
 
 export default ProtectedRoute;

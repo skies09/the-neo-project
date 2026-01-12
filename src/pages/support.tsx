@@ -42,7 +42,7 @@ const Support: React.FC = () => {
 			description:
 				"Commit to monthly support for a specific rescue dog, covering their food, medical care, and essentials until they find a home.",
 			action: "Find a Dog to Sponsor",
-			link: "/allDogs",
+			link: "/all-dogs",
 		},
 		{
 			icon: faShareAlt,

@@ -202,7 +202,7 @@ const DogOfTheDay: React.FC = () => {
 						}}
 					>
 						<button
-							onClick={() => navigate("/allDogs")}
+							onClick={() => navigate("/all-dogs")}
 							className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-xl"
 						>
 							<div className="flex items-center space-x-3 relative z-10">

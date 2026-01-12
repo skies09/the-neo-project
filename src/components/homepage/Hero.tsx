@@ -44,7 +44,7 @@ const Hero: React.FC = () => {
 				</button>
 
 				<button
-					onClick={() => navigate("/allDogs")}
+					onClick={() => navigate("/all-dogs")}
 					className="group relative overflow-hidden border-2 border-tomThumb text-oxfordBlue px-6 py-4 rounded-full font-fredoka font-semibold hover:bg-gradient-to-r from-sark to-bayleaf hover:text-honeydew transition-all duration-300 transform hover:scale-105 w-44 whitespace-nowrap"
 				>
 					<div className="flex items-center justify-center space-x-2 relative z-10">

@@ -28,7 +28,7 @@ const Navbar = () => {
 				{/* Desktop Links */}
 				<div className="hidden md:flex space-x-6 items-center">
 					<Link
-						to="/allDogs"
+						to="/all-dogs"
 						className="text-twilight hover:text-sunset font-comic font-semibold"
 					>
 						Adopt a dog
@@ -40,7 +40,7 @@ const Navbar = () => {
 						Find your dog
 					</Link>
 					<Link
-						to="/breedCalculator"
+						to="/breed-calculator"
 						className="text-twilight hover:text-sunset font-comic font-semibold"
 					>
 						Breed calculator
@@ -55,7 +55,7 @@ const Navbar = () => {
 					{isLoggedIn ? (
 						<div>
 							<Link
-								to="/kennelAccount"
+								to="/kennel-account"
 								className="text-twilight hover:text-sunset font-comic font-semibold mr-6"
 							>
 								Kennels
@@ -72,7 +72,7 @@ const Navbar = () => {
 						</div>
 					) : (
 						<Link
-							to="/kennelAdmin"
+							to="/kennel-admin"
 							className="text-twilight hover:text-sunset font-comic font-semibold"
 						>
 							Kennels
@@ -120,7 +120,7 @@ const Navbar = () => {
 			{isOpen && (
 				<div className="md:hidden bg-tomThumb">
 					<Link
-						to="/allDogs"
+						to="/all-dogs"
 						className="block px-4 py-2 text-twilight hover:text-sunset font-comic font-semibold"
 						onClick={() => setIsOpen(!isOpen)}
 					>
@@ -134,7 +134,7 @@ const Navbar = () => {
 						Find your dog
 					</Link>
 					<Link
-						to="/breedCalculator"
+						to="/breed-calculator"
 						className="block px-4 py-2 text-twilight hover:text-sunset font-comic font-semibold"
 						onClick={() => setIsOpen(!isOpen)}
 					>
@@ -151,7 +151,7 @@ const Navbar = () => {
 					{isLoggedIn ? (
 						<div>
 							<Link
-								to="/kennelAccount"
+								to="/kennel-account"
 								className="block px-4 py-2 text-twilight hover:text-sunset font-comic font-semibold"
 								onClick={() => setIsOpen(!isOpen)}
 							>
@@ -170,7 +170,7 @@ const Navbar = () => {
 						</div>
 					) : (
 						<Link
-							to="/kennelAdmin"
+							to="/kennel-admin"
 							className="block px-4 py-2 text-twilight hover:text-sunset font-comic font-semibold"
 							onClick={() => setIsOpen(!isOpen)}
 						>

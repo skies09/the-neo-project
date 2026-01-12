@@ -142,7 +142,7 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 								{/* Secondary CTA - Browse All Dogs */}
 								{!simplified && (
 									<button
-										onClick={() => navigate("/allDogs")}
+										onClick={() => navigate("/all-dogs")}
 										className="group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
 									>
 										<div className="flex items-center space-x-3 relative z-10">

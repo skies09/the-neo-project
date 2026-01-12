@@ -41,9 +41,9 @@ const App: React.FC = () => (
 			<NavBar />
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="/allDogs" element={<AllDogs />} />
+				<Route path="/all-dogs" element={<AllDogs />} />
 				<Route path="/adopt" element={<Adoption />} />
-				<Route path="/breedCalculator" element={<BreedCalculator />} />
+				<Route path="/breed-calculator" element={<BreedCalculator />} />
 				<Route path="/breeds" element={<Breeds />} />
 				<Route path="/contact" element={<Contact />} />
 				<Route path="/faq" element={<FAQ />} />
@@ -56,14 +56,14 @@ const App: React.FC = () => (
 				<Route path="/shop/cart" element={<CartPage />} />
 				<Route path="/shop/checkout" element={<CheckoutPage />} />
 				<Route
-					path="/kennelAccount"
+					path="/kennel-account"
 					element={
 						<ProtectedRoute>
 							<KennelAccount />
 						</ProtectedRoute>
 					}
 				/>
-				<Route path="/kennelAdmin" element={<KennelAdmin />} />
+				<Route path="/kennel-admin" element={<KennelAdmin />} />
 				<Route
 					path="/password-reset"
 					element={
