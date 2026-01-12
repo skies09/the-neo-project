@@ -4,38 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion, AnimatePresence } from "framer-motion";
 import {
 	faSearch,
-	faVenusMars,
-	faHeart,
-	faCat,
-	faBaby,
-	faDog,
 	faArrowRight,
-	faRuler,
-	faCalendarAlt,
-	faDna,
+	faDog,
 } from "@fortawesome/free-solid-svg-icons";
 import AdoptionCard from "../../components/cards/adoptCard";
 import { useToast } from "../../components/ToastContainer";
-
-interface Question {
-	id: string;
-	label: string;
-	helpText?: string;
-	icon: any;
-	type: "select" | "boolean" | "text";
-	options?: {
-		value: string | boolean | null;
-		label: string;
-		age_min?: number | null;
-		age_max?: number | null;
-		weight_min?: number | null;
-		weight_max?: number | null;
-		icon?: any;
-	}[];
-	field: string;
-	field2?: string; // For age/weight ranges
-	placeholder?: string;
-}
+import { questions, Question } from "./adoptionCalculatorQuestions";
 
 export default function Adoption() {
 	const [hasStarted, setHasStarted] = useState(false);
@@ -61,146 +35,6 @@ export default function Adoption() {
 	const [loading, setLoading] = useState(false);
 	const resultsRef = useRef<HTMLDivElement>(null);
 	const { showToast } = useToast();
-
-	// Questions array - matching the new questionnaire (8 questions)
-	const questions: Question[] = [
-		// Section 1: Basic Preferences
-		{
-			id: "size",
-			label: "What size dog would best fit your living situation and lifestyle?",
-			icon: faRuler,
-			type: "select",
-			field: "size",
-			options: [
-				{
-					value: "XS",
-					label: "XS - Extra Small (Under 10 kg / 20 lbs)",
-				},
-				{ value: "S", label: "S - Small (10-15 kg / 20-30 lbs)" },
-				{ value: "M", label: "M - Medium (15-25 kg / 30-55 lbs)" },
-				{ value: "L", label: "L - Large (25-40 kg / 55-90 lbs)" },
-				{
-					value: "XL",
-					label: "XL - Extra Large (Over 40 kg / 90 lbs)",
-				},
-			],
-		},
-		{
-			id: "gender",
-			label: "Do you have a preference for a male or female dog?",
-			helpText: "Leave blank if you have no preference",
-			icon: faVenusMars,
-			type: "select",
-			field: "gender",
-			options: [
-				{ value: "Male", label: "Male" },
-				{ value: "Female", label: "Female" },
-				{ value: "", label: "No preference" },
-			],
-		},
-		// Section 2: Age
-		{
-			id: "age_range",
-			label: "What age range are you interested in? Puppies, young dogs, adults, or seniors?",
-			helpText: "You can also specify a custom age range if needed",
-			icon: faCalendarAlt,
-			type: "select",
-			field: "age_min",
-			field2: "age_max",
-			options: [
-				{
-					value: "puppy",
-					label: "Puppy (0-1 years)",
-					age_min: 0,
-					age_max: 1,
-				},
-				{
-					value: "young",
-					label: "Young (1-3 years)",
-					age_min: 1,
-					age_max: 3,
-				},
-				{
-					value: "adult",
-					label: "Adult (3-7 years)",
-					age_min: 3,
-					age_max: 7,
-				},
-				{
-					value: "senior",
-					label: "Senior (7+ years)",
-					age_min: 7,
-					age_max: 30,
-				},
-				{
-					value: "any",
-					label: "Any age",
-					age_min: null,
-					age_max: null,
-				},
-			],
-		},
-		// Section 3: Compatibility
-		{
-			id: "good_with_dogs",
-			label: "Do you have other dogs? Do you need a dog that gets along with other dogs?",
-			icon: faDog,
-			type: "boolean",
-			field: "good_with_dogs",
-			options: [
-				{ value: true, label: "Yes, I have other dogs" },
-				{ value: false, label: "No other dogs" },
-			],
-		},
-		{
-			id: "good_with_cats",
-			label: "Do you have cats? Do you need a dog that gets along with cats?",
-			icon: faCat,
-			type: "boolean",
-			field: "good_with_cats",
-			options: [
-				{ value: true, label: "Yes, I have cats" },
-				{ value: false, label: "No cats" },
-			],
-		},
-		{
-			id: "good_with_children",
-			label: "Will the dog be around children? Do you need a dog that's good with children?",
-			icon: faBaby,
-			type: "boolean",
-			field: "good_with_children",
-			options: [
-				{
-					value: true,
-					label: "Yes, I have children or children visit regularly",
-				},
-				{ value: false, label: "No children" },
-			],
-		},
-		// Section 4: Breed Preferences
-		{
-			id: "breed",
-			label: "Do you have a specific breed in mind?",
-			helpText:
-				"Leave blank if no preference. The system will match partial breed names, so 'Retriever' will match 'Golden Retriever' and 'Labrador Retriever'.",
-			icon: faDog,
-			type: "text",
-			field: "breed",
-			placeholder: "e.g., Golden Retriever, Labrador, German Shepherd",
-		},
-		{
-			id: "is_crossbreed",
-			label: "Are you open to crossbreeds (mixed breeds), or do you prefer purebred dogs?",
-			icon: faDna,
-			type: "select",
-			field: "is_crossbreed",
-			options: [
-				{ value: null, label: "Yes, open to crossbreeds" },
-				{ value: false, label: "Prefer purebred only" },
-				{ value: true, label: "Prefer crossbreeds only" },
-			],
-		},
-	];
 
 	// Auto-scroll to results when dogs are found
 	useEffect(() => {
@@ -451,9 +285,6 @@ export default function Adoption() {
 									Question {currentQuestionIndex + 1} of{" "}
 									{questions.length}
 								</span>
-								<span className="text-oxfordBlue/70 font-poppins text-sm">
-									{Math.round(progress)}%
-								</span>
 							</div>
 							<div className="w-full bg-tara/30 rounded-full h-3 overflow-hidden">
 								<motion.div
@@ -545,7 +376,7 @@ export default function Adoption() {
 																className={`flex items-center justify-center space-x-3 cursor-pointer group p-4 rounded-2xl border-2 transition-all duration-300 ${
 																	isSelected
 																		? "bg-gradient-to-r from-highland to-sark text-honeydew border-highland shadow-lg transform scale-105"
-																		: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew"
+																		: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-oxfordBlue hover:from-highland hover:to-sark hover:text-honeydew hover:border-highland"
 																}`}
 															>
 																<input
@@ -576,7 +407,14 @@ export default function Adoption() {
 											</div>
 										) : (
 											// Select options
-											<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+											<div
+												className={`grid gap-4 ${
+													currentQuestion.options
+														?.length === 3
+														? "grid-cols-1 md:grid-cols-3"
+														: "grid-cols-1 md:grid-cols-2"
+												}`}
+											>
 												{currentQuestion.options?.map(
 													(option, optionIndex) => {
 														const currentValue =
@@ -618,7 +456,7 @@ export default function Adoption() {
 																className={`flex items-start justify-start space-x-3 cursor-pointer group p-4 rounded-2xl border-2 transition-all duration-300 ${
 																	isSelected
 																		? "bg-gradient-to-r from-highland to-sark text-honeydew border-highland shadow-lg transform scale-105"
-																		: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew"
+																		: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-oxfordBlue hover:from-highland hover:to-sark hover:text-honeydew hover:border-highland"
 																}`}
 															>
 																<input
@@ -659,16 +497,21 @@ export default function Adoption() {
 									</div>
 
 									{/* Navigation Buttons */}
-									<div className="flex justify-between items-center mt-8">
-										<button
-											onClick={handlePrevious}
-											disabled={
-												currentQuestionIndex === 0
-											}
-											className="px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew disabled:hover:bg-gradient-to-r disabled:hover:from-tara disabled:hover:to-mintCream disabled:hover:text-oxfordBlue"
-										>
-											Previous
-										</button>
+									<div
+										className={`flex ${
+											currentQuestionIndex === 0
+												? "justify-end"
+												: "justify-between"
+										} items-center mt-8`}
+									>
+										{currentQuestionIndex > 0 && (
+											<button
+												onClick={handlePrevious}
+												className="px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:from-highland hover:to-sark hover:text-honeydew hover:border-highland"
+											>
+												Previous
+											</button>
+										)}
 
 										<button
 											onClick={handleNext}
@@ -747,12 +590,16 @@ export default function Adoption() {
 							<p className="text-lg text-highland font-fredoka max-w-2xl mx-auto mb-4">
 								{dogs.length > 1 && (
 									<span>
-										Match {currentDogIndex + 1} of {dogs.length} -{" "}
+										Match {currentDogIndex + 1} of{" "}
+										{dogs.length} -{" "}
 									</span>
 								)}
 								{matchRates[dogs[currentDogIndex].id] && (
 									<span>
-										{matchRates[dogs[currentDogIndex].id].toFixed(1)}% Match
+										{matchRates[
+											dogs[currentDogIndex].id
+										].toFixed(1)}
+										% Match
 									</span>
 								)}
 							</p>
@@ -761,7 +608,10 @@ export default function Adoption() {
 						{/* Single Dog Card - Full Width */}
 						<AnimatePresence mode="wait">
 							<motion.div
-								key={dogs[currentDogIndex].id || `dog-${currentDogIndex}`}
+								key={
+									dogs[currentDogIndex].id ||
+									`dog-${currentDogIndex}`
+								}
 								initial={{ opacity: 0, scale: 0.95 }}
 								animate={{ opacity: 1, scale: 1 }}
 								exit={{ opacity: 0, scale: 0.95 }}
@@ -805,7 +655,8 @@ export default function Adoption() {
 								}}
 								className="text-oxfordBlue/70 hover:text-oxfordBlue font-poppins font-semibold underline transition-colors duration-300"
 							>
-								This dog has been adopted / Not available - Show next match
+								This dog has been adopted / Not available - Show
+								next match
 							</button>
 						</motion.div>
 					</motion.div>

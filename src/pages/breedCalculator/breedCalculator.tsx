@@ -6,39 +6,11 @@ import { useToast } from "../../components/ToastContainer";
 import BreedDetailModal from "../../components/modals/BreedDetailModal";
 import {
 	faSearch,
-	faRuler,
-	faRunning,
-	faUsers,
-	faDog,
-	faInfoCircle,
-	faBaby,
-	faClock,
-	faLeaf,
-	faCity,
 	faArrowRight,
-	faShieldAlt,
-	faHeartbeat,
-	faVolumeUp,
-	faGraduationCap,
-	faSmile,
-	faSprayCan,
+	faInfoCircle,
+	faDog,
 } from "@fortawesome/free-solid-svg-icons";
-
-interface Question {
-	id: string;
-	label: string;
-	description?: string;
-	helpText?: string;
-	icon: any;
-	type: "select" | "slider";
-	options?: { value: string; label: string; apiValue?: number; icon?: any }[];
-	field: string;
-	scaleLabels?: {
-		[key: string]: string;
-	};
-	reverseScale?: boolean;
-	mapping?: Record<string, number>;
-}
+import { questions, Question } from "./breedCalculatorQuestions";
 
 export default function BreedCalculator() {
 	const [hasStarted, setHasStarted] = useState(false);
@@ -73,308 +45,8 @@ export default function BreedCalculator() {
 	const [selectedBreed, setSelectedBreed] = useState<Breed | null>(null);
 	const resultsRef = useRef<HTMLDivElement>(null);
 	const { showToast } = useToast();
-
-	// Questions array - matching the new questionnaire structure
-	const questions: Question[] = [
-		// Basic Information
-		{
-			id: "size",
-			label: "What size dog are you looking for?",
-			icon: faRuler,
-			type: "select",
-			field: "size",
-			options: [
-				{ value: "XS", label: "Extra Small (Under 10 kg / 20 lbs)" },
-				{ value: "S", label: "Small (10-15 kg / 20-30 lbs)" },
-				{ value: "M", label: "Medium (15-25 kg / 30-55 lbs)" },
-				{ value: "L", label: "Large (25-40 kg / 55-90 lbs)" },
-				{ value: "XL", label: "Extra Large (Over 40 kg / 90 lbs)" },
-			],
-		},
-		// Living Situation & Accommodation
-		{
-			id: "living_situation",
-			label: "What is your living situation?",
-			helpText:
-				"Select your current living situation. This will be converted to apartment suitability rating for matching.",
-			icon: faCity,
-			type: "select",
-			field: "apartment_dog",
-			options: [
-				{
-					value: "apartment",
-					label: "Apartment - Small living space, limited outdoor area",
-					apiValue: 9,
-				},
-				{
-					value: "house",
-					label: "House - Standard house with yard/garden",
-					apiValue: 6,
-				},
-				{
-					value: "rural_farm",
-					label: "Rural/Farm - Large property, farm, or rural setting with extensive outdoor space",
-					apiValue: 2,
-				},
-			],
-			mapping: { apartment: 9, house: 6, rural_farm: 2 },
-		},
-		{
-			id: "time_away",
-			label: "How often are you out of the house?",
-			helpText:
-				"Select how often you're typically away from home. This will be converted to independence rating for matching.",
-			icon: faClock,
-			type: "select",
-			field: "can_be_alone",
-			options: [
-				{
-					value: "home_most",
-					label: "Home most of the time - Rarely out, work from home, or retired",
-					apiValue: 3,
-				},
-				{
-					value: "out_occasionally",
-					label: "Out occasionally - Out 2-4 hours at a time, a few times per week",
-					apiValue: 6,
-				},
-				{
-					value: "out_regularly",
-					label: "Out regularly - Out 4-6 hours daily, standard work schedule",
-					apiValue: 8,
-				},
-				{
-					value: "out_frequently",
-					label: "Out frequently - Out 6+ hours daily, long work days or frequent travel",
-					apiValue: 9,
-				},
-			],
-			mapping: {
-				home_most: 3,
-				out_occasionally: 6,
-				out_regularly: 8,
-				out_frequently: 9,
-			},
-		},
-		{
-			id: "good_for_busy_owners",
-			label: "Are you busy?",
-			helpText:
-				"1-3: Not busy | 4-6: Moderately busy | 7-8: Very busy | 9-10: Extremely busy",
-			icon: faClock,
-			type: "slider",
-			field: "good_for_busy_owners",
-			scaleLabels: {
-				"1": "Not busy - Plenty of time",
-				"5": "Moderately busy",
-				"10": "Extremely busy - Very little time",
-			},
-		},
-		// Family & Social Compatibility
-		{
-			id: "family_friendly",
-			label: "Do you have a family or live with others?",
-			helpText:
-				"1-3: Live alone | 4-6: Partner/roommate | 7-8: Have a family | 9-10: Large family",
-			icon: faUsers,
-			type: "slider",
-			field: "family_friendly",
-			scaleLabels: {
-				"1": "Live alone",
-				"5": "Live with partner/roommate",
-				"10": "Large family",
-			},
-		},
-		{
-			id: "child_friendly",
-			label: "Do you have children or will the dog be around children?",
-			helpText:
-				"1-3: No children | 4-6: Occasional contact | 7-8: Regular contact | 9-10: Children in household",
-			icon: faBaby,
-			type: "slider",
-			field: "child_friendly",
-			scaleLabels: {
-				"1": "No children",
-				"5": "Occasional contact",
-				"10": "Children in household",
-			},
-		},
-		{
-			id: "pet_friendly",
-			label: "Do you have other pets?",
-			helpText:
-				"1-3: No other pets | 4-6: Have other pets | 7-8: Multiple pets | 9-10: Many pets",
-			icon: faDog,
-			type: "slider",
-			field: "pet_friendly",
-			scaleLabels: {
-				"1": "No other pets",
-				"5": "Have other pets",
-				"10": "Many pets",
-			},
-		},
-		{
-			id: "stranger_friendly",
-			label: "Do you have many visitors or want a welcoming dog?",
-			helpText:
-				"1-3: Few visitors | 4-6: Some visitors | 7-8: Regular visitors | 9-10: Many visitors",
-			icon: faSmile,
-			type: "slider",
-			field: "stranger_friendly",
-			scaleLabels: {
-				"1": "Few visitors",
-				"5": "Some visitors",
-				"10": "Many visitors",
-			},
-		},
-		{
-			id: "friendliness",
-			label: "How friendly do you want your dog to be?",
-			helpText:
-				"1-3: Reserved/independent | 4-6: Moderately friendly | 7-8: Very friendly | 9-10: Extremely friendly",
-			icon: faSmile,
-			type: "slider",
-			field: "friendliness",
-			scaleLabels: {
-				"1": "Reserved/independent",
-				"5": "Moderately friendly",
-				"10": "Extremely friendly",
-			},
-		},
-		// Energy & Activity Level
-		{
-			id: "energy_levels",
-			label: "How active are you?",
-			helpText:
-				"1-3: Not very active | 4-6: Moderately active | 7-8: Very active | 9-10: Extremely active",
-			icon: faRunning,
-			type: "slider",
-			field: "energy_levels",
-			scaleLabels: {
-				"1": "Not very active",
-				"5": "Moderately active",
-				"10": "Extremely active",
-			},
-		},
-		{
-			id: "playfulness",
-			label: "Do you enjoy playing with dogs?",
-			helpText:
-				"1-3: Prefer calm | 4-6: Some playtime | 7-8: Love playing | 9-10: Very playful",
-			icon: faRunning,
-			type: "slider",
-			field: "playfulness",
-			scaleLabels: {
-				"1": "Prefer calm activities",
-				"5": "Some playtime",
-				"10": "Very playful",
-			},
-		},
-		// Training & Intelligence
-		{
-			id: "easy_to_train",
-			label: "How much time can you dedicate to training?",
-			helpText:
-				"1-3: Limited time | 4-6: Some time | 7-8: Regular time | 9-10: Lots of time",
-			icon: faGraduationCap,
-			type: "slider",
-			field: "easy_to_train",
-			scaleLabels: {
-				"1": "Limited time - Need easy to train",
-				"5": "Some time",
-				"10": "Lots of time - Can handle challenging",
-			},
-		},
-		{
-			id: "good_for_new_owners",
-			label: "Is this your first dog?",
-			helpText:
-				"1-3: Experienced | 4-6: Some experience | 7-8: First-time owner | 9-10: Complete beginner",
-			icon: faUsers,
-			type: "slider",
-			field: "good_for_new_owners",
-			scaleLabels: {
-				"1": "Experienced owner",
-				"5": "Some experience",
-				"10": "Complete beginner",
-			},
-		},
-		// Grooming & Maintenance
-		{
-			id: "easy_to_groom",
-			label: "How much time can you spend on grooming?",
-			helpText:
-				"1-3: Very little time | 4-6: Some time | 7-8: Regular time | 9-10: Lots of time",
-			icon: faSprayCan,
-			type: "slider",
-			field: "easy_to_groom",
-			scaleLabels: {
-				"1": "Very little time - Need low-maintenance",
-				"5": "Some time",
-				"10": "Lots of time - Can handle extensive",
-			},
-		},
-		{
-			id: "shedding_amount",
-			label: "How much shedding can you tolerate?",
-			helpText:
-				"Note: Lower numbers = less shedding. 1-3: Minimal | 4-6: Moderate | 7-8: Heavy | 9-10: Very heavy",
-			icon: faLeaf,
-			type: "slider",
-			field: "shedding_amount",
-			scaleLabels: {
-				"1": "Minimal shedding",
-				"5": "Moderate shedding",
-				"10": "Very heavy shedding",
-			},
-			reverseScale: true,
-		},
-		// Behavior & Characteristics
-		{
-			id: "barks_howls",
-			label: "How much barking can you tolerate?",
-			helpText:
-				"Note: Lower numbers = quieter dog. 1-3: Very quiet | 4-6: Some barking | 7-8: Moderate | 9-10: Don't mind",
-			icon: faVolumeUp,
-			type: "slider",
-			field: "barks_howls",
-			scaleLabels: {
-				"1": "Very quiet - Need quiet dog",
-				"5": "Some barking",
-				"10": "Don't mind barking",
-			},
-			reverseScale: true,
-		},
-		{
-			id: "guard_dog",
-			label: "Do you want a guard dog or protective dog?",
-			helpText:
-				"1-3: No | 4-6: Some protection | 7-8: Yes | 9-10: Very important",
-			icon: faShieldAlt,
-			type: "slider",
-			field: "guard_dog",
-			scaleLabels: {
-				"1": "No - Prefer friendly",
-				"5": "Some protection",
-				"10": "Very important - Need strong guard",
-			},
-		},
-		// Health & Longevity
-		{
-			id: "health",
-			label: "How important is good health to you?",
-			helpText:
-				"1-3: Not a priority | 4-6: Somewhat important | 7-8: Very important | 9-10: Extremely important",
-			icon: faHeartbeat,
-			type: "slider",
-			field: "health",
-			scaleLabels: {
-				"1": "Not a priority",
-				"5": "Somewhat important",
-				"10": "Extremely important",
-			},
-		},
-	];
+	const [isDragging, setIsDragging] = useState(false);
+	const sliderRef = useRef<HTMLDivElement>(null);
 
 	// Auto-scroll to results when breeds are found
 	useEffect(() => {
@@ -503,6 +175,67 @@ export default function BreedCalculator() {
 		}
 		return getCurrentValue(question.field);
 	};
+
+	// Slider drag handlers
+	const getValueFromPosition = (
+		clientX: number,
+		question: Question
+	): number => {
+		if (!sliderRef.current) return 1;
+		const rect = sliderRef.current.getBoundingClientRect();
+		const x = clientX - rect.left;
+		const percentage = Math.max(0, Math.min(1, x / rect.width));
+		let value = Math.round(percentage * 9) + 1; // 1-10
+
+		// For reverse scale, we'll handle inversion in handleAnswer
+		return value;
+	};
+
+	const handleSliderMouseDown = (e: React.MouseEvent, question: Question) => {
+		e.preventDefault();
+		setIsDragging(true);
+		const value = getValueFromPosition(e.clientX, question);
+		handleAnswer(question, value);
+	};
+
+	const handleSliderMouseMove = (e: MouseEvent, question: Question) => {
+		if (!isDragging) return;
+		e.preventDefault();
+		const value = getValueFromPosition(e.clientX, question);
+		handleAnswer(question, value);
+	};
+
+	const handleSliderMouseUp = () => {
+		setIsDragging(false);
+	};
+
+	const handleSliderTouchMove = (e: React.TouchEvent, question: Question) => {
+		if (!isDragging) return;
+		e.preventDefault();
+		const touch = e.touches[0];
+		const value = getValueFromPosition(touch.clientX, question);
+		handleAnswer(question, value);
+	};
+
+	useEffect(() => {
+		if (isDragging) {
+			const handleMouseMove = (e: MouseEvent) => {
+				const currentQuestion = questions[currentQuestionIndex];
+				if (currentQuestion && currentQuestion.type === "slider") {
+					handleSliderMouseMove(e, currentQuestion);
+				}
+			};
+			const handleMouseUp = () => handleSliderMouseUp();
+
+			document.addEventListener("mousemove", handleMouseMove);
+			document.addEventListener("mouseup", handleMouseUp);
+
+			return () => {
+				document.removeEventListener("mousemove", handleMouseMove);
+				document.removeEventListener("mouseup", handleMouseUp);
+			};
+		}
+	}, [isDragging, currentQuestionIndex]);
 
 	const handleSubmit = async () => {
 		setLoading(true);
@@ -660,9 +393,6 @@ export default function BreedCalculator() {
 									Question {currentQuestionIndex + 1} of{" "}
 									{questions.length}
 								</span>
-								<span className="text-oxfordBlue/70 font-poppins text-sm">
-									{Math.round(progress)}%
-								</span>
 							</div>
 							<div className="w-full bg-tara/30 rounded-full h-3 overflow-hidden">
 								<motion.div
@@ -713,7 +443,14 @@ export default function BreedCalculator() {
 									{/* Question Options */}
 									<div className="space-y-4">
 										{currentQuestion.type === "select" ? (
-											<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+											<div
+												className={`grid gap-4 ${
+													currentQuestion.options
+														?.length === 3
+														? "grid-cols-1 md:grid-cols-3"
+														: "grid-cols-1 md:grid-cols-2"
+												}`}
+											>
 												{currentQuestion.options?.map(
 													(option, optionIndex) => {
 														const displayValue =
@@ -729,7 +466,7 @@ export default function BreedCalculator() {
 																className={`flex items-start justify-start space-x-3 cursor-pointer group p-4 rounded-2xl border-2 transition-all duration-300 ${
 																	isSelected
 																		? "bg-gradient-to-r from-highland to-sark text-honeydew border-highland shadow-lg transform scale-105"
-																		: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew"
+																		: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-oxfordBlue hover:from-highland hover:to-sark hover:text-honeydew hover:border-highland"
 																}`}
 															>
 																<input
@@ -819,39 +556,84 @@ export default function BreedCalculator() {
 													</div>
 												)}
 
-												{/* Scale Buttons */}
-												<div className="grid grid-cols-5 md:grid-cols-10 gap-2">
-													{[
-														1, 2, 3, 4, 5, 6, 7, 8,
-														9, 10,
-													].map((num) => {
-														const displayValue =
-															getDisplayValue(
+												{/* Draggable Slider */}
+												<div className="relative py-8 px-6">
+													<div
+														ref={sliderRef}
+														className="relative w-full h-3 bg-gradient-to-r from-tara to-mintCream rounded-full border-2 border-oxfordBlue cursor-pointer"
+														onMouseDown={(e) =>
+															handleSliderMouseDown(
+																e,
 																currentQuestion
-															) as number;
-														const isSelected =
-															displayValue ===
-															num;
-														return (
-															<button
-																key={num}
-																type="button"
-																onClick={() =>
-																	handleAnswer(
-																		currentQuestion,
-																		num
-																	)
-																}
-																className={`p-4 rounded-xl border-2 transition-all duration-300 font-poppins font-bold text-lg ${
-																	isSelected
-																		? "bg-gradient-to-r from-highland to-sark text-honeydew border-highland shadow-lg transform scale-110"
-																		: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew hover:scale-105"
-																}`}
-															>
-																{num}
-															</button>
-														);
-													})}
+															)
+														}
+														onTouchStart={(e) => {
+															setIsDragging(true);
+															const touch =
+																e.touches[0];
+															const value =
+																getValueFromPosition(
+																	touch.clientX,
+																	currentQuestion
+																);
+															handleAnswer(
+																currentQuestion,
+																value
+															);
+														}}
+														onTouchMove={(e) =>
+															handleSliderTouchMove(
+																e,
+																currentQuestion
+															)
+														}
+														onTouchEnd={() =>
+															setIsDragging(false)
+														}
+													>
+														{/* Dog Icon Slider Handle */}
+														{(() => {
+															const displayValue =
+																getDisplayValue(
+																	currentQuestion
+																) as number;
+															const value =
+																displayValue > 0
+																	? displayValue
+																	: 1;
+															const percentage =
+																((value - 1) /
+																	9) *
+																100;
+
+															return (
+																<div
+																	className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing z-10 select-none"
+																	style={{
+																		left: `${percentage}%`,
+																	}}
+																	onMouseDown={(
+																		e
+																	) => {
+																		e.stopPropagation();
+																		handleSliderMouseDown(
+																			e,
+																			currentQuestion
+																		);
+																	}}
+																>
+																	<div className="w-12 h-12 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center shadow-lg border-2 border-honeydew transform hover:scale-110 transition-transform pointer-events-none">
+																		<FontAwesomeIcon
+																			icon={
+																				faPaw
+																			}
+																			className="text-honeydew text-xl"
+																		/>
+																	</div>
+																</div>
+															);
+														})()}
+													</div>
 												</div>
 
 												{/* Selected Value Display */}
@@ -881,16 +663,21 @@ export default function BreedCalculator() {
 									</div>
 
 									{/* Navigation Buttons */}
-									<div className="flex justify-between items-center mt-8">
-										<button
-											onClick={handlePrevious}
-											disabled={
-												currentQuestionIndex === 0
-											}
-											className="px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew disabled:hover:bg-gradient-to-r disabled:hover:from-tara disabled:hover:to-mintCream disabled:hover:text-oxfordBlue"
-										>
-											Previous
-										</button>
+									<div
+										className={`flex ${
+											currentQuestionIndex === 0
+												? "justify-end"
+												: "justify-between"
+										} items-center mt-8`}
+									>
+										{currentQuestionIndex > 0 && (
+											<button
+												onClick={handlePrevious}
+												className="px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:from-highland hover:to-sark hover:text-honeydew hover:border-highland"
+											>
+												Previous
+											</button>
+										)}
 
 										<button
 											onClick={handleNext}
