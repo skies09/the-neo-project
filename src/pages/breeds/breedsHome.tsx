@@ -3,8 +3,9 @@ import { breedsAPI, Breed } from "../../services/api";
 import BreedCard from "../../components/cards/breedCard";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaw, faList } from "@fortawesome/free-solid-svg-icons";
+import { faPaw, faList, faDog } from "@fortawesome/free-solid-svg-icons";
 import BreedDetailModal from "../../components/modals/BreedDetailModal";
+import PawLoading from "../../components/PawLoading";
 
 export default function Breeds() {
 	const [groups, setGroups] = useState<string[]>([]);
@@ -31,7 +32,7 @@ export default function Breeds() {
 			} catch (error) {
 				console.error(
 					"Error fetching initial data:",
-					error instanceof Error ? error.message : String(error)
+					error instanceof Error ? error.message : String(error),
 				);
 				setError("No breeds found, please check back later");
 			} finally {
@@ -53,7 +54,7 @@ export default function Breeds() {
 		} catch (error) {
 			console.error(
 				"Error fetching breeds:",
-				error instanceof Error ? error.message : String(error)
+				error instanceof Error ? error.message : String(error),
 			);
 			setError("Error fetching breeds. Please try again.");
 		} finally {
@@ -72,7 +73,7 @@ export default function Breeds() {
 		} catch (error) {
 			console.error(
 				"Error fetching breeds:",
-				error instanceof Error ? error.message : String(error)
+				error instanceof Error ? error.message : String(error),
 			);
 			setError("Error fetching breeds. Please try again.");
 		} finally {
@@ -93,12 +94,13 @@ export default function Breeds() {
 				transition={{ duration: 0.8, ease: "easeOut" }}
 			>
 				<motion.div
-					className="flex justify-center items-center font-poppins text-2xl lg:text-3xl font-bold text-oxfordBlue tracking-wider drop-shadow-md"
+					className="flex flex-col justify-center items-center font-poppins text-2xl lg:text-3xl font-bold text-oxfordBlue tracking-wider drop-shadow-md mt-4"
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 				>
-					Loading breeds...
+					Fetching breeds...
+					<PawLoading />
 				</motion.div>
 			</motion.div>
 		);
@@ -205,35 +207,47 @@ export default function Breeds() {
 				transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
 			>
 				{loading && breeds.length === 0 ? (
-					<div className="flex justify-center items-center py-12 mt-8">
+					<div className="flex flex-col justify-center items-center py-12 mt-8">
 						<p className="text-lg text-oxfordBlue">
-							Loading breeds...
+							Fetching breeds...
 						</p>
+						<PawLoading />
+					</div>
+				) : breeds.length > 0 ? (
+					<div>
+						{selectedGroup && (
+							<h2 className="text-4xl font-bold text-center mb-8 text-oxfordBlue font-delius">
+								{selectedGroup} Breeds
+							</h2>
+						)}
+						{!selectedGroup && (
+							<h2 className="text-4xl font-bold text-center mb-8 text-oxfordBlue font-delius">
+								All Breeds
+							</h2>
+						)}
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-12 justify-items-center">
+							{breeds.map((breed) => (
+								<BreedCard
+									key={breed.id}
+									breed={breed}
+									onClick={handleBreedClick}
+								/>
+							))}
+						</div>
 					</div>
 				) : (
-					breeds.length > 0 && (
-						<div>
-							{selectedGroup && (
-								<h2 className="text-4xl font-bold text-center mb-8 text-oxfordBlue font-delius">
-									{selectedGroup} Breeds
-								</h2>
-							)}
-							{!selectedGroup && (
-								<h2 className="text-4xl font-bold text-center mb-8 text-oxfordBlue font-delius">
-									All Breeds
-								</h2>
-							)}
-							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-12 justify-items-center">
-								{breeds.map((breed) => (
-									<BreedCard
-										key={breed.id}
-										breed={breed}
-										onClick={handleBreedClick}
-									/>
-								))}
-							</div>
-						</div>
-					)
+					<div className="flex flex-col justify-center items-center py-12">
+						<FontAwesomeIcon
+							icon={faDog}
+							className="text-6xl mb-4 text-oxfordBlue/50"
+						/>
+						<p className="text-lg text-oxfordBlue font-poppins">
+							No breeds available at the moment.
+						</p>
+						<p className="text-sm text-oxfordBlue/70 mt-2 font-poppins">
+							Check back soon for new breeds!
+						</p>
+					</div>
 				)}
 			</motion.div>
 

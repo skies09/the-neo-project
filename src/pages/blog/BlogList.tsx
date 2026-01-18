@@ -11,6 +11,7 @@ import {
 import { Link } from "react-router-dom";
 import { blogAPI, BlogPost, BlogFilters } from "../../services/blogApi";
 import { formatDateLong } from "../../helpers/dateUtils";
+import PawLoading from "../../components/PawLoading";
 
 const BlogList: React.FC = () => {
 	const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -20,7 +21,7 @@ const BlogList: React.FC = () => {
 	const [error, setError] = useState<string | null>(null);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(
-		null
+		null,
 	);
 	const [selectedTag, setSelectedTag] = useState<string | null>(null);
 	const [showFilters, setShowFilters] = useState(false);
@@ -114,13 +115,13 @@ const BlogList: React.FC = () => {
 
 	if (loading && posts.length === 0) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16">
+			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16 relative">
 				<div className="max-w-7xl mx-auto px-4 py-20">
 					<div className="text-center">
-						<div className="animate-spin w-16 h-16 border-4 border-skyBlue border-t-transparent rounded-full mx-auto mb-4"></div>
 						<p className="text-oxfordBlue/70 font-poppins">
-							Loading blog posts...
+							Fetching blog posts...
 						</p>
+						<PawLoading />
 					</div>
 				</div>
 			</div>
@@ -160,17 +161,17 @@ const BlogList: React.FC = () => {
 							ease: "easeOut",
 						}}
 					>
-					<div className="flex flex-col justify-center items-center py-12 bg-gradient-to-br from-tara to-mintCream rounded-3xl shadow-xl border-2 border-oxfordBlue/20">
-						<div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-							<FontAwesomeIcon
-								icon={faSearch}
-								className="text-2xl text-honeydew"
-							/>
+						<div className="flex flex-col justify-center items-center py-12 bg-gradient-to-br from-tara to-mintCream rounded-3xl shadow-xl border-2 border-oxfordBlue/20">
+							<div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+								<FontAwesomeIcon
+									icon={faSearch}
+									className="text-2xl text-honeydew"
+								/>
+							</div>
+							<p className="text-lg lg:text-xl text-oxfordBlue font-poppins max-w-5xl mx-auto text-center">
+								{error}
+							</p>
 						</div>
-						<p className="text-lg lg:text-xl text-oxfordBlue font-poppins max-w-5xl mx-auto text-center">
-							{error}
-						</p>
-					</div>
 					</motion.div>
 				)}
 
@@ -242,7 +243,7 @@ const BlogList: React.FC = () => {
 													key={category}
 													onClick={() =>
 														handleCategoryFilter(
-															category
+															category,
 														)
 													}
 													className={`w-full text-left px-3 py-2 rounded-full transition-all duration-300 font-poppins ${
@@ -409,7 +410,7 @@ const BlogList: React.FC = () => {
 														/>
 														{formatDateLong(
 															post.published_at ||
-																post.created
+																post.created,
 														)}
 													</span>
 												</div>
@@ -423,7 +424,7 @@ const BlogList: React.FC = () => {
 																.slice(0, 3)
 																.map(
 																	(
-																		tag: string
+																		tag: string,
 																	) => (
 																		<span
 																			key={
@@ -436,7 +437,7 @@ const BlogList: React.FC = () => {
 																				tag
 																			}
 																		</span>
-																	)
+																	),
 																)}
 															{post.tag_list
 																.length > 3 && (
@@ -513,7 +514,7 @@ const BlogList: React.FC = () => {
 							<button
 								onClick={() =>
 									setCurrentPage(
-										Math.min(totalPages, currentPage + 1)
+										Math.min(totalPages, currentPage + 1),
 									)
 								}
 								disabled={currentPage === totalPages}

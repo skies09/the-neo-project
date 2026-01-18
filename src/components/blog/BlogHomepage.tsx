@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { blogAPI, BlogPost } from "../../services/blogApi";
 import { formatDateShort } from "../../helpers/dateUtils";
 import TransitionCTA from "../homepage/TransitionCTA";
+import PawLoading from "../PawLoading";
 
 const BlogHomepage: React.FC = () => {
 	const [featuredPosts, setFeaturedPosts] = useState<BlogPost[]>([]);
@@ -48,10 +49,10 @@ const BlogHomepage: React.FC = () => {
 			<section className="py-20">
 				<div className="max-w-7xl mx-auto px-4">
 					<div className="text-center">
-						<div className="animate-spin w-12 h-12 border-4 border-skyBlue border-t-transparent rounded-full mx-auto mb-4"></div>
 						<p className="text-oxfordBlue/70 font-poppins">
-							Loading blog posts...
+							Fetching blog posts...
 						</p>
+						<PawLoading />
 					</div>
 				</div>
 			</section>
@@ -137,7 +138,7 @@ const BlogHomepage: React.FC = () => {
 													/>
 													{formatDateShort(
 														post.published_at ||
-															post.created
+															post.created,
 													)}
 												</span>
 											</div>
@@ -150,7 +151,7 @@ const BlogHomepage: React.FC = () => {
 															.slice(0, 2)
 															.map(
 																(
-																	tag: string
+																	tag: string,
 																) => (
 																	<span
 																		key={
@@ -160,7 +161,7 @@ const BlogHomepage: React.FC = () => {
 																	>
 																		#{tag}
 																	</span>
-																)
+																),
 															)}
 													</div>
 												)}

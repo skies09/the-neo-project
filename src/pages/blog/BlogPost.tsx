@@ -9,16 +9,17 @@ import {
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { blogAPI, BlogPost } from "../../services/blogApi";
 import { formatDateLong } from "../../helpers/dateUtils";
+import PawLoading from "../../components/PawLoading";
 
 // Utility function to convert line breaks to HTML
 const formatContent = (content: string): string => {
 	return content
-		.replace(/\r\n\r\n/g, '</p><p>') // Convert double line breaks to paragraph breaks
-		.replace(/\r\n/g, '<br>') // Convert single line breaks to <br> tags
-		.replace(/\n\n/g, '</p><p>') // Convert double \n to paragraph breaks
-		.replace(/\n/g, '<br>') // Convert single \n to <br> tags
-		.replace(/^/, '<p>') // Add opening <p> tag at the beginning
-		.replace(/$/, '</p>'); // Add closing </p> tag at the end
+		.replace(/\r\n\r\n/g, "</p><p>") // Convert double line breaks to paragraph breaks
+		.replace(/\r\n/g, "<br>") // Convert single line breaks to <br> tags
+		.replace(/\n\n/g, "</p><p>") // Convert double \n to paragraph breaks
+		.replace(/\n/g, "<br>") // Convert single \n to <br> tags
+		.replace(/^/, "<p>") // Add opening <p> tag at the beginning
+		.replace(/$/, "</p>"); // Add closing </p> tag at the end
 };
 
 const BlogPostPage: React.FC = () => {
@@ -55,12 +56,12 @@ const BlogPostPage: React.FC = () => {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16">
+			<div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16 relative">
+				<PawLoading />
 				<div className="max-w-4xl mx-auto px-4 py-20">
 					<div className="text-center">
-						<div className="animate-spin w-16 h-16 border-4 border-highland border-t-transparent rounded-full mx-auto mb-4"></div>
 						<p className="text-oxfordBlue/70 font-poppins">
-							Loading blog post...
+							Fetching blog post...
 						</p>
 					</div>
 				</div>
@@ -122,7 +123,10 @@ const BlogPostPage: React.FC = () => {
 						onClick={() => navigate(-1)}
 						className="group flex items-center space-x-2 text-highland hover:text-sark transition-colors font-poppins font-semibold"
 					>
-						<FontAwesomeIcon icon={faArrowLeft} className="group-hover:-translate-x-1 transition-transform duration-300" />
+						<FontAwesomeIcon
+							icon={faArrowLeft}
+							className="group-hover:-translate-x-1 transition-transform duration-300"
+						/>
 						<span>Back to Blog</span>
 					</button>
 				</motion.div>
@@ -153,7 +157,7 @@ const BlogPostPage: React.FC = () => {
 									className="mr-2 text-highland"
 								/>
 								{formatDateLong(
-									post.published_at || post.created
+									post.published_at || post.created,
 								)}
 							</span>
 						</div>
@@ -163,7 +167,9 @@ const BlogPostPage: React.FC = () => {
 					<div className="p-8">
 						<div
 							className="prose prose-lg max-w-none text-oxfordBlue font-poppins leading-relaxed"
-							dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
+							dangerouslySetInnerHTML={{
+								__html: formatContent(post.content),
+							}}
 						/>
 					</div>
 

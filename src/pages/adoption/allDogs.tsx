@@ -3,12 +3,8 @@ import AdoptCard from "../../components/cards/adoptCard";
 import { dogAPI, Dog } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
-import {
-	faPaw,
-	faSearch,
-	faHome,
-	faSpinner,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faHome } from "@fortawesome/free-solid-svg-icons";
+import PawLoading from "../../components/PawLoading";
 
 export default function AllDogs() {
 	const [dogData, setDogData] = useState<Dog[]>([]);
@@ -30,10 +26,10 @@ export default function AllDogs() {
 			} catch (error) {
 				console.error(
 					"Error fetching dogs:",
-					error instanceof Error ? error.message : String(error)
+					error instanceof Error ? error.message : String(error),
 				);
 				setError(
-					"No dogs available for adoption at this time, please check back later"
+					"No dogs available for adoption at this time, please check back later",
 				);
 				setDogData([]);
 			} finally {
@@ -58,11 +54,8 @@ export default function AllDogs() {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 				>
-					<FontAwesomeIcon
-						icon={faSpinner}
-						className="animate-spin text-4xl mb-4 text-skyBlue"
-					/>
-					Loading dogs...
+					Fetching dogs...
+					<PawLoading />
 				</motion.div>
 			</motion.div>
 		);

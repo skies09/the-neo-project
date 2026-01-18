@@ -35,7 +35,7 @@ interface DogToEdit {
 
 const KennelAccount = () => {
 	const { kennel: kennelId } = useSelector(
-		(state: RootState) => (state as any).kennel || {}
+		(state: RootState) => (state as any).kennel || {},
 	);
 	const [showProfile, setShowProfile] = useState(false);
 	const [profileEdited, setProfileEdited] = useState(false);
@@ -78,7 +78,7 @@ const KennelAccount = () => {
 
 					if (!kennelPublicId) {
 						throw new Error(
-							"Kennel data not found in localStorage."
+							"Kennel data not found in localStorage.",
 						);
 					}
 					const data = await kennelAPI.getProfile(kennelPublicId);
@@ -89,7 +89,7 @@ const KennelAccount = () => {
 				console.error("Error fetching kennel details:", err);
 				setProfileError(
 					"Error fetching kennel details: " +
-						(err instanceof Error ? err.message : String(err))
+						(err instanceof Error ? err.message : String(err)),
 				);
 			} finally {
 				setLoadingKennel(false);
@@ -128,19 +128,19 @@ const KennelAccount = () => {
 
 	const handleDeleteDog = async (dogId: string) => {
 		const confirmDelete = window.confirm(
-			"Are you sure you want to delete this dog?"
+			"Are you sure you want to delete this dog?",
 		);
 		if (!confirmDelete) return;
 
 		try {
 			await dogAPI.deleteKennelDog(kennelId, dogId);
 			setDogData((prevDogs) =>
-				prevDogs.filter((dog) => dog.id !== dogId)
+				prevDogs.filter((dog) => dog.id !== dogId),
 			);
 		} catch (error) {
 			console.error(
 				"Error deleting dog:",
-				error instanceof Error ? error.message : String(error)
+				error instanceof Error ? error.message : String(error),
 			);
 			setDogsError("Error deleting dog. Please try again.");
 		}
@@ -285,7 +285,7 @@ const KennelAccount = () => {
 									<div className="text-center py-12">
 										<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-tara mx-auto mb-4"></div>
 										<p className="text-lg text-tara font-semibold font-poppins">
-											Loading dogs...
+											Fetching dogs...
 										</p>
 									</div>
 								) : dogData.length === 0 ? (
@@ -356,7 +356,7 @@ const KennelAccount = () => {
 														</span>
 														<span className="font-medium text-oxfordBlue font-poppins">
 															{getSizeDisplayName(
-																dog.size
+																dog.size,
 															)}
 														</span>
 													</div>
@@ -368,7 +368,7 @@ const KennelAccount = () => {
 														className="flex-1 group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-4 py-2 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
 														onClick={() => {
 															setShowDogUploadForm(
-																true
+																true,
 															);
 															setDogToEdit({
 																id: dog.id,
@@ -418,7 +418,7 @@ const KennelAccount = () => {
 														type="button"
 														onClick={() =>
 															handleDeleteDog(
-																dog.id
+																dog.id,
 															)
 														}
 														className="flex-1 group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-4 py-2 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
