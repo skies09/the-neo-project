@@ -653,10 +653,18 @@ const KennelAdmin = () => {
 										<h2 className="text-3xl font-bold text-tara font-delius mb-8 text-center">
 											Register Your Center
 										</h2>
-										<p className="text-lg lg:text-xl text-tara/90 font-fredoka max-w-3xl mx-auto mb-8">
+										<p className="text-lg lg:text-xl text-tara/90 font-fredoka max-w-3xl mx-auto mb-4">
 											Are you a re-homing or animal rescue
 											center? Sign up here to upload dogs
 											available for adoption.
+										</p>
+										<p className="text-center mb-8">
+											<Link
+												to="/kennel-partnership"
+												className="text-tara hover:text-sunset font-fredoka underline text-base lg:text-lg transition-colors duration-200"
+											>
+												Learn more about joining The Neo Project
+											</Link>
 										</p>
 									</div>
 									{renderContactForm()}

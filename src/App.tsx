@@ -18,6 +18,7 @@ import Support from "./pages/support";
 import KennelAccount from "./pages/kennel/kennelAccount";
 import KennelAdmin from "./pages/kennel/kennelAdmin";
 import PasswordReset from "./pages/kennel/passwordReset";
+import KennelPartnership from "./pages/kennel/KennelPartnership";
 import BlogList from "./pages/blog/BlogList";
 import BlogPostPage from "./pages/blog/BlogPost";
 import ShopHome from "./pages/shop/ShopHome";
@@ -63,6 +64,7 @@ const App: React.FC = () => (
 						</ProtectedRoute>
 					}
 				/>
+				<Route path="/kennel-partnership" element={<KennelPartnership />} />
 				<Route path="/kennel-admin" element={<KennelAdmin />} />
 				<Route
 					path="/password-reset"

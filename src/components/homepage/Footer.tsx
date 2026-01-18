@@ -16,15 +16,21 @@ import {
 
 const Footer: React.FC = () => {
 	const neoRaisedStyle: React.CSSProperties = {
-		background: 'linear-gradient(135deg, #5A827E 0%, #6C8B58 100%)',
-		boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.1)',
+		background: "linear-gradient(135deg, #5A827E 0%, #6C8B58 100%)",
+		boxShadow:
+			"8px 8px 16px rgba(0, 0, 0, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.1)",
 	};
 
-	const handleNeoHover = (e: React.MouseEvent<HTMLElement>, isEntering: boolean) => {
+	const handleNeoHover = (
+		e: React.MouseEvent<HTMLElement>,
+		isEntering: boolean,
+	) => {
 		if (isEntering) {
-			e.currentTarget.style.boxShadow = 'inset 8px 8px 16px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(255, 255, 255, 0.1)';
+			e.currentTarget.style.boxShadow =
+				"inset 8px 8px 16px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(255, 255, 255, 0.1)";
 		} else {
-			e.currentTarget.style.boxShadow = '8px 8px 16px rgba(0, 0, 0, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.1)';
+			e.currentTarget.style.boxShadow =
+				"8px 8px 16px rgba(0, 0, 0, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.1)";
 		}
 	};
 
@@ -43,6 +49,7 @@ const Footer: React.FC = () => {
 		{ name: "FAQ", href: "/faq" },
 		{ name: "Donate", href: "/donate" },
 		{ name: "Support", href: "/support" },
+		{ name: "Kennel Partnership", href: "/kennel-partnership" },
 	];
 
 	return (
@@ -57,7 +64,7 @@ const Footer: React.FC = () => {
 						transition={{ duration: 0.6, delay: 0.1 }}
 					>
 						<div className="flex items-center space-x-3 mb-6">
-							<div 
+							<div
 								className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300"
 								style={neoRaisedStyle}
 								onMouseEnter={(e) => handleNeoHover(e, true)}
@@ -211,7 +218,7 @@ const Footer: React.FC = () => {
 					transition={{ duration: 0.6, delay: 0.5 }}
 				>
 					<p className="text-twilight/80 font-delius">
-						© 2025 The Neo Project. All rights reserved. Made with{" "}
+						© 2026 The Neo Project. All rights reserved. Made with{" "}
 						<FontAwesomeIcon
 							icon={faHeart}
 							className="text-aquamarine mx-1"
