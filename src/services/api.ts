@@ -85,6 +85,13 @@ export interface DogFilter {
 
 // Kennel API
 export const kennelAPI = {
+	// Get all active kennel names (public)
+	getKennelNames: (): Promise<string[]> => {
+		return axiosService.get(`/api/kennels/names/`).then((response) => {
+			return response.data;
+		});
+	},
+
 	// Get kennel profile
 	getProfile: (kennelPublicId: string): Promise<Kennel> => {
 		return axiosService.get(`/api/kennels/${kennelPublicId}/`);

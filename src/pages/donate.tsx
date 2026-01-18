@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,8 +12,11 @@ import {
 	faCreditCard,
 	faCalendarAlt,
 	faLock,
+	faBuilding,
+	faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { useToast } from "../components/ToastContainer";
+import { kennelAPI } from "../services/api";
 
 const Donate: React.FC = () => {
 	const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
@@ -25,6 +28,9 @@ const Donate: React.FC = () => {
 	const [expiryDate, setExpiryDate] = useState<string>("");
 	const [cvv, setCvv] = useState<string>("");
 	const [cardholderName, setCardholderName] = useState<string>("");
+	const [kennelNames, setKennelNames] = useState<string[]>([]);
+	const [selectedKennel, setSelectedKennel] = useState<string | null>(null);
+	const [loadingKennels, setLoadingKennels] = useState(false);
 	const { showToast } = useToast();
 
 	const sectionRef = useRef(null);
@@ -34,6 +40,23 @@ const Donate: React.FC = () => {
 	});
 
 	const presetAmounts = [25, 50, 100];
+
+	// Fetch kennel names on component mount
+	useEffect(() => {
+		const fetchKennelNames = async () => {
+			setLoadingKennels(true);
+			try {
+				const names = await kennelAPI.getKennelNames();
+				setKennelNames(names);
+			} catch (error) {
+				console.error("Error fetching kennel names:", error);
+			} finally {
+				setLoadingKennels(false);
+			}
+		};
+
+		fetchKennelNames();
+	}, [showToast]);
 
 	const formatCardNumber = (value: string) => {
 		const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
@@ -124,6 +147,9 @@ const Donate: React.FC = () => {
 
 		setIsDonating(true);
 
+		// Determine donation recipient
+		const recipientName = selectedKennel || "Neo Project";
+
 		// Simulate donation process
 		setTimeout(() => {
 			setIsDonating(false);
@@ -132,7 +158,7 @@ const Donate: React.FC = () => {
 				title: "Thank You!",
 				message: `Thank you ${
 					donorName || cardholderName || "for your donation"
-				} of £${amount}! Your contribution helps rescue dogs find their forever homes.`,
+				} of £${amount}! Your contribution to ${recipientName} helps rescue dogs find their forever homes.`,
 			});
 			setSelectedAmount(null);
 			setCustomAmount("");
@@ -142,6 +168,7 @@ const Donate: React.FC = () => {
 			setExpiryDate("");
 			setCvv("");
 			setCardholderName("");
+			setSelectedKennel(null);
 		}, 2000);
 	};
 
@@ -233,6 +260,52 @@ const Donate: React.FC = () => {
 										className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
 									/>
 								</div>
+								<div>
+									<label className="block text-tara font-poppins font-semibold mb-2">
+										Donate To (Optional)
+									</label>
+									<div className="relative">
+										<FontAwesomeIcon
+											icon={faBuilding}
+											className="absolute left-4 top-1/2 transform -translate-y-1/2 text-oxfordBlue/80"
+										/>
+										<select
+											value={selectedKennel || ""}
+											onChange={(e) =>
+												setSelectedKennel(
+													e.target.value || null,
+												)
+											}
+											className="w-full pl-10 pr-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none focus:border-highland transition-colors bg-white/80 appearance-none cursor-pointer"
+										>
+											<option value="">
+												Neo Project
+											</option>
+											{loadingKennels ? (
+												<option value="" disabled>
+													Loading kennels...
+												</option>
+											) : (
+												kennelNames.map((name) => (
+													<option
+														key={name}
+														value={name}
+													>
+														{name}
+													</option>
+												))
+											)}
+										</select>
+										<FontAwesomeIcon
+											icon={faChevronDown}
+											className="absolute right-4 top-1/2 transform -translate-y-1/2 text-oxfordBlue/80 pointer-events-none text-sm"
+										/>
+									</div>
+									<p className="text-sm text-tara/80 font-poppins mt-1 ml-1">
+										Select a specific kennel or donate to
+										Neo Project
+									</p>
+								</div>
 							</div>
 
 							{/* Preset Amounts */}
@@ -299,13 +372,18 @@ const Donate: React.FC = () => {
 									{/* Cardholder Name */}
 									<div>
 										<label className="block text-tara font-poppins font-semibold mb-2">
-											Cardholder Name <span className="text-red-500">*</span>
+											Cardholder Name{" "}
+											<span className="text-red-500">
+												*
+											</span>
 										</label>
 										<input
 											type="text"
 											value={cardholderName}
 											onChange={(e) =>
-												setCardholderName(e.target.value)
+												setCardholderName(
+													e.target.value,
+												)
 											}
 											placeholder="Name on card"
 											className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none focus:border-highland transition-colors bg-white/80"
@@ -316,7 +394,10 @@ const Donate: React.FC = () => {
 									{/* Card Number */}
 									<div>
 										<label className="block text-tara font-poppins font-semibold mb-2">
-											Card Number <span className="text-red-500">*</span>
+											Card Number{" "}
+											<span className="text-red-500">
+												*
+											</span>
 										</label>
 										<div className="relative">
 											<FontAwesomeIcon
@@ -326,7 +407,9 @@ const Donate: React.FC = () => {
 											<input
 												type="text"
 												value={cardNumber}
-												onChange={handleCardNumberChange}
+												onChange={
+													handleCardNumberChange
+												}
 												placeholder="1234 5678 9012 3456"
 												maxLength={19}
 												className="w-full pl-10 pr-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none focus:border-highland transition-colors bg-white/80"
@@ -339,7 +422,10 @@ const Donate: React.FC = () => {
 									<div className="grid grid-cols-2 gap-4">
 										<div>
 											<label className="block text-tara font-poppins font-semibold mb-2">
-												Expiry Date <span className="text-red-500">*</span>
+												Expiry Date{" "}
+												<span className="text-red-500">
+													*
+												</span>
 											</label>
 											<div className="relative">
 												<FontAwesomeIcon
@@ -349,7 +435,9 @@ const Donate: React.FC = () => {
 												<input
 													type="text"
 													value={expiryDate}
-													onChange={handleExpiryChange}
+													onChange={
+														handleExpiryChange
+													}
 													placeholder="MM/YY"
 													maxLength={5}
 													className="w-full pl-10 pr-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none focus:border-highland transition-colors bg-white/80"
@@ -359,7 +447,10 @@ const Donate: React.FC = () => {
 										</div>
 										<div>
 											<label className="block text-tara font-poppins font-semibold mb-2">
-												CVV <span className="text-red-500">*</span>
+												CVV{" "}
+												<span className="text-red-500">
+													*
+												</span>
 											</label>
 											<div className="relative">
 												<FontAwesomeIcon
