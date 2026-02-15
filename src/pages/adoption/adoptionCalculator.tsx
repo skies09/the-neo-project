@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { dogAPI, Dog } from "../../services/api";
+import { dogAPI, Dog, breedsAPI } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -19,8 +19,8 @@ export default function Adoption() {
 	const [answers, setAnswers] = useState<Record<string, any>>({
 		size: "",
 		gender: "",
-		age_min: undefined,
-		age_max: undefined,
+		age_min: null,
+		age_max: null,
 		good_with_dogs: undefined,
 		good_with_cats: undefined,
 		good_with_children: undefined,
@@ -33,8 +33,24 @@ export default function Adoption() {
 	const [currentDogIndex, setCurrentDogIndex] = useState(0);
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
+	const [breedOptions, setBreedOptions] = useState<{ value: string; label: string }[]>([]);
 	const resultsRef = useRef<HTMLDivElement>(null);
 	const { showToast } = useToast();
+
+	// Fetch breeds for the breed dropdown
+	useEffect(() => {
+		breedsAPI
+			.getAllBreeds()
+			.then((breeds) => {
+				const options = breeds
+					.map((b) => ({ value: b.breed, label: b.breed }))
+					.sort((a, b) => a.label.localeCompare(b.label));
+				setBreedOptions(options);
+			})
+			.catch((err) => {
+				console.error("Failed to fetch breeds:", err);
+			});
+	}, []);
 
 	// Auto-scroll to results when dogs are found
 	useEffect(() => {
@@ -63,6 +79,10 @@ export default function Adoption() {
 			// For select with null option (is_crossbreed), undefined means not answered
 			if (question.field === "is_crossbreed") {
 				return value !== undefined;
+			}
+			// Breed is optional (empty string = no preference)
+			if (question.field === "breed") {
+				return true;
 			}
 			return value !== "" && value !== undefined;
 		}
@@ -334,7 +354,37 @@ export default function Adoption() {
 
 									{/* Question Options */}
 									<div className="space-y-4">
-										{currentQuestion.type === "text" ? (
+										{currentQuestion.field === "breed" ? (
+											// Breed dropdown (options from API)
+											<div className="max-w-2xl mx-auto">
+												<select
+													value={
+														getCurrentValue(
+															currentQuestion.field
+														) || ""
+													}
+													onChange={(e) =>
+														handleAnswer(
+															currentQuestion,
+															e.target.value
+														)
+													}
+													className="w-full px-6 py-4 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none focus:ring-2 focus:ring-highland transition-colors bg-gradient-to-r from-tara to-mintCream text-oxfordBlue"
+												>
+													<option value="">
+														No preference
+													</option>
+													{breedOptions.map((opt) => (
+														<option
+															key={opt.value}
+															value={opt.value}
+														>
+															{opt.label}
+														</option>
+													))}
+												</select>
+											</div>
+										) : currentQuestion.type === "text" ? (
 											// Text input
 											<div className="max-w-2xl mx-auto">
 												<input
@@ -580,7 +630,7 @@ export default function Adoption() {
 						>
 							<div className="w-20 h-20 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl">
 								<FontAwesomeIcon
-									icon={faHeart}
+									icon={["fas", "heart"]}
 									className="text-3xl text-honeydew"
 								/>
 							</div>
@@ -704,8 +754,8 @@ export default function Adoption() {
 									setAnswers({
 										size: "",
 										gender: "",
-										age_min: undefined,
-										age_max: undefined,
+										age_min: null,
+										age_max: null,
 										good_with_dogs: undefined,
 										good_with_cats: undefined,
 										good_with_children: undefined,

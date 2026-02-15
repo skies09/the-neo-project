@@ -398,4 +398,3 @@ const KennelPartnership: React.FC = () => {
 };
 
 export default KennelPartnership;
-

@@ -39,14 +39,14 @@ export const questions: Question[] = [
 		options: [
 			{
 				value: "XS",
-				label: "XS - Extra Small (Under 10 kg / 20 lbs)",
+				label: "XS - Extra Small (Under 10 kg)",
 			},
-			{ value: "S", label: "S - Small (10-15 kg / 20-30 lbs)" },
-			{ value: "M", label: "M - Medium (15-25 kg / 30-55 lbs)" },
-			{ value: "L", label: "L - Large (25-40 kg / 55-90 lbs)" },
+			{ value: "S", label: "S - Small (10-15 kg)" },
+			{ value: "M", label: "M - Medium (15-25 kg)" },
+			{ value: "L", label: "L - Large (25-40 kg)" },
 			{
 				value: "XL",
-				label: "XL - Extra Large (Over 40 kg / 90 lbs)",
+				label: "XL - Extra Large (Over 40 kg)",
 			},
 		],
 	},
@@ -146,12 +146,13 @@ export const questions: Question[] = [
 	{
 		id: "breed",
 		label: "Do you have a specific breed in mind?",
-		helpText:
-			"Leave blank if no preference. The system will match partial breed names, so 'Retriever' will match 'Golden Retriever' and 'Labrador Retriever'.",
+		helpText: "Select a breed from the list, or choose “No preference” to see all dogs.",
 		icon: faDog,
-		type: "text",
+		type: "select",
 		field: "breed",
-		placeholder: "e.g., Golden Retriever, Labrador, German Shepherd",
+		options: [
+			{ value: "", label: "No preference" },
+		],
 	},
 	{
 		id: "is_crossbreed",
@@ -166,4 +167,13 @@ export const questions: Question[] = [
 		],
 	},
 ];
+
+
+
+
+
+
+
+
+
 
