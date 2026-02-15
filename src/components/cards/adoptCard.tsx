@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Dog } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,6 +12,8 @@ import {
 	faPhone,
 	faMapMarkerAlt,
 	faBuilding,
+	faImage,
+	faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { getSizeDisplayName } from "../../helpers/sizeUtils";
 
@@ -20,223 +22,210 @@ interface AdoptionCardProps {
 }
 
 const AdoptionCard = ({ dog }: AdoptionCardProps) => {
-	const [isFlipped, setIsFlipped] = useState(false);
+	const [showContactModal, setShowContactModal] = useState(false);
 
 	const getDogName = (string: string) => {
 		if (!string) return "";
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	};
 
+	const kennel = dog.kennel as {
+		contact_number?: string;
+		address_line_1?: string;
+		city?: string;
+		town?: string;
+	} & typeof dog.kennel;
+
 	return (
-		<div className="flex items-center justify-center p-2 w-full">
-			<div
-				className="relative w-full max-w-4xl cursor-pointer perspective-1000"
-				onClick={() => setIsFlipped(!isFlipped)}
-			>
-				{/* Front and Back Container */}
-				<motion.div
-					className="relative w-full"
-					initial={{ rotateY: 0 }}
-					animate={{ rotateY: isFlipped ? 180 : 0 }}
-					transition={{ duration: 0.8, ease: "easeInOut" }}
-					style={{ transformStyle: "preserve-3d" }}
-				>
-					{/* Front Side */}
-					<div
-						className="w-full text-center backface-hidden"
-						style={{ 
-							backfaceVisibility: "hidden"
-						}}
-					>
-						<motion.div
-							className="overflow-hidden shadow-lg rounded-2xl bg-gradient-to-br from-tara to-mintCream w-full hover:shadow-xl transition-all duration-200"
-							whileHover={{ scale: 1.01 }}
-							transition={{ duration: 0.2 }}
-						>
-							{dog.image && (
-								<div className="relative overflow-hidden">
-									<img
-										className="w-full h-64 md:h-80 object-cover rounded-t-2xl transition-transform duration-300 hover:scale-105"
-										src={
-											process.env.REACT_APP_LOCAL +
-											dog.image
-										}
-										alt={dog.name}
-									/>
-									<div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-t-2xl"></div>
-								</div>
+		<>
+			<div className="w-full max-w-4xl mx-auto h-full flex">
+				<div className="overflow-hidden rounded-2xl bg-gradient-to-br from-tara to-mintCream shadow-xl border-2 border-oxfordBlue/10 hover:shadow-2xl transition-shadow duration-300 p-6 md:p-8 flex flex-col min-h-[320px] w-full">
+					{/* Top row: circular profile image (top left) + name & details */}
+					<div className="flex gap-4 md:gap-6 items-start flex-1 min-h-0">
+						{/* Circle image - profile style, top left */}
+						<div className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-oxfordBlue/20 bg-oxfordBlue/10 flex items-center justify-center">
+							{dog.image ? (
+								<img
+									className="w-full h-full object-cover"
+									src={
+										process.env.REACT_APP_LOCAL +
+										dog.image
+									}
+									alt={dog.name}
+								/>
+							) : (
+								<FontAwesomeIcon
+									icon={faImage}
+									className="text-2xl md:text-3xl text-oxfordBlue/40"
+								/>
 							)}
-							<div className="p-6 md:p-8">
-								<p className="font-delius font-bold text-2xl md:text-3xl mb-4 text-oxfordBlue text-center">
-									{getDogName(dog.name)}
-								</p>
-								<div className="space-y-2 mb-4">
-									<div className="flex justify-between items-center">
-										<span className="text-oxfordBlue/70 font-poppins text-sm flex items-center">
-											<FontAwesomeIcon
-												icon={faVenusMars}
-												className="mr-2 text-tara"
-											/>
-											Gender:
-										</span>
-										<span className="font-semibold font-poppins text-oxfordBlue">
-											{dog.gender}
-										</span>
-									</div>
-									<div className="flex justify-between items-center">
-										<span className="text-oxfordBlue/70 font-poppins text-sm flex items-center">
-											<FontAwesomeIcon
-												icon={faBirthdayCake}
-												className="mr-2 text-tara"
-											/>
-											Age:
-										</span>
-										<span className="font-semibold font-poppins text-oxfordBlue">
-											{dog.age} years
-										</span>
-									</div>
-									<div className="flex justify-between items-center">
-										<span className="text-oxfordBlue/70 font-poppins text-sm flex items-center">
-											<FontAwesomeIcon
-												icon={faPaw}
-												className="mr-2 text-tara"
-											/>
-											Breed:
-										</span>
-										<span className="font-semibold font-poppins text-oxfordBlue">
-											{dog.breed}
-										</span>
-									</div>
-									<div className="flex justify-between items-center">
-										<span className="text-oxfordBlue/70 font-poppins text-sm flex items-center">
-											<FontAwesomeIcon
-												icon={faRuler}
-												className="mr-2 text-tara"
-											/>
-											Size:
-										</span>
-										<span className="font-semibold font-poppins text-oxfordBlue">
-											{getSizeDisplayName(dog.size)}
-										</span>
-									</div>
-								</div>
-								<button
-									className="w-full group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset text-xl"
-								>
-									<div className="flex items-center justify-center space-x-3 relative z-10">
-										<FontAwesomeIcon
-											icon={faHeart}
-											className="text-lg"
-										/>
-										<span>Adopt Me</span>
-									</div>
-								</button>
-							</div>
-						</motion.div>
+						</div>
+
+						{/* Content beside the image */}
+						<div className="flex-1 min-w-0">
+							<h2 className="font-delius font-bold text-2xl md:text-3xl text-oxfordBlue mb-4">
+								{getDogName(dog.name)}
+							</h2>
+
+							<ul className="space-y-2 text-sm">
+								<li className="flex items-center justify-between gap-3">
+									<span className="text-oxfordBlue/70 font-poppins flex items-center gap-2">
+										<FontAwesomeIcon icon={faVenusMars} className="text-highland w-4" />
+										Gender
+									</span>
+									<span className="font-semibold font-poppins text-oxfordBlue">
+										{dog.gender}
+									</span>
+								</li>
+								<li className="flex items-center justify-between gap-3">
+									<span className="text-oxfordBlue/70 font-poppins flex items-center gap-2">
+										<FontAwesomeIcon icon={faBirthdayCake} className="text-highland w-4" />
+										Age
+									</span>
+									<span className="font-semibold font-poppins text-oxfordBlue">
+										{dog.age} years
+									</span>
+								</li>
+								<li className="flex items-center justify-between gap-3">
+									<span className="text-oxfordBlue/70 font-poppins flex items-center gap-2">
+										<FontAwesomeIcon icon={faPaw} className="text-highland w-4" />
+										Breed
+									</span>
+									<span className="font-semibold font-poppins text-oxfordBlue">
+										{dog.breed}
+									</span>
+								</li>
+								<li className="flex items-center justify-between gap-3">
+									<span className="text-oxfordBlue/70 font-poppins flex items-center gap-2">
+										<FontAwesomeIcon icon={faRuler} className="text-highland w-4" />
+										Size
+									</span>
+									<span className="font-semibold font-poppins text-oxfordBlue">
+										{getSizeDisplayName(dog.size)}
+									</span>
+								</li>
+							</ul>
+						</div>
 					</div>
 
-					{/* Back Side */}
-					<div
-						className="absolute top-0 left-0 w-full text-center backface-hidden"
-						style={{
-							backfaceVisibility: "hidden",
-							transform: "rotateY(180deg)",
-						}}
+					{/* Grey border, Adopt Me button - 11/12 width with x padding */}
+					<div className="w-11/12 mx-auto mt-4 pt-4 border-t border-oxfordBlue/20 px-4 md:px-6">
+						<button
+							type="button"
+							onClick={() => setShowContactModal(true)}
+							className="w-full bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-xl font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:opacity-95 flex items-center justify-center gap-2 text-lg"
+						>
+							<FontAwesomeIcon icon={faHeart} className="text-lg" />
+							Adopt Me
+						</button>
+					</div>
+				</div>
+			</div>
+
+			{/* Contact modal: dog info + kennel details */}
+			<AnimatePresence>
+				{showContactModal && (
+					<motion.div
+						className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						onClick={() => setShowContactModal(false)}
 					>
 						<motion.div
-							className="overflow-hidden shadow-lg rounded-2xl bg-gradient-to-br from-tara to-mintCream w-full hover:shadow-xl transition-all duration-200"
-							whileHover={{ scale: 1.01 }}
-							transition={{ duration: 0.2 }}
+							className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-2xl border-2 border-oxfordBlue/20 max-w-lg w-full max-h-[90vh] overflow-y-auto"
+							initial={{ scale: 0.95, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							exit={{ scale: 0.95, opacity: 0 }}
+							onClick={(e) => e.stopPropagation()}
 						>
-							{dog.image && (
-								<div className="relative overflow-hidden">
-									<img
-										className="w-full h-64 md:h-80 object-cover rounded-t-2xl transition-transform duration-300 hover:scale-105"
-										src={
-											process.env.REACT_APP_LOCAL +
-											dog.image
-										}
-										alt={dog.name}
-									/>
-									<div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-t-2xl"></div>
-								</div>
-							)}
-							<div className="p-6 md:p-8">
-								<p className="font-delius font-bold text-2xl md:text-3xl mb-4 text-oxfordBlue text-center">
-									{dog.kennel.name}
-								</p>
-								<div className="space-y-2 mb-4">
-									<div className="flex justify-between items-center">
-										<span className="text-oxfordBlue/70 font-poppins text-sm flex items-center">
-											<FontAwesomeIcon
-												icon={faEnvelope}
-												className="mr-2 text-tara"
-											/>
-											Email:
-										</span>
-										<span className="font-semibold font-poppins text-oxfordBlue truncate ml-2">
-											{dog.kennel.email}
-										</span>
-									</div>
-									<div className="flex justify-between items-center">
-										<span className="text-oxfordBlue/70 font-poppins text-sm flex items-center">
-											<FontAwesomeIcon
-												icon={faPhone}
-												className="mr-2 text-tara"
-											/>
-											Phone:
-										</span>
-										<span className="font-semibold font-poppins text-oxfordBlue">
-											{(dog.kennel as any).contact_number ||
-												"Not provided"}
-										</span>
-									</div>
-									<div className="flex justify-between items-center">
-										<span className="text-oxfordBlue/70 font-poppins text-sm flex items-center">
-											<FontAwesomeIcon
-												icon={faMapMarkerAlt}
-												className="mr-2 text-tara"
-											/>
-											Address:
-										</span>
-										<span className="font-semibold font-poppins text-oxfordBlue text-xs">
-											{(dog.kennel as any).address_line_1 ||
-												"Not provided"}
-										</span>
-									</div>
-									<div className="flex justify-between items-center">
-										<span className="text-oxfordBlue/70 font-poppins text-sm flex items-center">
-											<FontAwesomeIcon
-												icon={faBuilding}
-												className="mr-2 text-tara"
-											/>
-											Location:
-										</span>
-										<span className="font-semibold font-poppins text-oxfordBlue text-xs">
-											{(dog.kennel as any).city ||
-												(dog.kennel as any).town ||
-												"Not provided"}
-										</span>
-									</div>
-								</div>
+							<div className="p-6 md:p-8 relative">
 								<button
-									className="w-full group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-6 py-3 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+									type="button"
+									onClick={() => setShowContactModal(false)}
+									className="absolute top-4 right-4 text-oxfordBlue/70 hover:text-oxfordBlue transition-colors p-1"
+									aria-label="Close"
 								>
-									<div className="flex items-center justify-center space-x-2 relative z-10">
-										<FontAwesomeIcon
-											icon={faPhone}
-											className="text-sm"
-										/>
-										<span>Contact Kennel</span>
+									<FontAwesomeIcon icon={faTimes} className="text-xl" />
+								</button>
+
+								{/* Dog info */}
+								<div className="flex gap-4 mb-6">
+									<div className="flex-shrink-0 w-16 h-16 rounded-full overflow-hidden border-2 border-oxfordBlue/20 bg-oxfordBlue/10 flex items-center justify-center">
+										{dog.image ? (
+											<img
+												className="w-full h-full object-cover"
+												src={process.env.REACT_APP_LOCAL + dog.image}
+												alt={dog.name}
+											/>
+										) : (
+											<FontAwesomeIcon icon={faImage} className="text-xl text-oxfordBlue/40" />
+										)}
 									</div>
-									<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+									<div className="flex-1 min-w-0">
+										<h3 className="font-delius font-bold text-xl text-oxfordBlue mb-2">
+											{getDogName(dog.name)}
+										</h3>
+										<ul className="space-y-1 text-sm text-oxfordBlue/80 font-poppins">
+											<li>{dog.gender} · {dog.age} years</li>
+											<li>{dog.breed} · {getSizeDisplayName(dog.size)}</li>
+										</ul>
+									</div>
+								</div>
+
+								{/* Kennel contact details */}
+								<div className="pt-4 border-t border-oxfordBlue/20">
+									<h4 className="font-poppins font-semibold text-oxfordBlue mb-3">
+										{kennel.name}
+									</h4>
+									<div className="space-y-2 text-sm">
+										{kennel.email && (
+											<div className="flex items-center gap-2 text-oxfordBlue">
+												<FontAwesomeIcon icon={faEnvelope} className="text-highland w-4 flex-shrink-0" />
+												<a href={`mailto:${kennel.email}`} className="font-poppins truncate hover:underline">
+													{kennel.email}
+												</a>
+											</div>
+										)}
+										{kennel.contact_number && (
+											<div className="flex items-center gap-2 text-oxfordBlue">
+												<FontAwesomeIcon icon={faPhone} className="text-highland w-4 flex-shrink-0" />
+												<a href={`tel:${kennel.contact_number}`} className="font-poppins hover:underline">
+													{kennel.contact_number}
+												</a>
+											</div>
+										)}
+										{kennel.address_line_1 && (
+											<div className="flex items-center gap-2 text-oxfordBlue">
+												<FontAwesomeIcon icon={faMapMarkerAlt} className="text-highland w-4 flex-shrink-0" />
+												<span className="font-poppins text-xs">{kennel.address_line_1}</span>
+											</div>
+										)}
+										{(kennel.city || kennel.town) && (
+											<div className="flex items-center gap-2 text-oxfordBlue">
+												<FontAwesomeIcon icon={faBuilding} className="text-highland w-4 flex-shrink-0" />
+												<span className="font-poppins text-xs">{kennel.city || kennel.town}</span>
+											</div>
+										)}
+										{!kennel.email && !kennel.contact_number && !kennel.address_line_1 && !kennel.city && !kennel.town && (
+											<p className="text-oxfordBlue/70 font-poppins text-xs">Contact details not provided</p>
+										)}
+									</div>
+								</div>
+
+								<button
+									className="mt-6 w-full bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-xl font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:opacity-95 flex items-center justify-center gap-2"
+									onClick={() => setShowContactModal(false)}
+								>
+									<FontAwesomeIcon icon={faHeart} className="text-lg" />
+									Adopt Me
 								</button>
 							</div>
 						</motion.div>
-					</div>
-				</motion.div>
-			</div>
-		</div>
+					</motion.div>
+				)}
+			</AnimatePresence>
+		</>
 	);
 };
 

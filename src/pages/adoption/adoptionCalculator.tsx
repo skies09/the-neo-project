@@ -6,6 +6,7 @@ import {
 	faSearch,
 	faArrowRight,
 	faDog,
+	faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import AdoptionCard from "../../components/cards/adoptCard";
 import { useToast } from "../../components/ToastContainer";
@@ -356,7 +357,7 @@ export default function Adoption() {
 									<div className="space-y-4">
 										{currentQuestion.field === "breed" ? (
 											// Breed dropdown (options from API)
-											<div className="max-w-2xl mx-auto">
+											<div className="max-w-2xl mx-auto relative">
 												<select
 													value={
 														getCurrentValue(
@@ -369,7 +370,7 @@ export default function Adoption() {
 															e.target.value
 														)
 													}
-													className="w-full px-6 py-4 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none focus:ring-2 focus:ring-highland transition-colors bg-gradient-to-r from-tara to-mintCream text-oxfordBlue"
+													className="w-full pl-6 pr-12 py-4 border-2 border-oxfordBlue rounded-2xl font-poppins font-semibold text-oxfordBlue focus:outline-none focus:ring-2 focus:ring-highland focus:border-highland transition-all duration-300 bg-gradient-to-r from-tara to-mintCream appearance-none cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:border-highland/70"
 												>
 													<option value="">
 														No preference
@@ -383,6 +384,12 @@ export default function Adoption() {
 														</option>
 													))}
 												</select>
+												<span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-oxfordBlue/70">
+													<FontAwesomeIcon
+														icon={faChevronDown}
+														className="text-lg"
+													/>
+												</span>
 											</div>
 										) : currentQuestion.type === "text" ? (
 											// Text input
@@ -669,7 +676,7 @@ export default function Adoption() {
 									duration: 0.4,
 									ease: "easeInOut",
 								}}
-								className="w-full"
+								className="w-full min-h-[360px]"
 							>
 								<AdoptionCard dog={dogs[currentDogIndex]} />
 							</motion.div>
