@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { dogAPI, Dog, breedsAPI } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,6 +8,7 @@ import {
 	faArrowRight,
 	faDog,
 	faChevronDown,
+	faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import AdoptionCard from "../../components/cards/adoptCard";
 import { useToast } from "../../components/ToastContainer";
@@ -34,7 +36,9 @@ export default function Adoption() {
 	const [currentDogIndex, setCurrentDogIndex] = useState(0);
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
-	const [breedOptions, setBreedOptions] = useState<{ value: string; label: string }[]>([]);
+	const [breedOptions, setBreedOptions] = useState<
+		{ value: string; label: string }[]
+	>([]);
 	const resultsRef = useRef<HTMLDivElement>(null);
 	const { showToast } = useToast();
 
@@ -139,29 +143,20 @@ export default function Adoption() {
 		setError("");
 
 		try {
-			// Build preferences object, only including non-empty/non-undefined values
-			const preferences: Record<string, any> = {};
-
-			if (answers.size) preferences.size = answers.size;
-			if (answers.gender) preferences.gender = answers.gender;
-			if (answers.age_min !== undefined)
-				preferences.age_min = answers.age_min;
-			if (answers.age_max !== undefined)
-				preferences.age_max = answers.age_max;
-			if (answers.good_with_dogs !== undefined)
-				preferences.good_with_dogs = answers.good_with_dogs;
-			if (answers.good_with_cats !== undefined)
-				preferences.good_with_cats = answers.good_with_cats;
-			if (answers.good_with_children !== undefined)
-				preferences.good_with_children = answers.good_with_children;
-			if (answers.breed) preferences.breed = answers.breed;
-			if (answers.is_crossbreed !== undefined)
-				preferences.is_crossbreed = answers.is_crossbreed;
-
-			// Check if at least one preference is provided
-			if (Object.keys(preferences).length === 0) {
-				throw new Error("Please answer at least one question");
-			}
+			// Build preferences object: pass all fields through (null/empty allowed).
+			// For good_with_* questions, use false when no preference is selected.
+			const preferences: Record<string, any> = {
+				size: answers.size ?? null,
+				gender: answers.gender || null,
+				age_min: answers.age_min ?? null,
+				age_max: answers.age_max ?? null,
+				breed: answers.breed || null,
+				good_with_dogs: answers.good_with_dogs ?? false,
+				good_with_cats: answers.good_with_cats ?? false,
+				good_with_children: answers.good_with_children ?? false,
+				// Purebred only → false; "Yes, open to crossbreeds" or "Prefer crossbreeds only" → true
+				is_crossbreed: answers.is_crossbreed === false ? false : true,
+			};
 
 			const response = await dogAPI.matchDogs(preferences);
 
@@ -192,7 +187,7 @@ export default function Adoption() {
 				});
 			} else {
 				setError(
-					"No dogs found with a match rate greater than 0%. Try adjusting your preferences to be less specific."
+					"No dogs found with a match rate greater than 0%. Try adjusting your preferences to be less specific.",
 				);
 				showToast({
 					type: "info",
@@ -356,40 +351,65 @@ export default function Adoption() {
 									{/* Question Options */}
 									<div className="space-y-4">
 										{currentQuestion.field === "breed" ? (
-											// Breed dropdown (options from API)
-											<div className="max-w-2xl mx-auto relative">
-												<select
-													value={
-														getCurrentValue(
-															currentQuestion.field
-														) || ""
-													}
-													onChange={(e) =>
-														handleAnswer(
-															currentQuestion,
-															e.target.value
-														)
-													}
-													className="w-full pl-6 pr-12 py-4 border-2 border-oxfordBlue rounded-2xl font-poppins font-semibold text-oxfordBlue focus:outline-none focus:ring-2 focus:ring-highland focus:border-highland transition-all duration-300 bg-gradient-to-r from-tara to-mintCream appearance-none cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:border-highland/70"
-												>
-													<option value="">
-														No preference
-													</option>
-													{breedOptions.map((opt) => (
-														<option
-															key={opt.value}
-															value={opt.value}
-														>
-															{opt.label}
+											// Breed dropdown (options from API) + contact link
+											<div className="max-w-2xl mx-auto space-y-3">
+												<div className="relative">
+													<select
+														value={
+															getCurrentValue(
+																currentQuestion.field,
+															) || ""
+														}
+														onChange={(e) =>
+															handleAnswer(
+																currentQuestion,
+																e.target.value,
+															)
+														}
+														className="w-full pl-6 pr-12 py-4 border-2 border-oxfordBlue rounded-2xl font-poppins font-semibold text-oxfordBlue focus:outline-none focus:ring-2 focus:ring-highland focus:border-highland transition-all duration-300 bg-gradient-to-r from-tara to-mintCream appearance-none cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:border-highland/70"
+													>
+														<option value="">
+															No preference
 														</option>
-													))}
-												</select>
-												<span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-oxfordBlue/70">
-													<FontAwesomeIcon
-														icon={faChevronDown}
-														className="text-lg"
-													/>
-												</span>
+														{breedOptions.map(
+															(opt) => (
+																<option
+																	key={
+																		opt.value
+																	}
+																	value={
+																		opt.value
+																	}
+																>
+																	{opt.label}
+																</option>
+															),
+														)}
+													</select>
+													<span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-oxfordBlue/70">
+														<FontAwesomeIcon
+															icon={faChevronDown}
+															className="text-lg"
+														/>
+													</span>
+												</div>
+												<p className="text-center mt-2">
+													<Link
+														to="/contact"
+														className="inline-flex items-center gap-2 font-poppins text-sm text-twilight hover:text-yellowOrange hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-highland focus-visible:ring-offset-2 rounded transition-colors duration-200"
+														aria-label="My breed is not in the list, go to contact form"
+													>
+														<FontAwesomeIcon
+															icon={faEnvelope}
+															className="text-xs"
+															aria-hidden
+														/>
+														<span>
+															My breed isn’t
+															listed — contact us
+														</span>
+													</Link>
+												</p>
 											</div>
 										) : currentQuestion.type === "text" ? (
 											// Text input
@@ -398,13 +418,13 @@ export default function Adoption() {
 													type="text"
 													value={
 														getCurrentValue(
-															currentQuestion.field
+															currentQuestion.field,
 														) || ""
 													}
 													onChange={(e) =>
 														handleAnswer(
 															currentQuestion,
-															e.target.value
+															e.target.value,
 														)
 													}
 													placeholder={
@@ -422,7 +442,7 @@ export default function Adoption() {
 													(option, optionIndex) => {
 														const currentValue =
 															getCurrentValue(
-																currentQuestion.field
+																currentQuestion.field,
 															);
 														const isSelected =
 															currentValue ===
@@ -447,7 +467,7 @@ export default function Adoption() {
 																	onChange={() =>
 																		handleAnswer(
 																			currentQuestion,
-																			option.value
+																			option.value,
 																		)
 																	}
 																	className="sr-only"
@@ -459,7 +479,7 @@ export default function Adoption() {
 																</span>
 															</label>
 														);
-													}
+													},
 												)}
 											</div>
 										) : (
@@ -476,7 +496,7 @@ export default function Adoption() {
 													(option, optionIndex) => {
 														const currentValue =
 															getCurrentValue(
-																currentQuestion.field
+																currentQuestion.field,
 															);
 														// For range questions, check if the range matches
 														let isSelected = false;
@@ -490,11 +510,11 @@ export default function Adoption() {
 															) {
 																const ageMin =
 																	getCurrentValue(
-																		"age_min"
+																		"age_min",
 																	);
 																const ageMax =
 																	getCurrentValue(
-																		"age_max"
+																		"age_max",
 																	);
 																isSelected =
 																	ageMin ===
@@ -527,7 +547,7 @@ export default function Adoption() {
 																	onChange={() =>
 																		handleAnswer(
 																			currentQuestion,
-																			option.value
+																			option.value,
 																		)
 																	}
 																	className="sr-only"
@@ -547,7 +567,7 @@ export default function Adoption() {
 																</span>
 															</label>
 														);
-													}
+													},
 												)}
 											</div>
 										)}
@@ -580,10 +600,10 @@ export default function Adoption() {
 													questions.length - 1
 														? "Find My Dogs"
 														: isQuestionAnswered(
-																currentQuestion
-														  )
-														? "Next"
-														: "Skip"}
+																	currentQuestion,
+															  )
+															? "Next"
+															: "Skip"}
 												</span>
 												{currentQuestionIndex !==
 													questions.length - 1 && (
@@ -651,13 +671,12 @@ export default function Adoption() {
 										{dogs.length} -{" "}
 									</span>
 								)}
-								{matchRates[dogs[currentDogIndex].id] && (
-									<span>
-										{matchRates[
-											dogs[currentDogIndex].id
-										].toFixed(1)}
-										% Match
-									</span>
+								{matchRates[dogs[currentDogIndex].id] != null && (
+									<>
+										<span className="font-semibold text-highland bg-highland/10 px-1.5 py-0.5 rounded">
+											{Math.round(matchRates[dogs[currentDogIndex].id])}%
+										</span>
+									</>
 								)}
 							</p>
 						</motion.div>
@@ -699,7 +718,7 @@ export default function Adoption() {
 										setMatchRates({});
 										setCurrentDogIndex(0);
 										setError(
-											"No more matches available. Try adjusting your preferences to see more options."
+											"No more matches available. Try adjusting your preferences to see more options.",
 										);
 										showToast({
 											type: "info",

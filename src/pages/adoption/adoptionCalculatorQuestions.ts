@@ -146,13 +146,12 @@ export const questions: Question[] = [
 	{
 		id: "breed",
 		label: "Do you have a specific breed in mind?",
-		helpText: "Select a breed from the list, or choose “No preference” to see all dogs.",
+		helpText:
+			"Choose a breed from the dropdown, or select “No preference” to see all dogs.",
 		icon: faDog,
 		type: "select",
 		field: "breed",
-		options: [
-			{ value: "", label: "No preference" },
-		],
+		options: [{ value: "", label: "No preference" }],
 	},
 	{
 		id: "is_crossbreed",
@@ -161,19 +160,9 @@ export const questions: Question[] = [
 		type: "select",
 		field: "is_crossbreed",
 		options: [
-			{ value: null, label: "Yes, open to crossbreeds" },
 			{ value: false, label: "Prefer purebred only" },
 			{ value: true, label: "Prefer crossbreeds only" },
+			{ value: null, label: "Yes, open to crossbreeds" },
 		],
 	},
 ];
-
-
-
-
-
-
-
-
-
-

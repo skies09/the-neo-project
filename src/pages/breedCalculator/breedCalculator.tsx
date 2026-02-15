@@ -9,6 +9,7 @@ import {
 	faArrowRight,
 	faInfoCircle,
 	faDog,
+	faPaw,
 } from "@fortawesome/free-solid-svg-icons";
 import { questions, Question } from "./breedCalculatorQuestions";
 
