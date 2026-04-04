@@ -1,6 +1,7 @@
 import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import { getAccessToken, getRefreshToken } from "../hooks/kennel.actions";
+import { clearAuthStorage, readAuthFromStorage } from "./authStorage";
 
 const axiosService = axios.create({
 	baseURL: process.env.REACT_APP_NEO_PROJECT_BASE_URL,
@@ -67,15 +68,13 @@ const refreshAuthLogic = async (failedRequest: any) => {
 		.then((resp) => {
 			const { access } = resp.data;
 
-			// IMPORTANT: update the localStorage with new access token and keep refresh & kennel data intact
-			const authData = localStorage.getItem("auth");
-			const oldAuth = authData ? JSON.parse(authData) : {};
+			const oldAuth = readAuthFromStorage() ?? {};
 			localStorage.setItem(
 				"auth",
 				JSON.stringify({
-					access, // updated access token
-					refresh: oldAuth.refresh, // keep the same refresh token
-					kennel: oldAuth.kennel, // keep kennel info as is
+					access,
+					refresh: oldAuth.refresh,
+					kennel: oldAuth.kennel,
 				})
 			);
 
@@ -85,10 +84,7 @@ const refreshAuthLogic = async (failedRequest: any) => {
 			}
 		})
 		.catch(() => {
-			localStorage.removeItem("auth");
-			// Clear any stale authentication data
-			localStorage.removeItem("kennel");
-			// Don't automatically redirect - let the app handle auth failures gracefully
+			clearAuthStorage();
 		});
 };
 

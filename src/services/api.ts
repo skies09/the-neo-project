@@ -52,23 +52,23 @@ export interface Breed {
 	lifespan?: string | null;
 	height?: string | null;
 	weight?: string | null;
-	friendliness?: string | null;
-	family_friendly?: string | null;
-	child_friendly?: string | null;
-	pet_friendly?: string | null;
-	stranger_friendly?: string | null;
-	easy_to_groom?: string | null;
-	energy_levels?: string | null;
-	health?: string | null;
-	shedding_amount?: string | null;
-	barks_howls?: string | null;
-	easy_to_train?: string | null;
-	guard_dog?: string | null;
-	playfulness?: string | null;
-	apartment_dog?: string | null;
-	can_be_alone?: string | null;
-	good_for_busy_owners?: string | null;
-	good_for_new_owners?: string | null;
+	friendliness?: string | number | null;
+	family_friendly?: string | number | null;
+	child_friendly?: string | number | null;
+	pet_friendly?: string | number | null;
+	stranger_friendly?: string | number | null;
+	easy_to_groom?: string | number | null;
+	energy_levels?: string | number | null;
+	health?: string | number | null;
+	shedding_amount?: string | number | null;
+	barks_howls?: string | number | null;
+	easy_to_train?: string | number | null;
+	guard_dog?: string | number | null;
+	playfulness?: string | number | null;
+	apartment_dog?: string | number | null;
+	can_be_alone?: string | number | null;
+	good_for_busy_owners?: string | number | null;
+	good_for_new_owners?: string | number | null;
 	health_concerns?: string | null;
 	short_description?: string | null;
 	long_description?: string | null;
@@ -94,7 +94,9 @@ export const kennelAPI = {
 
 	// Get kennel profile
 	getProfile: (kennelPublicId: string): Promise<Kennel> => {
-		return axiosService.get(`/api/kennels/${kennelPublicId}/`);
+		return axiosService
+			.get<Kennel>(`/api/kennels/${kennelPublicId}/`)
+			.then((response) => response.data);
 	},
 
 	// Update kennel profile
@@ -102,7 +104,9 @@ export const kennelAPI = {
 		kennelPublicId: string,
 		data: Partial<Kennel>
 	): Promise<Kennel> => {
-		return axiosService.patch(`/api/kennels/${kennelPublicId}/`, data);
+		return axiosService
+			.patch<Kennel>(`/api/kennels/${kennelPublicId}/`, data)
+			.then((response) => response.data);
 	},
 
 	// Change kennel password
@@ -269,7 +273,9 @@ export const breedsAPI = {
 
 	// Get breed details
 	getBreedDetails: (breedName: string): Promise<Breed> => {
-		return axiosService.post(`/api/breeds/detail/`, { breed: breedName });
+		return axiosService
+			.post(`/api/breeds/detail/`, { breed: breedName })
+			.then((response) => response.data);
 	},
 
 	// Match breeds based on preferences

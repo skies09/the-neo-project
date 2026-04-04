@@ -1,4 +1,4 @@
-// ProtectedRoute.js
+// ProtectedRoute.tsx
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { getKennel } from "../hooks/kennel.actions";

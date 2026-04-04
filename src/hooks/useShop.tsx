@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { shopAPI } from "../services/shopApi";
+import { shopAPI, type CreateOrderData } from "../services/shopApi";
 import {
 	fetchProductsRequest,
 	fetchProductsSuccess,
@@ -286,7 +286,7 @@ export const useShop = () => {
 		}
 	};
 
-	const createOrder = async (orderData: any) => {
+	const createOrder = async (orderData: CreateOrderData) => {
 		dispatch(createOrderRequest());
 		try {
 			const response = await shopAPI.createOrder(orderData);

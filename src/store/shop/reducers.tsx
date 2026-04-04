@@ -381,20 +381,22 @@ const shopReducer = (state = initialState, action: any) => {
           error: null,
         },
       };
-    case SHOP_ACTIONS.FETCH_ORDERS_SUCCESS:
+    case SHOP_ACTIONS.FETCH_ORDERS_SUCCESS: {
+      const page = action.payload.orders;
       return {
         ...state,
         orders: {
           ...state.orders,
           loading: false,
-          items: action.payload.orders.results,
+          items: page?.results ?? [],
           pagination: {
-            count: action.payload.orders.count,
-            next: action.payload.orders.next,
-            previous: action.payload.orders.previous,
+            count: page?.count ?? 0,
+            next: page?.next ?? null,
+            previous: page?.previous ?? null,
           },
         },
       };
+    }
     case SHOP_ACTIONS.FETCH_ORDERS_FAILURE:
       return {
         ...state,

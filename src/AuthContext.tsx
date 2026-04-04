@@ -1,11 +1,11 @@
-// src/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
+import type { Kennel } from "./services/api";
 import { getKennel } from "./hooks/kennel.actions";
 
 type AuthContextType = {
 	isLoggedIn: boolean;
-	kennel: any;
-	login: (kennelData: any) => void;
+	kennel: Kennel | null;
+	login: (kennelData: Kennel) => void;
 	logout: () => void;
 };
 
@@ -16,14 +16,25 @@ type AuthProviderProps = {
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-	const [kennel, setKennel] = useState<any>(null);
+	const [kennel, setKennel] = useState<Kennel | null>(null);
 
 	useEffect(() => {
 		const storedKennel = getKennel();
 		setKennel(storedKennel);
 	}, []);
 
-	const login = (kennelData: any) => {
+	/** Log out other tabs when `auth` is cleared (e.g. refresh failure). */
+	useEffect(() => {
+		const onStorage = (e: StorageEvent) => {
+			if (e.key === "auth" && e.newValue === null) {
+				setKennel(null);
+			}
+		};
+		window.addEventListener("storage", onStorage);
+		return () => window.removeEventListener("storage", onStorage);
+	}, []);
+
+	const login = (kennelData: Kennel) => {
 		setKennel(kennelData);
 	};
 
@@ -41,4 +52,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	);
 };
 
-export const useAuth = () => useContext(AuthContext);
+export function useAuth(): AuthContextType {
+	const ctx = useContext(AuthContext);
+	if (ctx === undefined) {
+		throw new Error("useAuth must be used within an AuthProvider");
+	}
+	return ctx;
+}

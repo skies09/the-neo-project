@@ -1,4 +1,29 @@
+import type { AxiosResponse } from "axios";
 import axiosService from "../helpers/axios";
+
+async function dataOf<T>(p: Promise<AxiosResponse<T>>): Promise<T> {
+	return (await p).data;
+}
+
+function asProductList(
+	data: Product[] | PaginatedResponse<Product>
+): Product[] {
+	if (Array.isArray(data)) return data;
+	if (data && typeof data === "object" && "results" in data) {
+		return (data as PaginatedResponse<Product>).results ?? [];
+	}
+	return [];
+}
+
+function asCategoryList(
+	data: ProductCategory[] | PaginatedResponse<ProductCategory>
+): ProductCategory[] {
+	if (Array.isArray(data)) return data;
+	if (data && typeof data === "object" && "results" in data) {
+		return (data as PaginatedResponse<ProductCategory>).results ?? [];
+	}
+	return [];
+}
 
 // Types
 export interface Product {
@@ -177,23 +202,35 @@ export const shopAPI = {
 			});
 		}
 		const url = `/api/shop/products/?${params.toString()}`;
-		return axiosService.get(url);
+		return dataOf(axiosService.get<PaginatedResponse<Product>>(url));
 	},
 
 	getProduct: (id: number): Promise<Product> => {
-		return axiosService.get(`/api/shop/products/${id}/`);
+		return dataOf(axiosService.get<Product>(`/api/shop/products/${id}/`));
 	},
 
 	getFeaturedProducts: (): Promise<Product[]> => {
-		return axiosService.get(`/api/shop/products/featured/`);
+		return dataOf(
+			axiosService.get<Product[] | PaginatedResponse<Product>>(
+				`/api/shop/products/featured/`
+			)
+		).then(asProductList);
 	},
 
 	getBestsellerProducts: (): Promise<Product[]> => {
-		return axiosService.get(`/api/shop/products/bestseller/`);
+		return dataOf(
+			axiosService.get<Product[] | PaginatedResponse<Product>>(
+				`/api/shop/products/bestseller/`
+			)
+		).then(asProductList);
 	},
 
 	getProductCategories: (): Promise<ProductCategory[]> => {
-		return axiosService.get(`/api/shop/products/categories/`);
+		return dataOf(
+			axiosService.get<
+				ProductCategory[] | PaginatedResponse<ProductCategory>
+			>(`/api/shop/products/categories/`)
+		).then(asCategoryList);
 	},
 
 	// Note: Cart functionality is handled entirely on the frontend using Redux
@@ -201,30 +238,38 @@ export const shopAPI = {
 
 	// Orders
 	getOrders: (): Promise<PaginatedResponse<Order>> => {
-		return axiosService.get(`/api/shop/orders/`);
+		return dataOf(
+			axiosService.get<PaginatedResponse<Order>>(`/api/shop/orders/`)
+		);
 	},
 
 	getOrder: (id: number): Promise<Order> => {
-		return axiosService.get(`/api/shop/orders/${id}/`);
+		return dataOf(axiosService.get<Order>(`/api/shop/orders/${id}/`));
 	},
 
 	createOrder: (orderData: CreateOrderData): Promise<Order> => {
-		return axiosService.post(`/api/shop/orders/`, orderData);
+		return dataOf(
+			axiosService.post<Order>(`/api/shop/orders/`, orderData)
+		);
 	},
 
 	// Coupons
 	getCoupons: (): Promise<PaginatedResponse<Coupon>> => {
-		return axiosService.get(`/api/shop/coupons/`);
+		return dataOf(
+			axiosService.get<PaginatedResponse<Coupon>>(`/api/shop/coupons/`)
+		);
 	},
 
 	applyCoupon: (
 		code: string,
 		totalAmount: string
 	): Promise<CouponApplication> => {
-		return axiosService.post(`/api/shop/coupons/apply/`, {
-			code,
-			total_amount: totalAmount,
-		});
+		return dataOf(
+			axiosService.post<CouponApplication>(`/api/shop/coupons/apply/`, {
+				code,
+				total_amount: totalAmount,
+			})
+		);
 	},
 };
 

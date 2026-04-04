@@ -1,3 +1,9 @@
+function apiBaseUrl(): string {
+	const base = (process.env.REACT_APP_NEO_PROJECT_BASE_URL || "").trim();
+	if (!base) return "";
+	return base.endsWith("/") ? base : `${base}/`;
+}
+
 // Contact API service for handling contact form submissions
 export interface ContactFormData {
   name: string;
@@ -29,7 +35,7 @@ class ContactApiService {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = process.env.REACT_APP_NEO_PROJECT_BASE_URL || '';
+    this.baseUrl = apiBaseUrl();
   }
 
   async submitContact(contactData: ContactFormData): Promise<ContactResponse> {

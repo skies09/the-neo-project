@@ -1,70 +1,84 @@
-# Getting Started with Create React App
+# NEO Project (neo-project)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Front-end web app for dog adoption, breed discovery, kennel partners, a merchandise shop, and supporting content (blog, FAQ, contact). It talks to a separate backend API and is built with **React 18**, **TypeScript**, and **Create React App**.
 
-## Available Scripts
+## Prerequisites
 
-In the project directory, you can run:
+- **Node.js** (LTS recommended)
+- **npm** (comes with Node)
 
-### `npm start`
+## Setup
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Clone the repository and open the app directory:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+   ```bash
+   cd neo-project
+   ```
 
-### `npm test`
+2. Install dependencies:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+   ```bash
+   npm install
+   ```
 
-### `npm run build`
+3. Configure environment variables (see [Environment variables](#environment-variables)).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Start the dev server:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```bash
+   npm start
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   The app runs at [http://localhost:3000](http://localhost:3000).
 
-### `npm run eject`
+## Environment variables
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Copy `.env.example` to `.env` and set values as needed:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `REACT_APP_NEO_PROJECT_BASE_URL` | Yes (for API features) | Backend API origin, e.g. `https://api.example.com/` (trailing slash is recommended). |
+| `REACT_APP_LOCAL` | No | Optional absolute origin for static/media URLs (e.g. CDN) used in some dog imagery. |
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Create React App only exposes variables prefixed with `REACT_APP_`. Restart the dev server after changing `.env`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Scripts
 
-## Learn More
+| Command | Description |
+|---------|-------------|
+| `npm start` | Development server with hot reload. |
+| `npm run build` | Production build output in `build/`. |
+| `npm test` | Jest test runner (interactive watch mode by default). |
+| `npm run eject` | Irreversibly ejects from CRA’s single dependency — only if you need full control of webpack/Babel. |
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Tech stack
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **UI:** React 18, TypeScript, Tailwind CSS, Framer Motion, Font Awesome
+- **Data & forms:** Redux Toolkit, Redux Thunk, Formik, Yup
+- **HTTP:** Axios with token refresh (`axios-auth-refresh`) for kennel auth
+- **Routing:** React Router v6 with lazy-loaded routes and protected kennel areas
 
-### Code Splitting
+## Main routes (overview)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+| Path | Area |
+|------|------|
+| `/` | Home |
+| `/all-dogs`, `/adopt` | Adoption listings and adoption calculator |
+| `/breed-calculator`, `/breeds`, `/breeds/:breedSlug` | Breed tools and breed detail |
+| `/blog`, `/blog/:id` | Blog |
+| `/shop`, `/shop/products/:id`, `/shop/cart`, `/shop/checkout` | Shop |
+| `/kennel-account`, `/kennel-admin`, `/kennel-partnership`, `/password-reset` | Kennel partner flows |
+| `/contact`, `/faq`, `/donate`, `/support` | Site pages |
 
-### Analyzing the Bundle Size
+## Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Production builds are static files in `build/`. The repo includes **Firebase Hosting** config (`firebase.json`) with SPA rewrites so client-side routes work in production. Deploy the `build` folder according to your hosting setup.
 
-### Making a Progressive Web App
+## Tests
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Unit tests live next to source (e.g. `*.test.ts`). Run `npm test`.
 
-### Advanced Configuration
+## Learn more
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [Create React App documentation](https://create-react-app.dev/docs/getting-started/)
+- [React documentation](https://react.dev/)

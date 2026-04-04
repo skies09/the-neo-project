@@ -3,49 +3,39 @@ import { useNavigate } from "react-router-dom";
 import axiosService from "../helpers/axios";
 import { setKennel } from "../store/kennels/actions";
 import { useAuth } from "../AuthContext";
+import type { Kennel } from "../services/api";
+import { clearAuthStorage, readAuthFromStorage } from "../helpers/authStorage";
 
-interface LoginData {
-	user: any;
+interface LoginBody {
+	username: string;
+	password: string;
+}
+
+interface LoginResponse {
+	user: Kennel;
 	access: string;
 	refresh: string;
 	requires_password_reset?: boolean;
 }
 
 interface EditData {
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
-interface KennelData {
-	access: string;
-	refresh: string;
-	user: any;
-}
-
-// Hook for kennel actions
 function useKennelActions() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const auth = useAuth();
-	const loginToContext = auth?.login ?? (() => {});
+	const { login: loginToContext, logout: logoutFromContext } = useAuth();
 
-	return {
-		login,
-		logout,
-		edit,
-		resetPassword,
-	};
-
-	// Login the kennel
-	function login(data: any) {
+	const login = (data: LoginBody) => {
 		return axiosService
-			.post(`/api/auth/login/`, data)
+			.post<LoginResponse>(`/api/auth/login/`, data)
 			.then((res) => {
 				const responseData = res.data;
 				setKennelData(responseData);
 				dispatch(setKennel(responseData.user.id));
 				loginToContext(responseData.user);
 
-				// Check if password reset is required
 				if (responseData.requires_password_reset) {
 					navigate("/password-reset");
 				} else {
@@ -55,17 +45,15 @@ function useKennelActions() {
 			.catch((err) => {
 				throw err;
 			});
-	}
+	};
 
-	// Reset password for first-time login
-	function resetPassword(data: {
+	const resetPassword = (data: {
 		new_password: string;
 		confirm_password: string;
-	}) {
+	}) => {
 		return axiosService
 			.post(`/api/auth/first-time-password-reset/`, data)
 			.then((res) => {
-				// After successful password reset, navigate to kennel account
 				navigate("/kennel-account");
 				return res.data;
 			})
@@ -73,12 +61,11 @@ function useKennelActions() {
 				console.error("Password reset error:", err);
 				throw err;
 			});
-	}
+	};
 
-	// Edit kennel details
-	function edit(data: EditData, kennelPublicId: string) {
+	const edit = (data: EditData, kennelPublicId: string) => {
 		return axiosService
-			.patch(`/api/kennels/${kennelPublicId}/`, data)
+			.patch<Kennel>(`/api/kennels/${kennelPublicId}/`, data)
 			.then((res) => {
 				const accessToken = getAccessToken();
 				const refreshToken = getRefreshToken();
@@ -99,13 +86,13 @@ function useKennelActions() {
 				console.error("Edit kennel error:", err);
 				throw err;
 			});
-	}
+	};
 
-	// Logout the kennel
-	function logout() {
+	const logout = () => {
 		const refresh = getRefreshToken();
 		if (!refresh) {
-			localStorage.removeItem("auth");
+			clearAuthStorage();
+			logoutFromContext();
 			navigate("/kennel-admin");
 			return Promise.resolve();
 		}
@@ -113,48 +100,54 @@ function useKennelActions() {
 		return axiosService
 			.post(`/api/auth/logout/`, { refresh })
 			.then(() => {
-				localStorage.removeItem("auth");
+				clearAuthStorage();
+				logoutFromContext();
 				navigate("/kennel-admin");
 			})
 			.catch(() => {
-				localStorage.removeItem("auth");
+				clearAuthStorage();
+				logoutFromContext();
 				navigate("/kennel-admin");
 			});
-	}
+	};
+
+	return {
+		login,
+		logout,
+		edit,
+		resetPassword,
+	};
 }
 
-// Get the kennel from localStorage
-function getKennel() {
-	const authData = localStorage.getItem("auth");
-	if (!authData) return null;
-	const auth = JSON.parse(authData);
-	return auth?.kennel || null;
+function getKennel(): Kennel | null {
+	const auth = readAuthFromStorage();
+	const k = auth?.kennel;
+	return k && typeof k === "object" ? (k as Kennel) : null;
 }
 
-// Get access token
-function getAccessToken() {
-	const authData = localStorage.getItem("auth");
-	if (!authData) return null;
-	const auth = JSON.parse(authData);
-	return auth?.access || null;
+function getAccessToken(): string | null {
+	const auth = readAuthFromStorage();
+	const t = auth?.access;
+	return typeof t === "string" ? t : null;
 }
 
-// Get refresh token
-function getRefreshToken() {
-	const authData = localStorage.getItem("auth");
-	if (!authData) return null;
-	const auth = JSON.parse(authData);
-	return auth?.refresh || null;
+function getRefreshToken(): string | null {
+	const auth = readAuthFromStorage();
+	const t = auth?.refresh;
+	return typeof t === "string" ? t : null;
 }
 
-// Set kennel + tokens in localStorage
-function setKennelData(data: KennelData) {
+function setKennelData(data: {
+	access: string;
+	refresh: string;
+	user: Kennel;
+}) {
 	localStorage.setItem(
 		"auth",
 		JSON.stringify({
 			access: data.access,
 			refresh: data.refresh,
-			kennel: data.user, // Ensures it's accessible via getKennel()
+			kennel: data.user,
 		})
 	);
 }

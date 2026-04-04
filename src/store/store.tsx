@@ -1,5 +1,4 @@
-// src/store/store.js
-import { createStore, combineReducers } from "redux";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import dogOfTheDayReducer from "./dogOfTheDay/reducers";
 import shopReducer from "./shop/reducers";
 import {
@@ -7,42 +6,48 @@ import {
 	isStateValidForToday,
 	saveDogOfTheDayState,
 } from "./dogOfTheDay/persistence";
-import { setDogOfTheDay, setDogsOfTheDay, setLastFetchDate } from "./dogOfTheDay/actions";
+import {
+	setDogOfTheDay,
+	setDogsOfTheDay,
+	setLastFetchDate,
+} from "./dogOfTheDay/actions";
 import { loadCartState, saveCartState } from "./shop/persistence";
 import { fetchCartSuccess } from "./shop/actions";
 
-// Combine reducers to handle multiple slices of state
 const rootReducer = combineReducers({
-	// breed: breedReducer,
-	// kennel: kennelReducer,
 	dogOfTheDay: dogOfTheDayReducer,
 	shop: shopReducer,
 });
 
-// Create the Redux store with the combined reducer and Redux DevTools
-const store = createStore(
-	rootReducer,
-	(window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
-);
+export const store = configureStore({
+	reducer: rootReducer,
+	devTools: process.env.NODE_ENV !== "production",
+});
 
 const persistedDogOfTheDayState = loadDogOfTheDayState();
 
 if (
-    persistedDogOfTheDayState &&
-    isStateValidForToday(persistedDogOfTheDayState)
+	persistedDogOfTheDayState &&
+	isStateValidForToday(persistedDogOfTheDayState)
 ) {
-    if (persistedDogOfTheDayState.dogs && persistedDogOfTheDayState.dogs.length > 0) {
-        store.dispatch(setDogsOfTheDay(persistedDogOfTheDayState.dogs));
-        store.dispatch(setDogOfTheDay(persistedDogOfTheDayState.dogs[0]));
-    } else if (persistedDogOfTheDayState.dog) {
-        store.dispatch(setDogOfTheDay(persistedDogOfTheDayState.dog));
-    }
-    store.dispatch(setLastFetchDate(persistedDogOfTheDayState.lastFetchDate));
+	if (
+		persistedDogOfTheDayState.dogs &&
+		persistedDogOfTheDayState.dogs.length > 0
+	) {
+		store.dispatch(setDogsOfTheDay(persistedDogOfTheDayState.dogs));
+		store.dispatch(setDogOfTheDay(persistedDogOfTheDayState.dogs[0]));
+	} else if (persistedDogOfTheDayState.dog) {
+		store.dispatch(setDogOfTheDay(persistedDogOfTheDayState.dog));
+	}
+	store.dispatch(setLastFetchDate(persistedDogOfTheDayState.lastFetchDate));
 }
 
-// Load persisted cart state
 const persistedCartState = loadCartState();
-if (persistedCartState && persistedCartState.items && persistedCartState.items.length > 0) {
+if (
+	persistedCartState &&
+	persistedCartState.items &&
+	persistedCartState.items.length > 0
+) {
 	store.dispatch(
 		fetchCartSuccess({
 			items: persistedCartState.items,
@@ -52,7 +57,6 @@ if (persistedCartState && persistedCartState.items && persistedCartState.items.l
 	);
 }
 
-// Subscribe to store changes to persist state
 store.subscribe(() => {
 	const state = store.getState();
 	if (state.dogOfTheDay) {
@@ -67,7 +71,7 @@ store.subscribe(() => {
 	}
 });
 
-// Export the RootState type for TypeScript
 export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
 export default store;

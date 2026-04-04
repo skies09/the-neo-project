@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faCreditCard,
-	faCalendarAlt,
-	faLock,
-	faArrowLeft,
-} from "@fortawesome/free-solid-svg-icons";
-import { Cart } from "../../services/shopApi";
+import { faLock, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { Cart, type CreateOrderData, type CouponApplication } from "../../services/shopApi";
 
 interface CheckoutFormProps {
 	cart: Cart;
 	loading?: boolean;
-	onSubmit?: (orderData: any) => void;
-	appliedCoupon?: any;
+	onSubmit?: (orderData: CreateOrderData) => void;
+	appliedCoupon?: CouponApplication | null;
 	onApplyCoupon?: (code: string) => void;
 	onRemoveCoupon?: () => void;
 }
@@ -47,10 +42,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
 	const [couponCode, setCouponCode] = useState("");
 	const [useSameAddress, setUseSameAddress] = useState(true);
-	const [cardNumber, setCardNumber] = useState<string>("");
-	const [expiryDate, setExpiryDate] = useState<string>("");
-	const [cvv, setCvv] = useState<string>("");
-	const [cardholderName, setCardholderName] = useState<string>("");
 	const [errors, setErrors] = useState<Record<string, string>>({});
 
 	const ukCounties = [
@@ -64,76 +55,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 		const numPrice = typeof price === "string" ? parseFloat(price) : price;
 		if (isNaN(numPrice)) return "£0.00";
 		return `£${numPrice.toFixed(2)}`;
-	};
-
-	const formatCardNumber = (value: string) => {
-		const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
-		const matches = v.match(/\d{4,16}/g);
-		const match = (matches && matches[0]) || "";
-		const parts = [];
-		for (let i = 0, len = match.length; i < len; i += 4) {
-			parts.push(match.substring(i, i + 4));
-		}
-		if (parts.length) {
-			return parts.join(" ");
-		} else {
-			return v;
-		}
-	};
-
-	const formatExpiryDate = (value: string) => {
-		const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
-		if (v.length >= 2) {
-			return v.substring(0, 2) + "/" + v.substring(2, 4);
-		}
-		return v;
-	};
-
-	const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const formatted = formatCardNumber(e.target.value);
-		setCardNumber(formatted);
-		if (errors.cardNumber) {
-			setErrors((prev) => ({
-				...prev,
-				cardNumber: "",
-			}));
-		}
-	};
-
-	const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const formatted = formatExpiryDate(e.target.value);
-		setExpiryDate(formatted);
-		if (errors.expiryDate) {
-			setErrors((prev) => ({
-				...prev,
-				expiryDate: "",
-			}));
-		}
-	};
-
-	const handleCvvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const v = e.target.value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
-		if (v.length <= 4) {
-			setCvv(v);
-		}
-		if (errors.cvv) {
-			setErrors((prev) => ({
-				...prev,
-				cvv: "",
-			}));
-		}
-	};
-
-	const handleCardholderNameChange = (
-		e: React.ChangeEvent<HTMLInputElement>
-	) => {
-		setCardholderName(e.target.value);
-		if (errors.cardholderName) {
-			setErrors((prev) => ({
-				...prev,
-				cardholderName: "",
-			}));
-		}
 	};
 
 	const calculateTotal = () => {
@@ -234,23 +155,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 			}
 		}
 
-		// Card details validation
-		if (!cardholderName.trim()) {
-			newErrors.cardholderName = "Cardholder name is required";
-		}
-
-		if (!cardNumber || cardNumber.replace(/\s/g, "").length < 16) {
-			newErrors.cardNumber = "Please enter a valid card number";
-		}
-
-		if (!expiryDate || expiryDate.length < 5) {
-			newErrors.expiryDate = "Please enter a valid expiry date (MM/YY)";
-		}
-
-		if (!cvv || cvv.length < 3) {
-			newErrors.cvv = "Please enter a valid CVV";
-		}
-
 		setErrors(newErrors);
 		return Object.keys(newErrors).length === 0;
 	};
@@ -258,13 +162,25 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (validateForm() && onSubmit) {
-			onSubmit({
-				...formData,
-				cardholder_name: cardholderName,
-				card_number: cardNumber.replace(/\s/g, ""),
-				expiry_date: expiryDate,
-				cvv: cvv,
-			});
+			const order: CreateOrderData = {
+				shipping_first_name: formData.shipping_first_name,
+				shipping_last_name: formData.shipping_last_name,
+				shipping_address: formData.shipping_address,
+				shipping_city: formData.shipping_city,
+				shipping_county: formData.shipping_county,
+				shipping_postal_code: formData.shipping_postal_code,
+				shipping_country: formData.shipping_country,
+				shipping_phone: formData.shipping_phone,
+				billing_first_name: formData.billing_first_name,
+				billing_last_name: formData.billing_last_name,
+				billing_address: formData.billing_address,
+				billing_city: formData.billing_city,
+				billing_county: formData.billing_county,
+				billing_postal_code: formData.billing_postal_code,
+				billing_country: formData.billing_country,
+				notes: formData.notes.trim() ? formData.notes : undefined,
+			};
+			onSubmit(order);
 		}
 	};
 
@@ -664,9 +580,9 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 						/>
 					</div>
 
-					{/* Payment Information */}
+					{/* Payment — card data is not collected here (PCI). Use a provider (e.g. Stripe) when wiring payments. */}
 					<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl p-6 border-2 border-oxfordBlue/10">
-						<div className="flex items-center mb-6">
+						<div className="flex items-center mb-4">
 							<div className="w-10 h-10 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mr-3 shadow-md">
 								<FontAwesomeIcon
 									icon={faLock}
@@ -674,137 +590,15 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 								/>
 							</div>
 							<h2 className="text-xl font-semibold text-oxfordBlue font-delius">
-								Payment Information
+								Payment
 							</h2>
 						</div>
-
-						<div className="space-y-4">
-							{/* Cardholder Name */}
-							<div>
-								<label className="block text-sm font-medium text-oxfordBlue mb-2 font-poppins">
-									Cardholder Name *
-								</label>
-								<input
-									type="text"
-									value={cardholderName}
-									onChange={handleCardholderNameChange}
-									placeholder="Name on card"
-									className={`w-full px-3 py-2 border-2 rounded-full focus:outline-none focus:ring-2 focus:ring-highland focus:border-highland bg-white/80 font-poppins ${
-										errors.cardholderName
-											? "border-red-500"
-											: "border-oxfordBlue/20"
-									}`}
-								/>
-								{errors.cardholderName && (
-									<p className="text-red-500 text-sm mt-1 font-poppins">
-										{errors.cardholderName}
-									</p>
-								)}
-							</div>
-
-							{/* Card Number */}
-							<div>
-								<label className="block text-sm font-medium text-oxfordBlue mb-2 font-poppins">
-									Card Number *
-								</label>
-								<div className="relative">
-									<FontAwesomeIcon
-										icon={faCreditCard}
-										className="absolute left-3 top-1/2 transform -translate-y-1/2 text-highland"
-									/>
-									<input
-										type="text"
-										value={cardNumber}
-										onChange={handleCardNumberChange}
-										placeholder="1234 5678 9012 3456"
-										maxLength={19}
-										className={`w-full pl-10 pr-3 py-2 border-2 rounded-full focus:outline-none focus:ring-2 focus:ring-highland focus:border-highland bg-white/80 font-poppins ${
-											errors.cardNumber
-												? "border-red-500"
-												: "border-oxfordBlue/20"
-										}`}
-									/>
-								</div>
-								{errors.cardNumber && (
-									<p className="text-red-500 text-sm mt-1 font-poppins">
-										{errors.cardNumber}
-									</p>
-								)}
-							</div>
-
-							{/* Expiry and CVV */}
-							<div className="grid grid-cols-2 gap-4">
-								<div>
-									<label className="block text-sm font-medium text-oxfordBlue mb-2 font-poppins">
-										Expiry Date *
-									</label>
-									<div className="relative">
-										<FontAwesomeIcon
-											icon={faCalendarAlt}
-											className="absolute left-3 top-1/2 transform -translate-y-1/2 text-highland"
-										/>
-										<input
-											type="text"
-											value={expiryDate}
-											onChange={handleExpiryChange}
-											placeholder="MM/YY"
-											maxLength={5}
-											className={`w-full pl-10 pr-3 py-2 border-2 rounded-full focus:outline-none focus:ring-2 focus:ring-highland focus:border-highland bg-white/80 font-poppins ${
-												errors.expiryDate
-													? "border-red-500"
-													: "border-oxfordBlue/20"
-											}`}
-										/>
-									</div>
-									{errors.expiryDate && (
-										<p className="text-red-500 text-sm mt-1 font-poppins">
-											{errors.expiryDate}
-										</p>
-									)}
-								</div>
-
-								<div>
-									<label className="block text-sm font-medium text-oxfordBlue mb-2 font-poppins">
-										CVV *
-									</label>
-									<div className="relative">
-										<FontAwesomeIcon
-											icon={faLock}
-											className="absolute left-3 top-1/2 transform -translate-y-1/2 text-highland"
-										/>
-										<input
-											type="text"
-											value={cvv}
-											onChange={handleCvvChange}
-											placeholder="123"
-											maxLength={4}
-											className={`w-full pl-10 pr-3 py-2 border-2 rounded-full focus:outline-none focus:ring-2 focus:ring-highland focus:border-highland bg-white/80 font-poppins ${
-												errors.cvv
-													? "border-red-500"
-													: "border-oxfordBlue/20"
-											}`}
-										/>
-									</div>
-									{errors.cvv && (
-										<p className="text-red-500 text-sm mt-1 font-poppins">
-											{errors.cvv}
-										</p>
-									)}
-								</div>
-							</div>
-
-							{/* Security Note */}
-							<div className="flex items-start space-x-2 pt-2">
-								<FontAwesomeIcon
-									icon={faLock}
-									className="text-highland mt-1"
-								/>
-								<p className="text-xs text-oxfordBlue/60 font-poppins">
-									Your payment information is secure and
-									encrypted
-								</p>
-							</div>
-						</div>
+						<p className="text-sm text-oxfordBlue/80 font-poppins leading-relaxed">
+							Card details are not handled in this form. After you
+							place the order, complete payment using the secure
+							link or instructions you receive (or integrate a
+							provider such as Stripe on the server).
+						</p>
 					</div>
 				</div>
 
