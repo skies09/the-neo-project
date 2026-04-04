@@ -5,13 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faArrowLeft,
 	faDog,
+	faFileLines,
 	faGraduationCap,
 	faHeart,
 	faHome,
 	faInfoCircle,
+	faPaw,
 	faRuler,
 	faWeightHanging,
-	faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 import { breedsAPI, Breed } from "../../services/api";
 import { getSizeDisplayName } from "../../helpers/sizeUtils";
@@ -156,7 +157,15 @@ export default function BreedDetailPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const breedName = breedSlug ?? "";
+	const rawSlug = breedSlug?.trim() ?? "";
+	const breedName = (() => {
+		if (!rawSlug) return "";
+		try {
+			return decodeURIComponent(rawSlug);
+		} catch {
+			return rawSlug;
+		}
+	})();
 
 	useEffect(() => {
 		if (!breedName.trim()) {
@@ -303,10 +312,10 @@ export default function BreedDetailPage() {
 						</div>
 					)}
 					<div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-oxfordBlue/90 via-oxfordBlue/25 to-transparent" />
-					{/* Group — top-right tab on the image */}
+					{/* Group — same dark green pill as breed cards */}
 					<div className="absolute right-3 top-3 z-10 sm:right-4 sm:top-4 md:right-5 md:top-5">
-						<span className="inline-flex max-w-[min(calc(100vw-2.5rem),16rem)] rounded-xl border border-white/45 bg-oxfordBlue/55 px-3 py-2 font-poppins text-[10px] font-bold uppercase leading-tight tracking-wider text-honeydew shadow-lg backdrop-blur-md sm:max-w-xs sm:px-4 sm:text-xs">
-							<span className="line-clamp-2 break-words text-right">
+						<span className="inline-flex max-w-[min(calc(100vw-2.5rem),16rem)] rounded-full bg-tomThumb px-3 py-1.5 font-poppins text-[10px] font-semibold uppercase leading-tight tracking-wide text-[#ffffff] shadow-md sm:max-w-xs sm:px-3.5 sm:py-2 sm:text-[11px]">
+							<span className="line-clamp-2 break-words text-center">
 								{breed.group}
 							</span>
 						</span>
@@ -344,7 +353,7 @@ export default function BreedDetailPage() {
 				</div>
 			</div>
 
-			<div className="relative z-10 mx-auto max-w-4xl px-4 pt-0">
+			<div className="relative z-10 mx-auto max-w-4xl px-4 pt-10 sm:pt-14">
 				<button
 					type="button"
 					onClick={() => navigate(-1)}
@@ -418,43 +427,44 @@ export default function BreedDetailPage() {
 						</Section>
 					)}
 
-					{(breed.health || breed.health_concerns) && (
+					{breed.health && (
 						<Section title="Health" icon={faHeart}>
-							<div className="space-y-4">
-								{breed.health && (
-									<div>
-										<h3 className="mb-2 font-poppins text-sm font-semibold text-oxfordBlue">
-											General health
-										</h3>
-										{healthScorePct !== null ? (
-											<TraitPercentMeter
-												label="Compared with other breeds"
-												percent={healthScorePct}
-											/>
-										) : (
-											<p className="font-poppins leading-relaxed text-ink-muted">
-												{breed.health}
-											</p>
-										)}
-									</div>
-								)}
-								{breed.health_concerns && (
-									<div className="rounded-2xl border border-yellowOrange/25 bg-cherokee/30 p-5">
-										<h3 className="mb-2 flex items-center gap-2 font-poppins text-sm font-bold text-oxfordBlue">
-											<FontAwesomeIcon
-												icon={faExclamationTriangle}
-												className="text-yellowOrange"
-											/>
-											Things to discuss with your vet
-										</h3>
-										<p className="font-poppins leading-relaxed text-oxfordBlue/90">
-											{breed.health_concerns}
-										</p>
-									</div>
+							<div>
+								<h3 className="mb-2 font-poppins text-sm font-semibold text-oxfordBlue">
+									General health
+								</h3>
+								{healthScorePct !== null ? (
+									<TraitPercentMeter
+										label="Compared with other breeds"
+										percent={healthScorePct}
+									/>
+								) : (
+									<p className="font-poppins leading-relaxed text-ink-muted">
+										{breed.health}
+									</p>
 								)}
 							</div>
 						</Section>
 					)}
+
+					{breed.health_concerns && (
+						<Section title="Extra information" icon={faFileLines}>
+							<p className="whitespace-pre-wrap font-poppins leading-relaxed text-ink-muted">
+								{breed.health_concerns}
+							</p>
+						</Section>
+					)}
+
+					<p className="mt-6 border-t border-oxfordBlue/10 pt-8 text-center font-poppins text-sm text-ink-muted">
+						Something look off?{" "}
+						<Link
+							to="/contact"
+							className="font-semibold text-highland underline decoration-highland/30 underline-offset-2 transition hover:text-oxfordBlue hover:decoration-oxfordBlue/40"
+						>
+							Report an issue with this breed’s data
+						</Link>
+						.
+					</p>
 				</div>
 			</div>
 		</div>

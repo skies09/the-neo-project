@@ -4,7 +4,6 @@ import BreedCard from "../../components/cards/breedCard";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw, faList, faDog } from "@fortawesome/free-solid-svg-icons";
-import BreedDetailModal from "../../components/modals/BreedDetailModal";
 import PawLoading from "../../components/PawLoading";
 
 export default function Breeds() {
@@ -13,8 +12,6 @@ export default function Breeds() {
 	const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [selectedBreed, setSelectedBreed] = useState<Breed | null>(null);
-
 	useEffect(() => {
 		const fetchInitialData = async () => {
 			setLoading(true);
@@ -79,10 +76,6 @@ export default function Breeds() {
 		} finally {
 			setLoading(false);
 		}
-	};
-
-	const handleBreedClick = (breed: Breed) => {
-		setSelectedBreed(breed);
 	};
 
 	if (loading && groups.length === 0 && breeds.length === 0) {
@@ -225,12 +218,14 @@ export default function Breeds() {
 								All Breeds
 							</h2>
 						)}
-						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-12 justify-items-center">
+						<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
 							{breeds.map((breed) => (
 								<BreedCard
-									key={breed.id}
+									key={
+										breed.id ??
+										`${breed.breed}::${breed.group}`
+									}
 									breed={breed}
-									onClick={handleBreedClick}
 								/>
 							))}
 						</div>
@@ -251,11 +246,6 @@ export default function Breeds() {
 				)}
 			</motion.div>
 
-			{/* Breed Detail Modal */}
-			<BreedDetailModal
-				selectedBreed={selectedBreed}
-				onClose={() => setSelectedBreed(null)}
-			/>
 		</motion.div>
 	);
 }

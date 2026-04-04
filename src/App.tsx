@@ -11,6 +11,7 @@ import AllDogs from "./pages/adoption/allDogs";
 import Adoption from "./pages/adoption/adoptionCalculator";
 import BreedCalculator from "./pages/breedCalculator/breedCalculator";
 import Breeds from "./pages/breeds/breedsHome";
+import BreedDetailPage from "./pages/breeds/BreedDetailPage";
 import Contact from "./pages/contact";
 import FAQ from "./pages/faq";
 import Donate from "./pages/donate";
@@ -46,6 +47,7 @@ const App: React.FC = () => (
 				<Route path="/adopt" element={<Adoption />} />
 				<Route path="/breed-calculator" element={<BreedCalculator />} />
 				<Route path="/breeds" element={<Breeds />} />
+				<Route path="/breeds/:breedSlug" element={<BreedDetailPage />} />
 				<Route path="/contact" element={<Contact />} />
 				<Route path="/faq" element={<FAQ />} />
 				<Route path="/donate" element={<Donate />} />

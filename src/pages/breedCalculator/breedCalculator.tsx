@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { breedsAPI, Breed } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "../../components/ToastContainer";
-import BreedDetailModal from "../../components/modals/BreedDetailModal";
+import { breedDetailPath } from "../../helpers/breedRoutes";
 import {
 	faSearch,
 	faArrowRight,
@@ -43,7 +44,6 @@ export default function BreedCalculator() {
 	const [matchRates, setMatchRates] = useState<Record<string, number>>({});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
-	const [selectedBreed, setSelectedBreed] = useState<Breed | null>(null);
 	const resultsRef = useRef<HTMLDivElement>(null);
 	const { showToast } = useToast();
 	const [isDragging, setIsDragging] = useState(false);
@@ -753,12 +753,18 @@ export default function BreedCalculator() {
 					)}
 
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-						{breeds.map((breed, index) => (
+						{breeds.map((breed, index) => {
+							const match = matchRates[breed.breed];
+							const detailState =
+								match != null && Number.isFinite(match)
+									? { matchRate: match }
+									: undefined;
+							return (
 							<motion.div
 								key={
 									breed.id || breed.breed || `breed-${index}`
 								}
-								className="relative group cursor-pointer w-full max-w-xs p-2"
+								className="relative group w-full max-w-xs p-2"
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{
@@ -813,29 +819,28 @@ export default function BreedCalculator() {
 											</div>
 										</div>
 
-										{/* Action button */}
+										{/* Link to full breed page */}
 										<div className="flex-shrink-0 mt-4">
-											<button
-												onClick={(e) => {
-													e.stopPropagation();
-													setSelectedBreed(breed);
-												}}
-												className="w-full group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-3 sm:px-4 py-3 rounded-full font-fredoka font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+											<Link
+												to={breedDetailPath(breed.breed)}
+												state={detailState}
+												className="flex w-full group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-3 sm:px-4 py-3 rounded-full font-fredoka font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
 											>
-												<div className="flex items-center justify-center space-x-2 relative z-10">
+												<div className="flex flex-1 items-center justify-center space-x-2 relative z-10">
 													<FontAwesomeIcon
 														icon={faInfoCircle}
 														className="text-sm"
 													/>
 													<span>Learn More</span>
 												</div>
-												<div className="absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-											</button>
+												<div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+											</Link>
 										</div>
 									</div>
 								</motion.div>
 							</motion.div>
-						))}
+							);
+						})}
 					</div>
 
 					{error && (
@@ -860,12 +865,6 @@ export default function BreedCalculator() {
 						</motion.div>
 					)}
 				</motion.div>
-
-				{/* Breed Detail Modal */}
-				<BreedDetailModal
-					selectedBreed={selectedBreed}
-					onClose={() => setSelectedBreed(null)}
-				/>
 			</div>
 		</motion.div>
 	);
