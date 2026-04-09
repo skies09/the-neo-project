@@ -206,13 +206,13 @@ const BlogList: React.FC = () => {
 							</div>
 							<button
 								onClick={handleSearch}
-								className="bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-3 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-fredoka font-semibold"
+								className="btn-primary px-6 py-3"
 							>
 								Search
 							</button>
 							<button
 								onClick={() => setShowFilters(!showFilters)}
-								className="flex items-center space-x-2 bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-6 py-3 rounded-full hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300 font-fredoka font-semibold"
+								className="btn-secondary flex items-center space-x-2 px-6 py-3"
 							>
 								<FontAwesomeIcon icon={faFilter} />
 								<span>Filters</span>
@@ -373,15 +373,25 @@ const BlogList: React.FC = () => {
 									>
 										<Link to={`/blog/${post.public_id}`}>
 											<div className="relative">
-												{/* Placeholder for featured image */}
-												<div className="h-48 bg-gradient-to-br from-highland/20 to-sark/20 flex items-center justify-center">
-													<div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center shadow-lg">
-														<FontAwesomeIcon
-															icon={faCalendar}
-															className="text-2xl text-honeydew"
+												{post.featured_image ? (
+													<div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-highland/20 to-sark/20">
+														<img
+															src={post.featured_image}
+															alt={post.title}
+															className="absolute inset-0 h-full w-full object-cover"
+															loading="lazy"
 														/>
 													</div>
-												</div>
+												) : (
+													<div className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-highland/20 to-sark/20">
+														<div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center shadow-lg">
+															<FontAwesomeIcon
+																icon={faCalendar}
+																className="text-2xl text-honeydew"
+															/>
+														</div>
+													</div>
+												)}
 
 												{/* Category Badge */}
 												<div className="absolute top-4 left-4">

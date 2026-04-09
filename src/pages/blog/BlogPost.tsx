@@ -163,6 +163,19 @@ const BlogPostPage: React.FC = () => {
 						</div>
 					</div>
 
+					{/* Featured Image */}
+					{post.featured_image && (
+						<div className="px-8 pt-8">
+							<div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-highland/20 to-sark/20">
+								<img
+									src={post.featured_image}
+									alt={post.title}
+									className="absolute inset-0 h-full w-full object-cover"
+								/>
+							</div>
+						</div>
+					)}
+
 					{/* Content */}
 					<div className="p-8">
 						<div

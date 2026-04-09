@@ -23,15 +23,25 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, index = 0 }) => {
       whileHover={{ scale: 1.02 }}
     >
       <Link to={`/blog/${post.public_id}`}>
-        {/* Featured Image Placeholder */}
-        <div className="relative h-48 bg-gradient-to-br from-highland/20 to-sark/20 flex items-center justify-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center shadow-lg">
-            <FontAwesomeIcon
-              icon={faCalendar}
-              className="text-2xl text-honeydew"
+        {post.featured_image ? (
+          <div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-highland/20 to-sark/20">
+            <img
+              src={post.featured_image}
+              alt={post.title}
+              className="absolute inset-0 h-full w-full object-cover"
+              loading="lazy"
             />
           </div>
-        </div>
+        ) : (
+          <div className="relative flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-highland/20 to-sark/20">
+            <div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center shadow-lg">
+              <FontAwesomeIcon
+                icon={faCalendar}
+                className="text-2xl text-honeydew"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Content */}
         <div className="p-6">
