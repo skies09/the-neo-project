@@ -467,10 +467,10 @@ const KennelAdmin = () => {
 					<div className="flex flex-wrap justify-center gap-4">
 						<button
 							onClick={() => setIsLoginForm(true)}
-							className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
+							className={`px-6 py-3 ${
 								isLoginForm
-									? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
-									: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
+									? "btn-primary"
+									: "btn-secondary bg-gradient-to-r from-tara to-mintCream"
 							}`}
 						>
 							<FontAwesomeIcon icon={faUser} className="mr-2" />
@@ -478,10 +478,10 @@ const KennelAdmin = () => {
 						</button>
 						<button
 							onClick={() => setIsLoginForm(false)}
-							className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
+							className={`px-6 py-3 ${
 								!isLoginForm
-									? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
-									: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
+									? "btn-primary"
+									: "btn-secondary bg-gradient-to-r from-tara to-mintCream"
 							}`}
 						>
 							<FontAwesomeIcon
@@ -582,7 +582,7 @@ const KennelAdmin = () => {
 														loggingIn
 													}
 													type="submit"
-													className="w-full group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+													className="btn-primary w-full px-8 py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
 												>
 													<div className="flex items-center justify-center space-x-3 relative z-10">
 														{loggingIn ? (
@@ -624,7 +624,7 @@ const KennelAdmin = () => {
 										</p>
 										<Link
 											to="/Contact"
-											className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-3 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2"
+											className="btn-primary flex items-center justify-center space-x-2 px-8 py-3"
 										>
 											<FontAwesomeIcon
 												icon={faEnvelope}

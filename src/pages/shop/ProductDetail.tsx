@@ -150,7 +150,7 @@ const ProductDetail: React.FC = () => {
 						</p>
 						<button
 							onClick={() => navigate("/shop")}
-							className="bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-3 rounded-full font-fredoka font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:text-sunset"
+							className="btn-primary px-6 py-3"
 						>
 							Back to Shop
 						</button>
@@ -387,7 +387,7 @@ const ProductDetail: React.FC = () => {
 								disabled={!product.is_in_stock}
 								className={`w-full py-4 px-6 rounded-full font-semibold text-lg transition-all duration-300 font-fredoka ${
 									product.is_in_stock
-										? "bg-gradient-to-r from-highland to-sark text-honeydew hover:shadow-lg transform hover:scale-105 hover:text-sunset"
+										? "btn-primary"
 										: "bg-gray-300 text-gray-500 cursor-not-allowed"
 								}`}
 							>

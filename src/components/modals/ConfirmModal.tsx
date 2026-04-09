@@ -34,8 +34,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
 	const confirmButtonClasses =
 		confirmButtonStyle === "danger"
-			? "bg-gradient-to-r from-highland to-sark text-honeydew hover:text-sunset"
-			: "bg-gradient-to-r from-highland to-sark text-honeydew hover:text-sunset";
+			? "bg-gradient-to-r from-highland to-sark text-honeydew"
+			: "bg-gradient-to-r from-highland to-sark text-honeydew";
 
 	return (
 		<AnimatePresence>
@@ -88,7 +88,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 						<div className="flex flex-col sm:flex-row gap-3">
 							<button
 								onClick={onClose}
-								className="flex-1 group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-6 py-3 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+								className="btn-secondary flex-1 bg-gradient-to-r from-tara to-mintCream px-6 py-3 shadow-lg hover:shadow-xl"
 							>
 								<div className="flex items-center justify-center space-x-2 relative z-10">
 									<span>{cancelText}</span>
@@ -96,7 +96,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 							</button>
 							<button
 								onClick={handleConfirm}
-								className={`flex-1 group relative overflow-hidden ${confirmButtonClasses} px-6 py-3 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`}
+								className={`btn-primary flex-1 px-6 py-3 ${confirmButtonClasses}`}
 							>
 								<div className="flex items-center justify-center space-x-2 relative z-10">
 									<span>{confirmText}</span>

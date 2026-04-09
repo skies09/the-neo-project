@@ -90,7 +90,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 			<div className="text-center mt-12">
 				<button
 					onClick={() => onCategorySelect?.("")}
-					className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset"
+					className="btn-primary px-8 py-4"
 				>
 					<div className="flex items-center space-x-3 relative z-10">
 						<span>View All Products</span>

@@ -121,7 +121,7 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 								{/* Main CTA - Find Your Perfect Dog */}
 								<button
 									onClick={() => navigate("/adopt")}
-									className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-xl"
+									className="btn-primary px-6 py-4 whitespace-nowrap text-xl"
 								>
 									<div className="flex items-center space-x-3 relative z-10">
 										{showFirstButtonIcon && (
@@ -143,7 +143,7 @@ const TransitionCTA: React.FC<TransitionCTAProps> = ({
 								{!simplified && (
 									<button
 										onClick={() => navigate("/all-dogs")}
-										className="group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+										className="btn-secondary bg-gradient-to-r from-tara to-mintCream px-8 py-4 shadow-lg hover:shadow-xl"
 									>
 										<div className="flex items-center space-x-3 relative z-10">
 											<FontAwesomeIcon

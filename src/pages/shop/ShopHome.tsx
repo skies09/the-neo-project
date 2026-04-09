@@ -313,7 +313,7 @@ const ShopHome: React.FC = () => {
 												disabled={!product.is_in_stock}
 												className={`w-full py-2 px-4 rounded-full font-semibold transition-all duration-300 font-fredoka ${
 													product.is_in_stock
-														? "bg-gradient-to-r from-highland to-sark text-honeydew hover:shadow-lg transform hover:scale-105 hover:text-sunset"
+														? "btn-primary"
 														: "bg-gray-300 text-gray-500 cursor-not-allowed"
 												}`}
 											>

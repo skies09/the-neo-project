@@ -191,7 +191,7 @@ const BlogHomepage: React.FC = () => {
 						</p>
 						<Link
 							to="/blog"
-							className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset inline-flex items-center"
+							className="btn-primary inline-flex items-center px-8 py-4"
 						>
 							<span>View All Posts</span>
 							<FontAwesomeIcon

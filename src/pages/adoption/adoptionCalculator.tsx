@@ -122,6 +122,11 @@ export default function Adoption() {
 				}));
 			}
 		}
+
+		// Auto-advance after selecting an option.
+		setCurrentQuestionIndex((index) =>
+			index < questions.length - 1 ? index + 1 : index,
+		);
 	};
 
 	const handleNext = () => {
@@ -270,7 +275,7 @@ export default function Adoption() {
 						</motion.p>
 						<motion.button
 							onClick={() => setHasStarted(true)}
-							className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset text-xl"
+							className="btn-primary px-8 py-4 text-xl"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.6, delay: 0.5 }}
@@ -291,7 +296,7 @@ export default function Adoption() {
 					<>
 						{/* Progress Bar */}
 						<motion.div
-							className="mb-8"
+							className="mb-8 mt-2"
 							initial={{ opacity: 0, y: -20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.4 }}
@@ -584,7 +589,7 @@ export default function Adoption() {
 										{currentQuestionIndex > 0 && (
 											<button
 												onClick={handlePrevious}
-												className="px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:from-highland hover:to-sark hover:text-honeydew hover:border-highland"
+												className="btn-secondary px-6 py-3"
 											>
 												Previous
 											</button>
@@ -592,7 +597,7 @@ export default function Adoption() {
 
 										<button
 											onClick={handleNext}
-											className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset"
+											className="btn-primary px-8 py-4"
 										>
 											<div className="flex items-center justify-center space-x-3 relative z-10">
 												<span>
@@ -671,10 +676,16 @@ export default function Adoption() {
 										{dogs.length} -{" "}
 									</span>
 								)}
-								{matchRates[dogs[currentDogIndex].id] != null && (
+								{matchRates[dogs[currentDogIndex].id] !=
+									null && (
 									<>
 										<span className="font-semibold text-highland bg-highland/10 px-1.5 py-0.5 rounded">
-											{Math.round(matchRates[dogs[currentDogIndex].id])}%
+											{Math.round(
+												matchRates[
+													dogs[currentDogIndex].id
+												],
+											)}
+											%
 										</span>
 									</>
 								)}
@@ -793,7 +804,7 @@ export default function Adoption() {
 									setMatchRates({});
 									setCurrentDogIndex(0);
 								}}
-								className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset"
+								className="btn-primary px-8 py-4"
 							>
 								<div className="flex items-center justify-center space-x-3 relative z-10">
 									<span>Try Again</span>

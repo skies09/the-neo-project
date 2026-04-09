@@ -621,7 +621,7 @@ const UploadDogForm = ({
 									setDogToEdit && setDogToEdit(null);
 									setDogAdded(true);
 								}}
-								className="group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+								className="btn-secondary bg-gradient-to-r from-tara to-mintCream px-8 py-4 text-lg shadow-lg hover:shadow-xl"
 							>
 								<div className="flex items-center justify-center space-x-3 relative z-10">
 									<FontAwesomeIcon
@@ -633,7 +633,7 @@ const UploadDogForm = ({
 							</button>
 							<button
 								type="submit"
-								className="group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+								className="btn-secondary bg-gradient-to-r from-tara to-mintCream px-8 py-4 text-lg shadow-lg hover:shadow-xl"
 							>
 								<div className="flex items-center justify-center space-x-3 relative z-10">
 									<FontAwesomeIcon

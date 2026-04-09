@@ -69,10 +69,10 @@ const FAQ: React.FC = () => {
 									onClick={() =>
 										setSelectedCategory(category)
 									}
-									className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
+									className={`px-6 py-3 ${
 										selectedCategory === category
-											? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
-											: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
+											? "btn-primary"
+											: "btn-secondary bg-gradient-to-r from-tara to-mintCream"
 									}`}
 								>
 									{category}
@@ -187,7 +187,7 @@ const FAQ: React.FC = () => {
 						<div className="flex flex-col sm:flex-row justify-center gap-4">
 							<button 
 								onClick={() => navigate("/contact")}
-								className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset whitespace-nowrap text-xl"
+								className="btn-primary px-6 py-4 whitespace-nowrap text-xl"
 							>
 								<div className="flex items-center justify-center space-x-3 relative z-10">
 									<FontAwesomeIcon
@@ -199,7 +199,7 @@ const FAQ: React.FC = () => {
 							</button>
 							<button 
 								onClick={() => navigate("/all-dogs")}
-								className="group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+								className="btn-secondary bg-gradient-to-r from-tara to-mintCream px-8 py-4 shadow-lg hover:shadow-xl"
 							>
 								<div className="flex items-center justify-center space-x-3 relative z-10">
 									<FontAwesomeIcon

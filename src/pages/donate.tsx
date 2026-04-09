@@ -494,7 +494,7 @@ const Donate: React.FC = () => {
 									!cvv ||
 									!cardholderName
 								}
-								className="w-full group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full text-lg font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:text-honeydew"
+								className="btn-primary w-full px-8 py-4 text-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none"
 							>
 								<div className="flex items-center justify-center space-x-3 relative z-10">
 									{isDonating ? (

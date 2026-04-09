@@ -73,6 +73,14 @@ export default function BreedCalculator() {
 	};
 
 	const handleAnswer = (question: Question, value: string | number) => {
+		const autoAdvanceIfNeeded = () => {
+			if (question.type !== "slider") {
+				setCurrentQuestionIndex((index) =>
+					index < questions.length - 1 ? index + 1 : index,
+				);
+			}
+		};
+
 		// For select questions with mapping, convert the selected value to API value
 		if (
 			question.type === "select" &&
@@ -85,6 +93,7 @@ export default function BreedCalculator() {
 					...prev,
 					[question.field]: apiValue,
 				}));
+				autoAdvanceIfNeeded();
 				return;
 			}
 		}
@@ -99,6 +108,7 @@ export default function BreedCalculator() {
 				...prev,
 				[question.field]: value,
 			}));
+			autoAdvanceIfNeeded();
 			return;
 		}
 
@@ -122,6 +132,7 @@ export default function BreedCalculator() {
 			...prev,
 			[question.field]: value,
 		}));
+		autoAdvanceIfNeeded();
 	};
 
 	const handleNext = () => {
@@ -161,7 +172,7 @@ export default function BreedCalculator() {
 			// For select questions with mapping, find the option that matches the API value
 			if (question.mapping && typeof currentValue === "number") {
 				const option = question.options?.find(
-					(opt) => opt.apiValue === currentValue
+					(opt) => opt.apiValue === currentValue,
 				);
 				return option?.value || "";
 			}
@@ -180,7 +191,7 @@ export default function BreedCalculator() {
 	// Slider drag handlers
 	const getValueFromPosition = (
 		clientX: number,
-		question: Question
+		question: Question,
 	): number => {
 		if (!sliderRef.current) return 1;
 		const rect = sliderRef.current.getBoundingClientRect();
@@ -280,7 +291,7 @@ export default function BreedCalculator() {
 			} else {
 				// API returned successfully but no breeds matched (all had 0% match rate)
 				setError(
-					"No breeds found with a match rate greater than 0%. Try adjusting your preferences to be less specific."
+					"No breeds found with a match rate greater than 0%. Try adjusting your preferences to be less specific.",
 				);
 				showToast({
 					type: "info",
@@ -363,7 +374,7 @@ export default function BreedCalculator() {
 						</motion.p>
 						<motion.button
 							onClick={() => setHasStarted(true)}
-							className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset text-xl"
+							className="btn-primary px-8 py-4 text-xl"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.6, delay: 0.5 }}
@@ -384,7 +395,7 @@ export default function BreedCalculator() {
 					<>
 						{/* Progress Bar */}
 						<motion.div
-							className="mb-8"
+							className="mb-8 mt-2"
 							initial={{ opacity: 0, y: -20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.4 }}
@@ -456,7 +467,7 @@ export default function BreedCalculator() {
 													(option, optionIndex) => {
 														const displayValue =
 															getDisplayValue(
-																currentQuestion
+																currentQuestion,
 															);
 														const isSelected =
 															displayValue ===
@@ -484,7 +495,7 @@ export default function BreedCalculator() {
 																	onChange={() =>
 																		handleAnswer(
 																			currentQuestion,
-																			option.value
+																			option.value,
 																		)
 																	}
 																	className="sr-only"
@@ -504,7 +515,7 @@ export default function BreedCalculator() {
 																</span>
 															</label>
 														);
-													}
+													},
 												)}
 											</div>
 										) : (
@@ -565,7 +576,7 @@ export default function BreedCalculator() {
 														onMouseDown={(e) =>
 															handleSliderMouseDown(
 																e,
-																currentQuestion
+																currentQuestion,
 															)
 														}
 														onTouchStart={(e) => {
@@ -575,17 +586,17 @@ export default function BreedCalculator() {
 															const value =
 																getValueFromPosition(
 																	touch.clientX,
-																	currentQuestion
+																	currentQuestion,
 																);
 															handleAnswer(
 																currentQuestion,
-																value
+																value,
 															);
 														}}
 														onTouchMove={(e) =>
 															handleSliderTouchMove(
 																e,
-																currentQuestion
+																currentQuestion,
 															)
 														}
 														onTouchEnd={() =>
@@ -596,7 +607,7 @@ export default function BreedCalculator() {
 														{(() => {
 															const displayValue =
 																getDisplayValue(
-																	currentQuestion
+																	currentQuestion,
 																) as number;
 															const value =
 																displayValue > 0
@@ -614,12 +625,12 @@ export default function BreedCalculator() {
 																		left: `${percentage}%`,
 																	}}
 																	onMouseDown={(
-																		e
+																		e,
 																	) => {
 																		e.stopPropagation();
 																		handleSliderMouseDown(
 																			e,
-																			currentQuestion
+																			currentQuestion,
 																		);
 																	}}
 																>
@@ -641,7 +652,7 @@ export default function BreedCalculator() {
 												{(() => {
 													const displayValue =
 														getDisplayValue(
-															currentQuestion
+															currentQuestion,
 														) as number;
 													if (displayValue > 0) {
 														return (
@@ -674,7 +685,7 @@ export default function BreedCalculator() {
 										{currentQuestionIndex > 0 && (
 											<button
 												onClick={handlePrevious}
-												className="px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:from-highland hover:to-sark hover:text-honeydew hover:border-highland"
+												className="btn-secondary px-6 py-3"
 											>
 												Previous
 											</button>
@@ -682,7 +693,7 @@ export default function BreedCalculator() {
 
 										<button
 											onClick={handleNext}
-											className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset"
+											className="btn-primary px-8 py-4"
 										>
 											<div className="flex items-center justify-center space-x-3 relative z-10">
 												<span>
@@ -690,10 +701,10 @@ export default function BreedCalculator() {
 													questions.length - 1
 														? "Find My Breeds"
 														: isQuestionAnswered(
-																currentQuestion
-														  )
-														? "Next"
-														: "Skip"}
+																	currentQuestion,
+															  )
+															? "Next"
+															: "Skip"}
 												</span>
 												{currentQuestionIndex !==
 													questions.length - 1 && (
@@ -760,85 +771,89 @@ export default function BreedCalculator() {
 									? { matchRate: match }
 									: undefined;
 							return (
-							<motion.div
-								key={
-									breed.id || breed.breed || `breed-${index}`
-								}
-								className="relative group w-full max-w-xs p-2"
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{
-									duration: 0.6,
-									delay: 0.8 + index * 0.1,
-								}}
-							>
 								<motion.div
-									className="w-full min-h-80 bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-lg transition-all duration-200 hover:shadow-xl flex flex-col overflow-hidden"
-									whileHover={{ scale: 1.02 }}
-									whileTap={{ scale: 0.98 }}
+									key={
+										breed.id ||
+										breed.breed ||
+										`breed-${index}`
+									}
+									className="relative group w-full max-w-xs p-2"
+									initial={{ opacity: 0, y: 20 }}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{
+										duration: 0.6,
+										delay: 0.8 + index * 0.1,
+									}}
 								>
-									{/* Header with icon */}
-									<div className="h-36 relative rounded-t-2xl flex items-center justify-center pt-6 flex-shrink-0">
-										<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
-											<FontAwesomeIcon
-												icon={faDog}
-												className="text-2xl text-sunset"
-											/>
-										</div>
-									</div>
-
-									{/* Content */}
-									<div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-4 sm:pb-6 flex flex-col flex-grow min-h-0">
-										<motion.h3
-											className="font-delius font-bold text-lg sm:text-xl text-oxfordBlue text-center mb-4 min-h-[5rem] flex items-center justify-center flex-shrink-0"
-											whileHover={{ scale: 1.02 }}
-										>
-											{breed.breed}
-										</motion.h3>
-
-										<div className="space-y-2 sm:space-y-3 flex-grow flex flex-col justify-center flex-shrink-0">
-											<div className="flex items-center justify-between">
-												<span className="text-oxfordBlue/70 font-poppins text-xs sm:text-sm font-medium">
-													Group:
-												</span>
-												<span className="font-semibold font-poppins text-oxfordBlue bg-oxfordBlue/10 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
-													{breed.group}
-												</span>
-											</div>
-											<div className="flex items-center justify-between">
-												<span className="text-oxfordBlue/70 font-poppins text-xs sm:text-sm font-medium">
-													Match Score:
-												</span>
-												<span className="font-semibold font-poppins text-oxfordBlue bg-gradient-to-r from-highland to-sark text-honeydew px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
-													{matchRates[breed.breed]
-														? `${matchRates[
-																breed.breed
-														  ].toFixed(1)}%`
-														: "N/A"}
-												</span>
+									<motion.div
+										className="w-full min-h-80 bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-lg transition-all duration-200 hover:shadow-xl flex flex-col overflow-hidden"
+										whileHover={{ scale: 1.02 }}
+										whileTap={{ scale: 0.98 }}
+									>
+										{/* Header with icon */}
+										<div className="h-36 relative rounded-t-2xl flex items-center justify-center pt-6 flex-shrink-0">
+											<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
+												<FontAwesomeIcon
+													icon={faDog}
+													className="text-2xl text-sunset"
+												/>
 											</div>
 										</div>
 
-										{/* Link to full breed page */}
-										<div className="flex-shrink-0 mt-4">
-											<Link
-												to={breedDetailPath(breed.breed)}
-												state={detailState}
-												className="flex w-full group relative overflow-hidden bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-3 sm:px-4 py-3 rounded-full font-fredoka font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+										{/* Content */}
+										<div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-4 sm:pb-6 flex flex-col flex-grow min-h-0">
+											<motion.h3
+												className="font-delius font-bold text-lg sm:text-xl text-oxfordBlue text-center mb-4 min-h-[5rem] flex items-center justify-center flex-shrink-0"
+												whileHover={{ scale: 1.02 }}
 											>
-												<div className="flex flex-1 items-center justify-center space-x-2 relative z-10">
-													<FontAwesomeIcon
-														icon={faInfoCircle}
-														className="text-sm"
-													/>
-													<span>Learn More</span>
+												{breed.breed}
+											</motion.h3>
+
+											<div className="space-y-2 sm:space-y-3 flex-grow flex flex-col justify-center flex-shrink-0">
+												<div className="flex items-center justify-between">
+													<span className="text-oxfordBlue/70 font-poppins text-xs sm:text-sm font-medium">
+														Group:
+													</span>
+													<span className="font-semibold font-poppins text-oxfordBlue bg-oxfordBlue/10 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
+														{breed.group}
+													</span>
 												</div>
-												<div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-											</Link>
+												<div className="flex items-center justify-between">
+													<span className="text-oxfordBlue/70 font-poppins text-xs sm:text-sm font-medium">
+														Match Score:
+													</span>
+													<span className="font-semibold font-poppins text-oxfordBlue bg-gradient-to-r from-highland to-sark text-honeydew px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
+														{matchRates[breed.breed]
+															? `${matchRates[
+																	breed.breed
+																].toFixed(1)}%`
+															: "N/A"}
+													</span>
+												</div>
+											</div>
+
+											{/* Link to full breed page */}
+											<div className="flex-shrink-0 mt-4">
+												<Link
+													to={breedDetailPath(
+														breed.breed,
+													)}
+													state={detailState}
+													className="btn-secondary flex w-full bg-gradient-to-r from-tara to-mintCream px-3 py-3 text-xs shadow-lg hover:shadow-xl sm:px-4 sm:text-sm"
+												>
+													<div className="flex flex-1 items-center justify-center space-x-2 relative z-10">
+														<FontAwesomeIcon
+															icon={faInfoCircle}
+															className="text-sm"
+														/>
+														<span>Learn More</span>
+													</div>
+													<div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+												</Link>
+											</div>
 										</div>
-									</div>
+									</motion.div>
 								</motion.div>
-							</motion.div>
 							);
 						})}
 					</div>

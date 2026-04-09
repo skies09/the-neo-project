@@ -110,6 +110,13 @@ export function useAdoptionCalculator() {
 				[question.field]: value,
 			}));
 		}
+
+		// Auto-advance only for option-style questions (not sliders).
+		if (question.type !== "slider") {
+			setCurrentQuestionIndex((index) =>
+				index < questions.length - 1 ? index + 1 : index
+			);
+		}
 	}, []);
 
 	const handleSubmit = useCallback(async () => {

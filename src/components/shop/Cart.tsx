@@ -77,7 +77,7 @@ const Cart: React.FC<CartProps> = ({
 						</p>
 						<Link
 							to="/shop"
-							className="inline-block bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-3 rounded-full font-fredoka font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:text-sunset"
+							className="btn-primary inline-block px-6 py-3"
 						>
 							Continue Shopping
 						</Link>
@@ -281,7 +281,7 @@ const Cart: React.FC<CartProps> = ({
 
 						<Link
 							to="/shop/checkout"
-							className="w-full bg-gradient-to-r from-highland to-sark text-honeydew py-3 px-4 rounded-full font-fredoka font-semibold text-center block hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:text-sunset mb-4"
+							className="btn-primary mb-4 block w-full px-4 py-3 text-center"
 						>
 							Proceed to Checkout
 						</Link>

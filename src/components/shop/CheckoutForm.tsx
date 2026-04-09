@@ -763,7 +763,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
 						<button
 							type="submit"
-							className="w-full bg-gradient-to-r from-highland to-sark text-honeydew py-3 px-4 rounded-full font-fredoka font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:text-sunset"
+							className="btn-primary w-full px-4 py-3"
 						>
 							Place Order
 						</button>

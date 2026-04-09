@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+	.btn-primary {
+		@apply relative overflow-hidden rounded-full bg-gradient-to-r from-highland to-sark font-fredoka font-semibold text-honeydew shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:text-sunset focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0;
+	}
+
+	.btn-secondary {
+		@apply relative overflow-hidden rounded-full border-2 border-tomThumb bg-gradient-to-r from-tara to-mintCream font-fredoka font-semibold text-oxfordBlue transition-all duration-300 hover:scale-105 hover:bg-gradient-to-r hover:from-titan hover:to-twilight hover:text-oxfordBlue focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0;
+	}
+
+	.btn-tertiary {
+		@apply rounded-full border-0 font-fredoka font-semibold text-sark underline decoration-2 underline-offset-4 transition-all duration-300 hover:-translate-y-0.5 hover:text-highland hover:decoration-highland focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0;
+		-webkit-tap-highlight-color: transparent;
+		appearance: none;
+	}
+}
+
 html {
 	overscroll-behavior: none;
 }

@@ -121,7 +121,7 @@ const KennelPartnership: React.FC = () => {
 						</p>
 						<Link
 							to="/kennel-admin"
-							className="inline-block group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset text-lg"
+							className="btn-primary inline-block px-8 py-4 text-lg"
 						>
 							<div className="flex items-center space-x-3 relative z-10">
 								<FontAwesomeIcon
@@ -378,7 +378,7 @@ const KennelPartnership: React.FC = () => {
 							</p>
 							<Link
 								to="/kennel-admin"
-								className="inline-block group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-10 py-5 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset text-xl"
+								className="btn-primary inline-block px-10 py-5 text-xl"
 							>
 								<div className="flex items-center space-x-3 relative z-10">
 									<FontAwesomeIcon

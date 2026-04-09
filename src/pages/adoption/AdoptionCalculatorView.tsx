@@ -86,7 +86,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 						<motion.button
 							type="button"
 							onClick={() => setHasStarted(true)}
-							className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset text-xl"
+							className="btn-primary px-8 py-4 text-xl"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.6, delay: 0.5 }}
@@ -105,7 +105,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 				{hasStarted && !loading && dogs.length === 0 && (
 					<>
 						<motion.div
-							className="mb-8"
+							className="mb-8 mt-2"
 							initial={{ opacity: 0, y: -20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.4 }}
@@ -166,13 +166,13 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 													options={breedOptions}
 													value={
 														(getCurrentValue(
-															currentQuestion.field
+															currentQuestion.field,
 														) as string) || ""
 													}
 													onChange={(v) =>
 														handleAnswer(
 															currentQuestion,
-															v
+															v,
 														)
 													}
 													emptyLabel="No preference"
@@ -201,13 +201,13 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 													type="text"
 													value={
 														(getCurrentValue(
-															currentQuestion.field
+															currentQuestion.field,
 														) as string) || ""
 													}
 													onChange={(e) =>
 														handleAnswer(
 															currentQuestion,
-															e.target.value
+															e.target.value,
 														)
 													}
 													placeholder={
@@ -224,7 +224,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 													(option, optionIndex) => {
 														const currentValue =
 															getCurrentValue(
-																currentQuestion.field
+																currentQuestion.field,
 															);
 														const isSelected =
 															currentValue ===
@@ -249,7 +249,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 																	onChange={() =>
 																		handleAnswer(
 																			currentQuestion,
-																			option.value
+																			option.value,
 																		)
 																	}
 																	className="sr-only"
@@ -261,7 +261,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 																</span>
 															</label>
 														);
-													}
+													},
 												)}
 											</div>
 										) : (
@@ -277,7 +277,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 													(option, optionIndex) => {
 														const currentValue =
 															getCurrentValue(
-																currentQuestion.field
+																currentQuestion.field,
 															);
 														let isSelected = false;
 														if (
@@ -289,11 +289,11 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 															) {
 																const ageMin =
 																	getCurrentValue(
-																		"age_min"
+																		"age_min",
 																	);
 																const ageMax =
 																	getCurrentValue(
-																		"age_max"
+																		"age_max",
 																	);
 																isSelected =
 																	ageMin ===
@@ -326,7 +326,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 																	onChange={() =>
 																		handleAnswer(
 																			currentQuestion,
-																			option.value
+																			option.value,
 																		)
 																	}
 																	className="sr-only"
@@ -346,7 +346,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 																</span>
 															</label>
 														);
-													}
+													},
 												)}
 											</div>
 										)}
@@ -363,7 +363,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 											<button
 												type="button"
 												onClick={handlePrevious}
-												className="px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:from-highland hover:to-sark hover:text-honeydew hover:border-highland"
+												className="btn-secondary px-6 py-3"
 											>
 												Previous
 											</button>
@@ -372,7 +372,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 										<button
 											type="button"
 											onClick={handleNext}
-											className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset"
+											className="btn-primary px-8 py-4"
 										>
 											<div className="flex items-center justify-center space-x-3 relative z-10">
 												<span>
@@ -380,7 +380,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 													questions.length - 1
 														? "Find My Dogs"
 														: isQuestionAnswered(
-																	currentQuestion
+																	currentQuestion,
 															  )
 															? "Next"
 															: "Skip"}
@@ -448,10 +448,13 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 										{dogs.length} -{" "}
 									</span>
 								)}
-								{matchRates[dogs[currentDogIndex].id] != null && (
+								{matchRates[dogs[currentDogIndex].id] !=
+									null && (
 									<span className="font-semibold text-highland bg-highland/10 px-1.5 py-0.5 rounded">
 										{Math.round(
-											matchRates[dogs[currentDogIndex].id]
+											matchRates[
+												dogs[currentDogIndex].id
+											],
 										)}
 										%
 									</span>
@@ -533,7 +536,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 							<button
 								type="button"
 								onClick={resetFlow}
-								className="group relative overflow-hidden bg-gradient-to-r from-highland to-sark text-honeydew px-8 py-4 rounded-full font-fredoka font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:text-sunset"
+								className="btn-primary px-8 py-4"
 							>
 								<div className="flex items-center justify-center space-x-3 relative z-10">
 									<span>Try Again</span>
