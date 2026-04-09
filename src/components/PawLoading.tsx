@@ -6,7 +6,7 @@ const PawLoading: React.FC = () => {
 			<img
 				src="/images/pawsLoading.gif"
 				alt="Loading paw prints"
-				className="w-auto transform rotate-45"
+				className="w-auto transform rotate-50"
 			/>
 		</div>
 	);
