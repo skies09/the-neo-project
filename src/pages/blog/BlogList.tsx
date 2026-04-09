@@ -371,7 +371,7 @@ const BlogList: React.FC = () => {
 										whileHover={{ scale: 1.02 }}
 										transition={{ duration: 0.2 }}
 									>
-										<Link to={`/blog/${post.public_id}`}>
+										<Link to={`/blog/${encodeURIComponent(post.slug)}`}>
 											<div className="relative">
 												{post.featured_image ? (
 													<div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-highland/20 to-sark/20">

@@ -116,9 +116,20 @@ class BlogAPI {
 	// For compatibility with existing code that might use slug-based routing
 	async getPostBySlug(slug: string): Promise<BlogPost | null> {
 		try {
-			// Search for post by slug
-			const posts = await this.getPosts({ search: slug });
-			return posts.results[0] || null;
+			// Some APIs support /posts/<slug>/ directly (others only support public_id).
+			try {
+				return await this.request<BlogPost>(`/posts/${slug}/`);
+			} catch {
+				// Fall through to list-based lookup.
+			}
+
+			// Fetch a larger page and do an exact slug match locally.
+			const posts = await this.getPosts({ page_size: 100 });
+			return (
+				posts.results.find(
+					(post) => post.slug.toLowerCase() === slug.toLowerCase(),
+				) || null
+			);
 		} catch (error) {
 			console.error("Error fetching post by slug:", error);
 			return null;

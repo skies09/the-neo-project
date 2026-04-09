@@ -23,15 +23,15 @@ const formatContent = (content: string): string => {
 };
 
 const BlogPostPage: React.FC = () => {
-	const { id: publicId } = useParams<{ id: string }>();
+	const { slug } = useParams<{ slug: string }>();
 	const navigate = useNavigate();
 	const [post, setPost] = useState<BlogPost | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
 	const fetchPost = async () => {
-		if (!publicId) {
-			setError("Post ID not provided");
+		if (!slug) {
+			setError("Post slug not provided");
 			setLoading(false);
 			return;
 		}
@@ -40,7 +40,15 @@ const BlogPostPage: React.FC = () => {
 			setLoading(true);
 			setError(null);
 
-			const postData = await blogAPI.getPost(publicId);
+			const decodedSlug = decodeURIComponent(slug);
+			const postData = await blogAPI.getPostBySlug(decodedSlug);
+
+			if (!postData) {
+				setError("Post Not Found");
+				setPost(null);
+				return;
+			}
+
 			setPost(postData);
 		} catch (err) {
 			console.error("Error fetching post:", err);
@@ -52,7 +60,7 @@ const BlogPostPage: React.FC = () => {
 
 	useEffect(() => {
 		fetchPost();
-	}, [publicId]);
+	}, [slug]);
 
 	if (loading) {
 		return (

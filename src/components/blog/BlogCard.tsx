@@ -22,7 +22,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, index = 0 }) => {
       transition={{ duration: 0.6, delay: index * 0.1 }}
       whileHover={{ scale: 1.02 }}
     >
-      <Link to={`/blog/${post.public_id}`}>
+      <Link to={`/blog/${encodeURIComponent(post.slug)}`}>
         {post.featured_image ? (
           <div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-highland/20 to-sark/20">
             <img

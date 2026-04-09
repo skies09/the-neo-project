@@ -53,7 +53,7 @@ const App: React.FC = () => (
 				<Route path="/donate" element={<Donate />} />
 				<Route path="/support" element={<Support />} />
 				<Route path="/blog" element={<BlogList />} />
-				<Route path="/blog/:id" element={<BlogPostPage />} />
+				<Route path="/blog/:slug" element={<BlogPostPage />} />
 				<Route path="/shop" element={<ShopHome />} />
 				<Route path="/shop/products/:id" element={<ProductDetail />} />
 				<Route path="/shop/cart" element={<CartPage />} />
