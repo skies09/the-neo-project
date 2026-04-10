@@ -65,7 +65,9 @@ function FactCard({
 function TraitTextCard({ label, value }: { label: string; value: string }) {
 	return (
 		<div className="rounded-xl border border-oxfordBlue/10 bg-mintCream/80 px-4 py-3">
-			<p className="font-poppins text-xs font-medium text-ink-muted">{label}</p>
+			<p className="font-poppins text-xs font-medium text-ink-muted">
+				{label}
+			</p>
 			<p className="mt-0.5 font-poppins text-sm font-semibold text-oxfordBlue">
 				{value}
 			</p>
@@ -73,7 +75,13 @@ function TraitTextCard({ label, value }: { label: string; value: string }) {
 	);
 }
 
-function TraitPercentMeter({ label, percent }: { label: string; percent: number }) {
+function TraitPercentMeter({
+	label,
+	percent,
+}: {
+	label: string;
+	percent: number;
+}) {
 	const id = React.useId();
 	return (
 		<div className="rounded-xl border border-oxfordBlue/10 bg-mintCream/80 px-4 py-3">
@@ -114,9 +122,7 @@ function TraitDisplayRow({ label, value }: { label: string; value: unknown }) {
 	if (pct !== null) {
 		return <TraitPercentMeter label={label} percent={pct} />;
 	}
-	return (
-		<TraitTextCard label={label} value={stringifyTraitValue(value)} />
-	);
+	return <TraitTextCard label={label} value={stringifyTraitValue(value)} />;
 }
 
 function Section({
@@ -149,7 +155,9 @@ export default function BreedDetailPage() {
 	const navigate = useNavigate();
 	const state = location.state as LocationState;
 	const calculatorMatch =
-		state && typeof state.matchRate === "number" && Number.isFinite(state.matchRate)
+		state &&
+		typeof state.matchRate === "number" &&
+		Number.isFinite(state.matchRate)
 			? state.matchRate
 			: null;
 
@@ -204,11 +212,18 @@ export default function BreedDetailPage() {
 
 	if (loading) {
 		return (
-			<div className="flex min-h-screen flex-col items-center justify-center bg-mintCream pt-20">
-				<p className="mb-4 font-poppins text-lg text-oxfordBlue">
-					Loading breed…
-				</p>
-				<PawLoading />
+			<div className="relative min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16">
+				<div className="mx-auto max-w-4xl px-4 py-20">
+					<div className="text-center">
+						<PawLoading
+							message={
+								breedName.trim()
+									? `Fetching ${breedName}...`
+									: "Fetching this breed..."
+							}
+						/>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -226,18 +241,20 @@ export default function BreedDetailPage() {
 					<p className="mt-3 font-poppins text-ink-muted">{error}</p>
 					<Link
 						to="/breeds"
-						className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-highland to-sark px-8 py-3 font-fredoka font-semibold text-honeydew shadow-lg transition hover:opacity-95"
+						className="group mt-8 inline-flex items-center space-x-2 text-highland hover:text-sark transition-colors font-poppins font-semibold"
 					>
-						<FontAwesomeIcon icon={faArrowLeft} />
-						Back to breeds
+						<FontAwesomeIcon
+							icon={faArrowLeft}
+							className="group-hover:-translate-x-1 transition-transform duration-300"
+						/>
+						<span>Back to Breeds</span>
 					</Link>
 				</div>
 			</div>
 		);
 	}
 
-	const heroImage =
-		breed.landscape_image || breed.portrait_image || null;
+	const heroImage = breed.landscape_image || breed.portrait_image || null;
 
 	const physicalFacts = [
 		breed.lifespan && {
@@ -264,9 +281,10 @@ export default function BreedDetailPage() {
 		["Good with other pets", breed.pet_friendly],
 		["Stranger friendly", breed.stranger_friendly],
 		["Playfulness", breed.playfulness],
-	].filter(
-		([, v]) => v !== null && v !== undefined && v !== "",
-	) as [string, unknown][];
+	].filter(([, v]) => v !== null && v !== undefined && v !== "") as [
+		string,
+		unknown,
+	][];
 
 	const care = [
 		["Easy to groom", breed.easy_to_groom],
@@ -274,9 +292,10 @@ export default function BreedDetailPage() {
 		["Energy level", breed.energy_levels],
 		["Shedding", breed.shedding_amount],
 		["Barking / howling", breed.barks_howls],
-	].filter(
-		([, v]) => v !== null && v !== undefined && v !== "",
-	) as [string, unknown][];
+	].filter(([, v]) => v !== null && v !== undefined && v !== "") as [
+		string,
+		unknown,
+	][];
 
 	const living = [
 		["Apartment-friendly", breed.apartment_dog],
@@ -284,9 +303,10 @@ export default function BreedDetailPage() {
 		["Busy owners", breed.good_for_busy_owners],
 		["New dog owners", breed.good_for_new_owners],
 		["Watchdog / guard", breed.guard_dog],
-	].filter(
-		([, v]) => v !== null && v !== undefined && v !== "",
-	) as [string, unknown][];
+	].filter(([, v]) => v !== null && v !== undefined && v !== "") as [
+		string,
+		unknown,
+	][];
 
 	const healthScorePct = breed.health
 		? parseTraitPercent(breed.health)
@@ -314,7 +334,7 @@ export default function BreedDetailPage() {
 					<div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-oxfordBlue/90 via-oxfordBlue/25 to-transparent" />
 					{/* Group — same dark green pill as breed cards */}
 					<div className="absolute right-3 top-3 z-10 sm:right-4 sm:top-4 md:right-5 md:top-5">
-						<span className="inline-flex max-w-[min(calc(100vw-2.5rem),16rem)] rounded-full bg-tomThumb px-3 py-1.5 font-poppins text-[10px] font-semibold uppercase leading-tight tracking-wide text-[#ffffff] shadow-md sm:max-w-xs sm:px-3.5 sm:py-2 sm:text-[11px]">
+						<span className="inline-flex max-w-[min(calc(100vw-2.5rem),16rem)] rounded-full bg-gradient-to-r from-highland to-sark px-3 py-1.5 font-poppins text-[10px] font-bold uppercase leading-tight tracking-wide text-honeydew shadow-md sm:max-w-xs sm:px-3.5 sm:py-2 sm:text-[11px]">
 							<span className="line-clamp-2 break-words text-center">
 								{breed.group}
 							</span>
@@ -331,7 +351,8 @@ export default function BreedDetailPage() {
 									)}
 									{calculatorMatch != null && (
 										<span className="rounded-full bg-sunset/95 px-4 py-1.5 font-poppins text-sm font-bold text-oxfordBlue">
-											Your match: {Math.round(calculatorMatch)}%
+											Your match:{" "}
+											{Math.round(calculatorMatch)}%
 										</span>
 									)}
 								</div>
@@ -357,10 +378,13 @@ export default function BreedDetailPage() {
 				<button
 					type="button"
 					onClick={() => navigate(-1)}
-					className="mb-8 inline-flex w-fit items-center gap-2 rounded-full border-2 border-oxfordBlue/15 bg-white px-5 py-2.5 font-poppins text-sm font-semibold text-oxfordBlue shadow-sm transition hover:border-highland/35 hover:bg-mintCream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highland focus-visible:ring-offset-2"
+					className="group mb-8 inline-flex items-center space-x-2 text-highland hover:text-sark transition-colors font-poppins font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highland focus-visible:ring-offset-2 rounded"
 				>
-					<FontAwesomeIcon icon={faArrowLeft} />
-					Back
+					<FontAwesomeIcon
+						icon={faArrowLeft}
+						className="group-hover:-translate-x-1 transition-transform duration-300"
+					/>
+					<span>Back to Breeds</span>
 				</button>
 				<div className="flex flex-col gap-14">
 					{physicalFacts.length > 0 && (
@@ -391,17 +415,26 @@ export default function BreedDetailPage() {
 							</h2>
 							<div className="rounded-3xl border border-oxfordBlue/10 bg-white p-6 shadow-sm md:p-8">
 								<p className="whitespace-pre-wrap font-poppins text-base leading-relaxed text-ink-muted md:text-lg">
-									{stripLeadingInDepthHeading(breed.long_description)}
+									{stripLeadingInDepthHeading(
+										breed.long_description,
+									)}
 								</p>
 							</div>
 						</section>
 					)}
 
 					{temperament.length > 0 && (
-						<Section title="Temperament & personality" icon={faHeart}>
+						<Section
+							title="Temperament & personality"
+							icon={faHeart}
+						>
 							<div className="grid gap-3 sm:grid-cols-2">
 								{temperament.map(([label, value]) => (
-									<TraitDisplayRow key={label} label={label} value={value} />
+									<TraitDisplayRow
+										key={label}
+										label={label}
+										value={value}
+									/>
 								))}
 							</div>
 						</Section>
@@ -411,7 +444,11 @@ export default function BreedDetailPage() {
 						<Section title="Care & training" icon={faGraduationCap}>
 							<div className="grid gap-3 sm:grid-cols-2">
 								{care.map(([label, value]) => (
-									<TraitDisplayRow key={label} label={label} value={value} />
+									<TraitDisplayRow
+										key={label}
+										label={label}
+										value={value}
+									/>
 								))}
 							</div>
 						</Section>
@@ -421,7 +458,11 @@ export default function BreedDetailPage() {
 						<Section title="Home & lifestyle fit" icon={faHome}>
 							<div className="grid gap-3 sm:grid-cols-2">
 								{living.map(([label, value]) => (
-									<TraitDisplayRow key={label} label={label} value={value} />
+									<TraitDisplayRow
+										key={label}
+										label={label}
+										value={value}
+									/>
 								))}
 							</div>
 						</Section>

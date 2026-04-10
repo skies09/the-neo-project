@@ -65,12 +65,9 @@ const BlogPostPage: React.FC = () => {
 	if (loading) {
 		return (
 			<div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16 relative">
-				<PawLoading />
 				<div className="max-w-4xl mx-auto px-4 py-20">
 					<div className="text-center">
-						<p className="text-oxfordBlue/70 font-poppins">
-							Fetching blog post...
-						</p>
+						<PawLoading message="Fetching the blog post..." />
 					</div>
 				</div>
 			</div>
@@ -122,7 +119,7 @@ const BlogPostPage: React.FC = () => {
 			<div className="max-w-4xl mx-auto px-4 py-20">
 				{/* Back Button */}
 				<motion.div
-					className="mb-8"
+					className="mb-8 pl-2"
 					initial={{ opacity: 0, x: -20 }}
 					animate={{ opacity: 1, x: 0 }}
 					transition={{ duration: 0.6 }}
@@ -209,7 +206,7 @@ const BlogPostPage: React.FC = () => {
 									<Link
 										key={tag}
 										to={`/blog?tags=${tag}`}
-										className="bg-oxfordBlue/10 text-oxfordBlue px-3 py-1 rounded-full text-sm font-poppins font-medium border border-oxfordBlue/20 hover:bg-gradient-to-r hover:from-highland hover:to-sark hover:text-honeydew hover:border-highland transition-all duration-300"
+										className="bg-highland/20 text-oxfordBlue px-3 py-1 rounded-full text-sm font-poppins font-semibold border border-highland/40 hover:bg-highland/30 transition-all duration-300"
 									>
 										#{tag}
 									</Link>

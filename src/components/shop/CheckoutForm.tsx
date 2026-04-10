@@ -205,7 +205,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 			<div className="flex flex-col sm:flex-row gap-4 mb-8">
 				<Link
 					to="/shop/cart"
-					className="group flex items-center justify-center space-x-2 text-highland hover:text-sark font-medium font-poppins transition-colors duration-200"
+					className="group flex items-center justify-center space-x-2 text-highland hover:text-sark font-poppins font-semibold transition-colors"
 				>
 					<FontAwesomeIcon
 						icon={faArrowLeft}

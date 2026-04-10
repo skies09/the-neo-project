@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Dog } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faImage } from "@fortawesome/free-solid-svg-icons";
-import { getSizeDisplayName } from "../../helpers/sizeUtils";
 import KennelModal from "../modals/KennelModal";
 
 interface AdoptionCardProps {
@@ -41,14 +40,14 @@ const AdoptionCard = ({ dog }: AdoptionCardProps) => {
 				<div className="overflow-hidden rounded-3xl bg-gradient-to-br from-tara to-mintCream shadow-xl border border-oxfordBlue/15 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col w-full">
 					<div className="relative aspect-[4/3] bg-oxfordBlue/10">
 						<div className="absolute top-3 left-3 z-10 flex flex-wrap gap-2">
-							<span className="bg-honeydew/95 text-oxfordBlue text-xs font-poppins font-semibold px-3 py-1 rounded-full shadow-sm">
+							<span className="bg-gradient-to-r from-highland to-sark text-honeydew text-xs font-poppins font-bold px-3 py-1 rounded-full shadow-md">
 								{dog.age} yrs
 							</span>
-							<span className="bg-honeydew/95 text-oxfordBlue text-xs font-poppins font-semibold px-3 py-1 rounded-full shadow-sm">
-								{getSizeDisplayName(dog.size)}
+							<span className="bg-gradient-to-r from-highland to-sark text-honeydew text-xs font-poppins font-bold px-3 py-1 rounded-full shadow-md">
+								{dog.breed || "Unknown breed"}
 							</span>
 						</div>
-						<div className="absolute top-3 right-3 z-10 bg-oxfordBlue/80 text-honeydew text-xs font-poppins font-semibold px-3 py-1 rounded-full">
+						<div className="absolute top-3 right-3 z-10 bg-gradient-to-r from-highland to-sark text-honeydew text-xs font-poppins font-bold px-3 py-1 rounded-full shadow-md">
 							{dog.gender}
 						</div>
 						<div className="w-full h-full flex items-center justify-center">

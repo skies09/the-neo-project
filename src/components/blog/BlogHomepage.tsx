@@ -167,7 +167,7 @@ const BlogHomepage: React.FC = () => {
 																		key={
 																			tag
 																		}
-																		className="bg-oxfordBlue/10 text-oxfordBlue px-2 py-1 rounded-full text-xs font-poppins font-medium border border-oxfordBlue/20"
+																		className="bg-highland/20 text-oxfordBlue px-3 py-1 rounded-full text-xs font-poppins font-semibold border border-highland/40"
 																	>
 																		#{tag}
 																	</span>

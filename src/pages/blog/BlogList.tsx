@@ -118,10 +118,7 @@ const BlogList: React.FC = () => {
 			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16 relative">
 				<div className="max-w-7xl mx-auto px-4 py-20">
 					<div className="text-center">
-						<p className="text-oxfordBlue/70 font-poppins">
-							Fetching blog posts...
-						</p>
-						<PawLoading />
+						<PawLoading message="Fetching blog posts and wag-worthy stories..." />
 					</div>
 				</div>
 			</div>
@@ -222,22 +219,22 @@ const BlogList: React.FC = () => {
 						{/* Filters Panel */}
 						{showFilters && (
 							<motion.div
-								className="border-t border-gray-200 pt-4"
+								className="mt-2 border-t border-oxfordBlue/15 pt-5"
 								initial={{ opacity: 0, height: 0 }}
 								animate={{ opacity: 1, height: "auto" }}
 								transition={{ duration: 0.3 }}
 							>
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 									{/* Categories */}
-									<div>
-										<h3 className="font-semibold text-oxfordBlue mb-3 flex items-center font-poppins">
+									<div className="rounded-2xl border border-oxfordBlue/15 bg-white/80 p-4 shadow-sm">
+										<h3 className="mb-3 flex items-center pl-2 font-poppins font-semibold text-oxfordBlue">
 											<FontAwesomeIcon
 												icon={faFolder}
 												className="mr-2 text-highland"
 											/>
 											Categories
 										</h3>
-										<div className="space-y-2 max-h-40 overflow-y-auto">
+										<div className="space-y-2 max-h-48 overflow-y-auto">
 											{categories.map((category) => (
 												<button
 													key={category}
@@ -246,11 +243,11 @@ const BlogList: React.FC = () => {
 															category,
 														)
 													}
-													className={`w-full text-left px-3 py-2 rounded-full transition-all duration-300 font-poppins ${
+													className={`w-full text-left px-3 py-2 rounded-full transition-all duration-200 font-poppins font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highland/50 ${
 														selectedCategory ===
 														category
-															? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-md"
-															: "bg-white/80 text-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew border border-oxfordBlue/20"
+															? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-md border border-transparent"
+															: "bg-honeydew text-oxfordBlue border border-oxfordBlue/15 hover:bg-sprout/50 hover:border-highland/40 hover:text-oxfordBlue active:bg-sprout/70"
 													}`}
 												>
 													{category}
@@ -260,25 +257,25 @@ const BlogList: React.FC = () => {
 									</div>
 
 									{/* Tags */}
-									<div>
-										<h3 className="font-semibold text-oxfordBlue mb-3 flex items-center font-poppins">
+									<div className="rounded-2xl border border-oxfordBlue/15 bg-white/80 p-4 shadow-sm">
+										<h3 className="mb-3 flex items-center pl-2 font-poppins font-semibold text-oxfordBlue">
 											<FontAwesomeIcon
 												icon={faTag}
 												className="mr-2 text-highland"
 											/>
 											Tags
 										</h3>
-										<div className="space-y-2 max-h-40 overflow-y-auto">
+										<div className="space-y-2 max-h-48 overflow-y-auto">
 											{tags.map((tag) => (
 												<button
 													key={tag}
 													onClick={() =>
 														handleTagFilter(tag)
 													}
-													className={`w-full text-left px-3 py-2 rounded-full transition-all duration-300 font-poppins ${
+													className={`w-full text-left px-3 py-2 rounded-full transition-all duration-200 font-poppins font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highland/50 ${
 														selectedTag === tag
-															? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-md"
-															: "bg-white/80 text-oxfordBlue hover:bg-oxfordBlue hover:text-honeydew border border-oxfordBlue/20"
+															? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-md border border-transparent"
+															: "bg-honeydew text-oxfordBlue border border-oxfordBlue/15 hover:bg-sprout/50 hover:border-highland/40 hover:text-oxfordBlue active:bg-sprout/70"
 													}`}
 												>
 													#{tag}
@@ -371,12 +368,16 @@ const BlogList: React.FC = () => {
 										whileHover={{ scale: 1.02 }}
 										transition={{ duration: 0.2 }}
 									>
-										<Link to={`/blog/${encodeURIComponent(post.slug)}`}>
+										<Link
+											to={`/blog/${encodeURIComponent(post.slug)}`}
+										>
 											<div className="relative">
 												{post.featured_image ? (
 													<div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-highland/20 to-sark/20">
 														<img
-															src={post.featured_image}
+															src={
+																post.featured_image
+															}
 															alt={post.title}
 															className="absolute inset-0 h-full w-full object-cover"
 															loading="lazy"
@@ -386,7 +387,9 @@ const BlogList: React.FC = () => {
 													<div className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-highland/20 to-sark/20">
 														<div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center shadow-lg">
 															<FontAwesomeIcon
-																icon={faCalendar}
+																icon={
+																	faCalendar
+																}
 																className="text-2xl text-honeydew"
 															/>
 														</div>
@@ -440,7 +443,7 @@ const BlogList: React.FC = () => {
 																			key={
 																				tag
 																			}
-																			className="bg-oxfordBlue/10 text-oxfordBlue px-2 py-1 rounded-full text-xs font-poppins font-medium border border-oxfordBlue/20"
+																			className="bg-highland/20 text-oxfordBlue px-3 py-1 rounded-full text-xs font-poppins font-semibold border border-highland/40"
 																		>
 																			#
 																			{

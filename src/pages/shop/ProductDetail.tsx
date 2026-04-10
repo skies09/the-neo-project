@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { RootState } from "../../store/store";
 import { shopAPI } from "../../services/shopApi";
 import {
@@ -150,9 +152,13 @@ const ProductDetail: React.FC = () => {
 						</p>
 						<button
 							onClick={() => navigate("/shop")}
-							className="btn-primary px-6 py-3"
+							className="group inline-flex items-center space-x-2 text-highland hover:text-sark transition-colors font-poppins font-semibold"
 						>
-							Back to Shop
+							<FontAwesomeIcon
+								icon={faArrowLeft}
+								className="group-hover:-translate-x-1 transition-transform duration-300"
+							/>
+							<span>Back to Shop</span>
 						</button>
 					</div>
 				</div>

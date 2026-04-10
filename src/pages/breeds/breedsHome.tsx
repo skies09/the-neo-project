@@ -12,6 +12,13 @@ export default function Breeds() {
 	const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+
+	const sortBreedsAlphabetically = (breedList: Breed[]): Breed[] => {
+		return [...breedList].sort((a, b) =>
+			a.breed.localeCompare(b.breed, undefined, { sensitivity: "base" }),
+		);
+	};
+
 	useEffect(() => {
 		const fetchInitialData = async () => {
 			setLoading(true);
@@ -25,7 +32,7 @@ export default function Breeds() {
 				]);
 
 				setGroups(groupsData);
-				setBreeds(breedsData);
+				setBreeds(sortBreedsAlphabetically(breedsData));
 			} catch (error) {
 				console.error(
 					"Error fetching initial data:",
@@ -47,7 +54,7 @@ export default function Breeds() {
 
 		try {
 			const breedsData = await breedsAPI.getBreedsByGroup(group);
-			setBreeds(breedsData);
+			setBreeds(sortBreedsAlphabetically(breedsData));
 		} catch (error) {
 			console.error(
 				"Error fetching breeds:",
@@ -66,7 +73,7 @@ export default function Breeds() {
 
 		try {
 			const breedsData = await breedsAPI.getAllBreeds();
-			setBreeds(breedsData);
+			setBreeds(sortBreedsAlphabetically(breedsData));
 		} catch (error) {
 			console.error(
 				"Error fetching breeds:",
@@ -245,7 +252,6 @@ export default function Breeds() {
 					</div>
 				)}
 			</motion.div>
-
 		</motion.div>
 	);
 }

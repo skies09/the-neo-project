@@ -1,9 +1,16 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faClipboardList,
+	faGem,
+	faImage,
+	faTruckFast,
+} from "@fortawesome/free-solid-svg-icons";
 import { RootState } from "../../store/store";
 import ProductList from "../../components/shop/ProductList";
 import CategoryGrid from "../../components/shop/CategoryGrid";
-import { shopAPI } from "../../services/shopApi";
+import { shopAPI, type Product } from "../../services/shopApi";
 import {
 	fetchProductsRequest,
 	fetchProductsSuccess,
@@ -20,11 +27,18 @@ import {
 	setProductFilters,
 } from "../../store/shop/actions";
 
+function getProductDiscountLabel(product: Product): string | null {
+	if (!product.discount_percentage) return null;
+	const n = parseFloat(String(product.discount_percentage));
+	if (!Number.isFinite(n) || n <= 0) return null;
+	return `${Math.round(n)}% OFF`;
+}
+
 const ShopHome: React.FC = () => {
 	const dispatch = useDispatch();
 	const shopState = useSelector((state: RootState) => state.shop);
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(
-		null
+		null,
 	);
 	const [currentFilters, setCurrentFilters] = useState<any>({});
 
@@ -53,19 +67,22 @@ const ShopHome: React.FC = () => {
 		error: null,
 	};
 
-	const fetchProducts = useCallback(async (filters?: any) => {
-		dispatch(fetchProductsRequest());
-		try {
-			const response = await shopAPI.getProducts(filters);
-			dispatch(fetchProductsSuccess(response, response));
-		} catch (error: any) {
-			dispatch(
-				fetchProductsFailure(
-					error.message || "Failed to fetch products"
-				)
-			);
-		}
-	}, [dispatch]);
+	const fetchProducts = useCallback(
+		async (filters?: any) => {
+			dispatch(fetchProductsRequest());
+			try {
+				const response = await shopAPI.getProducts(filters);
+				dispatch(fetchProductsSuccess(response, response));
+			} catch (error: any) {
+				dispatch(
+					fetchProductsFailure(
+						error.message || "Failed to fetch products",
+					),
+				);
+			}
+		},
+		[dispatch],
+	);
 
 	const fetchFeaturedProducts = useCallback(async () => {
 		dispatch(fetchFeaturedProductsRequest());
@@ -75,8 +92,8 @@ const ShopHome: React.FC = () => {
 		} catch (error: any) {
 			dispatch(
 				fetchFeaturedProductsFailure(
-					error.message || "Failed to fetch bestseller products"
-				)
+					error.message || "Failed to fetch bestseller products",
+				),
 			);
 		}
 	}, [dispatch]);
@@ -89,8 +106,8 @@ const ShopHome: React.FC = () => {
 		} catch (error: any) {
 			dispatch(
 				fetchCategoriesFailure(
-					error.message || "Failed to fetch categories"
-				)
+					error.message || "Failed to fetch categories",
+				),
 			);
 		}
 	}, [dispatch]);
@@ -111,7 +128,7 @@ const ShopHome: React.FC = () => {
 			if (product) {
 				// Check if product already exists in cart
 				const existingItemIndex = cart.items.findIndex(
-					(item: any) => item.product === productId
+					(item: any) => item.product === productId,
 				);
 
 				let updatedItems;
@@ -120,19 +137,21 @@ const ShopHome: React.FC = () => {
 
 				if (existingItemIndex >= 0) {
 					// Update existing item quantity
-					updatedItems = cart.items.map((item: any, index: number) => {
-						if (index === existingItemIndex) {
-							const newQuantity = item.quantity + quantity;
-							return {
-								...item,
-								quantity: newQuantity,
-								total_price: (
-									parseFloat(item.price) * newQuantity
-								).toFixed(2),
-							};
-						}
-						return item;
-					});
+					updatedItems = cart.items.map(
+						(item: any, index: number) => {
+							if (index === existingItemIndex) {
+								const newQuantity = item.quantity + quantity;
+								return {
+									...item,
+									quantity: newQuantity,
+									total_price: (
+										parseFloat(item.price) * newQuantity
+									).toFixed(2),
+								};
+							}
+							return item;
+						},
+					);
 					newTotalItems = cart.totalItems + quantity;
 					newTotalPrice = (
 						parseFloat(cart.totalPrice) +
@@ -164,12 +183,12 @@ const ShopHome: React.FC = () => {
 						items: updatedItems,
 						total_items: newTotalItems,
 						total_price: newTotalPrice,
-					})
+					}),
 				);
 			}
 		} catch (error: any) {
 			dispatch(
-				addToCartFailure(error.message || "Failed to add item to cart")
+				addToCartFailure(error.message || "Failed to add item to cart"),
 			);
 		}
 	};
@@ -206,8 +225,8 @@ const ShopHome: React.FC = () => {
 		dispatch(
 			fetchProductsSuccess(
 				{ results: [], count: 0, next: null, previous: null },
-				{ results: [], count: 0, next: null, previous: null }
-			)
+				{ results: [], count: 0, next: null, previous: null },
+			),
 		);
 	};
 
@@ -220,25 +239,61 @@ const ShopHome: React.FC = () => {
 						The Neo Project Shop
 					</h1>
 				</div>
-				<p className="text-lg lg:text-xl text-highland font-fredoka max-w-3xl mx-auto mb-8">
-					Premium products for your beloved pets
+				<p className="mx-auto mb-8 max-w-3xl font-fredoka text-lg leading-relaxed text-highland lg:text-xl hidden lg:block">
+					Everything you’ll need for your new furry friend.
+					<br />
+					Quality picks to help them feel happy, safe, and right at
+					home.
 				</p>
-				<div className="flex justify-center space-x-4 flex-wrap gap-4">
-					<div className="bg-gradient-to-br from-tara to-mintCream rounded-full px-6 py-3 border-2 border-oxfordBlue/20 shadow-md">
-						<span className="text-sm font-medium font-poppins text-oxfordBlue">
-							Free UK Shipping
-						</span>
-					</div>
-					<div className="bg-gradient-to-br from-tara to-mintCream rounded-full px-6 py-3 border-2 border-oxfordBlue/20 shadow-md">
-						<span className="text-sm font-medium font-poppins text-oxfordBlue">
-							Premium Quality
-						</span>
-					</div>
-					<div className="bg-gradient-to-br from-tara to-mintCream rounded-full px-6 py-3 border-2 border-oxfordBlue/20 shadow-md">
-						<span className="text-sm font-medium font-poppins text-oxfordBlue">
-							Expert Curated
-						</span>
-					</div>
+
+				<p className="mx-auto mb-8 max-w-3xl font-fredoka text-lg leading-relaxed text-highland lg:text-xl lg:hidden">
+					Everything you’ll need for your new furry friend. Quality
+					picks to help them feel happy, safe, and right at home.
+				</p>
+
+				<div
+					className="mx-auto mb-2 max-w-4xl overflow-hidden rounded-2xl lg:rounded-full border border-highland/25 bg-gradient-to-r from-highland to-sark shadow-[0_10px_40px_rgba(11,37,69,0.14)]"
+					role="region"
+					aria-label="Shop benefits"
+				>
+					<ul className="flex flex-col divide-y divide-honeydew/20 sm:flex-row sm:divide-x sm:divide-y-0">
+						<li className="flex flex-1 items-center justify-center gap-3 px-5 py-4 sm:py-5">
+							<span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-honeydew/20 text-honeydew">
+								<FontAwesomeIcon
+									icon={faTruckFast}
+									className="text-lg"
+									aria-hidden
+								/>
+							</span>
+							<span className="text-left font-poppins text-sm font-semibold leading-snug text-honeydew sm:text-base">
+								Free UK shipping
+							</span>
+						</li>
+						<li className="flex flex-1 items-center justify-center gap-3 px-5 py-4 sm:py-5">
+							<span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-honeydew/20 text-honeydew">
+								<FontAwesomeIcon
+									icon={faGem}
+									className="text-lg"
+									aria-hidden
+								/>
+							</span>
+							<span className="text-left font-poppins text-sm font-semibold leading-snug text-honeydew sm:text-base">
+								Premium quality
+							</span>
+						</li>
+						<li className="flex flex-1 items-center justify-center gap-3 px-5 py-4 sm:py-5">
+							<span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-honeydew/20 text-honeydew">
+								<FontAwesomeIcon
+									icon={faClipboardList}
+									className="text-lg"
+									aria-hidden
+								/>
+							</span>
+							<span className="text-left font-poppins text-sm font-semibold leading-snug text-honeydew sm:text-base">
+								Expert curated
+							</span>
+						</li>
+					</ul>
 				</div>
 			</div>
 
@@ -255,75 +310,100 @@ const ShopHome: React.FC = () => {
 							</p>
 						</div>
 
-						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+						<div className="flex flex-wrap items-stretch justify-center gap-6">
 							{featuredProducts.items
 								?.slice(0, 4)
-								.map((product) => (
-									<div
-										key={product.id}
-										className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
-									>
-										<div className="relative">
-											{/* <img
-												src={
-													product.primary_image ||
-													"/images/dog1.jpg"
-												}
-												alt={product.name}
-												className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-											/> */}
-											<div className="absolute top-2 right-2 bg-gradient-to-r from-highland to-sark text-honeydew px-3 py-1 rounded-full text-xs font-bold font-poppins shadow-md">
-												Bestseller
-											</div>
-										</div>
-										<div className="p-4">
-											{product.brand && (
-												<div className="mb-2">
-													<span className="text-sm text-oxfordBlue/70 font-medium font-poppins">
-														{product.brand}
-													</span>
-												</div>
-											)}
-											<h3 className="text-lg font-semibold text-oxfordBlue mb-2 line-clamp-2 font-delius group-hover:text-highland transition-colors">
-												{product.name}
-											</h3>
-											<div className="flex items-center gap-2 mb-4">
-												<span className="text-xl font-bold text-oxfordBlue font-poppins">
-													£
-													{parseFloat(
-														product.price
-													).toFixed(2)}
-												</span>
-												{product.compare_price && (
-													<span className="text-sm text-oxfordBlue/50 line-through font-poppins">
-														£
-														{parseFloat(
-															product.compare_price
-														).toFixed(2)}
-													</span>
+								.map((product) => {
+									const discountLabel =
+										getProductDiscountLabel(product);
+									return (
+										<div
+											key={product.id}
+											className="group flex h-full min-h-[26rem] w-full max-w-sm shrink-0 flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-tara to-mintCream shadow-lg transition-all duration-300 hover:shadow-xl sm:min-h-[26rem] sm:w-72"
+										>
+											<div className="relative h-48 w-full shrink-0 overflow-hidden bg-gradient-to-br from-highland/20 to-sark/20">
+												{product.primary_image ? (
+													<img
+														src={
+															product.primary_image
+														}
+														alt={product.name}
+														className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+													/>
+												) : (
+													<div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-sprout/45 via-tara/35 to-mintCream/50 px-3 text-center">
+														<FontAwesomeIcon
+															icon={faImage}
+															className="text-5xl text-highland/30"
+															aria-hidden
+														/>
+													</div>
 												)}
+												{discountLabel && (
+													<div className="absolute left-2 top-2 z-10 rounded-full bg-gradient-to-r from-highland to-sark px-3 py-1 font-poppins text-xs font-bold text-honeydew shadow-md">
+														{discountLabel}
+													</div>
+												)}
+												<div className="absolute right-2 top-2 z-10 rounded-full bg-gradient-to-r from-highland to-sark px-3 py-1 font-poppins text-xs font-bold text-honeydew shadow-md">
+													Bestseller
+												</div>
 											</div>
-											<button
-												onClick={() =>
-													handleAddToCart(
-														product.id,
-														1
-													)
-												}
-												disabled={!product.is_in_stock}
-												className={`w-full py-2 px-4 rounded-full font-semibold transition-all duration-300 font-fredoka ${
-													product.is_in_stock
-														? "btn-primary"
-														: "bg-gray-300 text-gray-500 cursor-not-allowed"
-												}`}
-											>
-												{product.is_in_stock
-													? "Add to Cart"
-													: "Out of Stock"}
-											</button>
+											<div className="flex min-h-0 flex-1 flex-col p-4">
+												<div className="min-h-0 flex-1">
+													{product.brand && (
+														<div className="mb-2">
+															<span className="font-poppins text-sm font-medium text-oxfordBlue/70">
+																{product.brand}
+															</span>
+														</div>
+													)}
+													<h3 className="mb-0 line-clamp-2 font-delius text-lg font-semibold text-oxfordBlue transition-colors group-hover:text-highland">
+														{product.name}
+													</h3>
+												</div>
+												<div className="mt-auto shrink-0 pt-4">
+													<div className="mb-3 flex items-center gap-2">
+														<span className="font-poppins text-xl font-bold text-oxfordBlue">
+															£
+															{parseFloat(
+																product.price,
+															).toFixed(2)}
+														</span>
+														{product.compare_price && (
+															<span className="font-poppins text-sm text-oxfordBlue/50 line-through">
+																£
+																{parseFloat(
+																	product.compare_price,
+																).toFixed(2)}
+															</span>
+														)}
+													</div>
+													<button
+														type="button"
+														onClick={() =>
+															handleAddToCart(
+																product.id,
+																1,
+															)
+														}
+														disabled={
+															!product.is_in_stock
+														}
+														className={`w-full rounded-full px-4 py-2 font-fredoka font-semibold transition-all duration-300 ${
+															product.is_in_stock
+																? "btn-primary"
+																: "cursor-not-allowed bg-gray-300 text-gray-500"
+														}`}
+													>
+														{product.is_in_stock
+															? "Add to Cart"
+															: "Out of Stock"}
+													</button>
+												</div>
+											</div>
 										</div>
-									</div>
-								))}
+									);
+								})}
 						</div>
 					</div>
 				</div>
@@ -347,7 +427,7 @@ const ShopHome: React.FC = () => {
 						<div className="mb-8">
 							<button
 								onClick={handleBackToCategories}
-								className="group flex items-center space-x-2 text-highland hover:text-sark font-medium font-poppins transition-colors duration-200"
+								className="group flex items-center space-x-2 text-highland hover:text-sark font-poppins font-semibold transition-colors"
 							>
 								<svg
 									className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300"
@@ -372,24 +452,25 @@ const ShopHome: React.FC = () => {
 								{selectedCategory === "all"
 									? "All Products"
 									: selectedCategory
-									? categories.items?.find(
-											(cat) =>
-												cat.code === selectedCategory
-									  )?.name || "Products"
-									: "All Products"}
+										? categories.items?.find(
+												(cat) =>
+													cat.code ===
+													selectedCategory,
+											)?.name || "Products"
+										: "All Products"}
 							</h2>
 							<p className="text-lg text-highland font-fredoka">
 								{selectedCategory === "all"
 									? "Browse our complete collection of pet products"
 									: selectedCategory
-									? `Browse ${categories.items
-											?.find(
-												(cat) =>
-													cat.code ===
-													selectedCategory
-											)
-											?.name?.toLowerCase()} products`
-									: "Browse our complete collection of pet products"}
+										? `Browse ${categories.items
+												?.find(
+													(cat) =>
+														cat.code ===
+														selectedCategory,
+												)
+												?.name?.toLowerCase()} products`
+										: "Browse our complete collection of pet products"}
 							</p>
 						</div>
 

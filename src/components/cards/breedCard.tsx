@@ -67,7 +67,7 @@ const BreedCard = ({ breed, calculatorMatch }: BreedCardProps) => {
 
 				{/* Group — dark green pill (decorative; whole card is the link) */}
 				<span
-					className="pointer-events-none absolute right-3 top-3 z-10 max-w-[min(calc(100%-5rem),12rem)] truncate rounded-full bg-tomThumb px-3 py-1.5 text-center font-poppins text-[10px] font-semibold uppercase tracking-wide text-[#ffffff] shadow-md sm:right-4 sm:top-4 sm:max-w-[13rem] sm:px-3.5 sm:py-2 sm:text-[11px]"
+					className="pointer-events-none absolute right-3 top-3 z-10 max-w-[min(calc(100%-5rem),12rem)] truncate rounded-full bg-gradient-to-r from-highland to-sark px-3 py-1.5 text-center font-poppins text-[10px] font-bold uppercase tracking-wide text-honeydew shadow-md sm:right-4 sm:top-4 sm:max-w-[13rem] sm:px-3.5 sm:py-2 sm:text-[11px]"
 					title={breed.group}
 					aria-hidden="true"
 				>

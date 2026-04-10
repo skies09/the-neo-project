@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage } from "@fortawesome/free-solid-svg-icons";
 import { Product } from "../../services/shopApi";
 
 interface ProductCardProps {
@@ -24,7 +26,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
 			parseFloat(product.discount_percentage.toString()) > 0
 		) {
 			const discount = Math.round(
-				parseFloat(product.discount_percentage.toString())
+				parseFloat(product.discount_percentage.toString()),
 			);
 			return `${discount}% OFF`;
 		}
@@ -57,13 +59,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
 	return (
 		<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col">
 			{/* Product Image */}
-			<div className="relative h-72 bg-gradient-to-br from-highland/20 to-sark/20">
-				<Link to={`/shop/products/${product.id}`}>
-					{/* <img
-            src={product.primary_image || '/images/dog1.jpg'}
-            alt={product.name}
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-          /> */}
+			<div className="relative h-72 overflow-hidden bg-gradient-to-br from-highland/20 to-sark/20">
+				<Link
+					to={`/shop/products/${product.id}`}
+					className="block h-full w-full"
+				>
+					{product.primary_image ? (
+						<img
+							src={product.primary_image}
+							alt={product.name}
+							className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+						/>
+					) : (
+						<div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-sprout/45 via-tara/35 to-mintCream/50 px-3 text-center">
+							<FontAwesomeIcon
+								icon={faImage}
+								className="text-5xl text-highland/30"
+								aria-hidden
+							/>
+						</div>
+					)}
 				</Link>
 
 				{/* Bestseller Badge */}
@@ -75,8 +90,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
 
 				{/* Stock Status */}
 				{!product.is_in_stock && (
-					<div className="absolute inset-0 bg-black/50 rounded-t-2xl flex items-center justify-center">
-						<span className="text-white font-semibold text-lg font-poppins">
+					<div className="absolute inset-0 z-20 flex items-center justify-center rounded-t-2xl bg-black/50">
+						<span className="font-poppins text-lg font-semibold text-white">
 							Out of Stock
 						</span>
 					</div>

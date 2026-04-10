@@ -42,22 +42,13 @@ export default function AllDogs() {
 
 	if (loading) {
 		return (
-			<motion.div
-				className="min-h-screen pt-24 pb-16 px-4"
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-				transition={{ duration: 0.8, ease: "easeOut" }}
-			>
-				<motion.div
-					className="flex flex-col justify-center items-center font-poppins text-2xl font-bold text-oxfordBlue tracking-wider drop-shadow-md"
-					initial={{ opacity: 0, y: -20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-				>
-					Fetching dogs...
-					<PawLoading />
-				</motion.div>
-			</motion.div>
+			<div className="relative min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16">
+				<div className="mx-auto max-w-4xl px-4 py-20">
+					<div className="text-center">
+						<PawLoading message="Fetching all the dogs ready for adoption..." />
+					</div>
+				</div>
+			</div>
 		);
 	}
 
