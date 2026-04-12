@@ -108,14 +108,9 @@ const BlogList: React.FC = () => {
 		setCurrentPage(1);
 	};
 
-	const handleRetry = () => {
-		fetchPosts();
-		fetchCategoriesAndTags();
-	};
-
 	if (loading && posts.length === 0) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-skyBlue/5 to-aquamarine/5 pt-16 relative">
+			<div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16 relative">
 				<div className="max-w-7xl mx-auto px-4 py-20">
 					<div className="text-center">
 						<PawLoading message="Fetching blog posts and wag-worthy stories..." />
@@ -137,7 +132,7 @@ const BlogList: React.FC = () => {
 				>
 					<div className="flex justify-center items-center my-4">
 						<h1 className="font-delius text-4xl md:text-6xl lg:text-7xl font-bold text-oxfordBlue drop-shadow-md text-center">
-							Our Blog
+							The Neo Project Blog
 						</h1>
 					</div>
 					<p className="text-lg lg:text-xl text-highland font-fredoka max-w-4xl mx-auto mb-8">
