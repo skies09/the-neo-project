@@ -63,7 +63,7 @@ export function AdoptionCalculatorView(props: AdoptionCalculatorModel) {
 							<div className="w-24 h-24 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
 								<FontAwesomeIcon
 									icon={faDog}
-									className="text-4xl text-honeydew"
+									className="text-4xl text-sunset"
 								/>
 							</div>
 						</motion.div>

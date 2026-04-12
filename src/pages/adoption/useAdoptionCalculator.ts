@@ -69,6 +69,15 @@ export function useAdoptionCalculator() {
 		}
 	}, [dogs]);
 
+	useEffect(() => {
+		if (matchFlowError != null && resultsRef.current) {
+			resultsRef.current.scrollIntoView({
+				behavior: "smooth",
+				block: "start",
+			});
+		}
+	}, [matchFlowError]);
+
 	const getCurrentValue = useCallback(
 		(field: string): unknown => answers[field],
 		[answers],
@@ -119,8 +128,8 @@ export function useAdoptionCalculator() {
 			}));
 		}
 
-		// Auto-advance only for option-style questions (not sliders).
-		if (question.type !== "slider") {
+		// Auto-advance after discrete answers only (text uses Next).
+		if (question.type === "select" || question.type === "boolean") {
 			setCurrentQuestionIndex((index) =>
 				index < questions.length - 1 ? index + 1 : index,
 			);
