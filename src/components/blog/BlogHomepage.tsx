@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faCalendar,
-	faArrowRight,
-	faNewspaper,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { blogAPI, BlogPost } from "../../services/blogApi";
 import { formatDateShort } from "../../helpers/dateUtils";
 import TransitionCTA from "../homepage/TransitionCTA";
-import PawLoading from "../PawLoading";
-import { ErrorCard } from "../ErrorCard";
 
 const BlogHomepage: React.FC = () => {
 	const [featuredPosts, setFeaturedPosts] = useState<BlogPost[]>([]);
@@ -44,63 +38,8 @@ const BlogHomepage: React.FC = () => {
 		fetchBlogData();
 	}, []);
 
-	if (loading) {
-		return (
-			<section className="py-20">
-				<div className="max-w-7xl mx-auto px-4">
-					<div className="text-center">
-						<p className="text-oxfordBlue/70 font-poppins">
-							Fetching blog posts...
-						</p>
-						<PawLoading />
-					</div>
-				</div>
-			</section>
-		);
-	}
-
-	const blogAsideWithCta = (card: React.ReactNode) => (
-		<section className="py-10 bg-gradient-to-br from-honeydew to-mintCream">
-			<div className="max-w-7xl mx-auto px-4 pb-8">
-				<motion.div
-					className="mx-auto max-w-xl text-center"
-					initial={{ opacity: 0, y: 12 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.45, ease: "easeOut" }}
-				>
-					{card}
-				</motion.div>
-			</div>
-			<TransitionCTA
-				simplified
-				title="Ready to find your perfect dog?"
-				firstButtonText="Begin Your Journey Today"
-				showFirstButtonIcon={true}
-			/>
-		</section>
-	);
-
-	/** Request failed — not the same as “no featured posts”. */
-	if (error) {
-		return blogAsideWithCta(
-			<ErrorCard
-				icon={faNewspaper}
-				title="Apologies, the blog is currently unavailable"
-				showSubtitle
-				buttons={[{ type: "home" }]}
-			/>,
-		);
-	}
-
-	/** Loaded OK but nothing to feature on the homepage (often no posts marked featured). */
-	if (featuredPosts.length === 0) {
-		return blogAsideWithCta(
-			<ErrorCard
-				title="Nothing to show yet"
-				detail="There are no featured posts at the moment. Please check back soon, or open the blog from the menu."
-				buttons={[{ type: "home" }]}
-			/>,
-		);
+	if (loading || error || featuredPosts.length === 0) {
+		return null;
 	}
 
 	return (
@@ -125,15 +64,14 @@ const BlogHomepage: React.FC = () => {
 				</motion.div>
 
 				{/* Featured Posts */}
-				{featuredPosts.length > 0 && (
-					<motion.div
-						className="mb-12"
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6, delay: 0.2 }}
-					>
-						<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-							{featuredPosts.map((post, index) => (
+				<motion.div
+					className="mb-12"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.2 }}
+				>
+					<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+						{featuredPosts.map((post, index) => (
 								<motion.article
 									key={post.public_id}
 									className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group"
@@ -226,10 +164,9 @@ const BlogHomepage: React.FC = () => {
 										</div>
 									</Link>
 								</motion.article>
-							))}
-						</div>
-					</motion.div>
-				)}
+						))}
+					</div>
+				</motion.div>
 
 				{/* Call to Action */}
 				<motion.div
