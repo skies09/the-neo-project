@@ -733,7 +733,7 @@ export default function Adoption() {
 										setMatchFlowError({
 											mode: "criteria",
 											message:
-												"No more matches available. Try adjusting your preferences to see more options.",
+												"No more matches available.",
 										});
 									}
 								}}

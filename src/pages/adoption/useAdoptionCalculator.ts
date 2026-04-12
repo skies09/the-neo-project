@@ -71,7 +71,7 @@ export function useAdoptionCalculator() {
 
 	const getCurrentValue = useCallback(
 		(field: string): unknown => answers[field],
-		[answers]
+		[answers],
 	);
 
 	const isQuestionAnswered = useCallback(
@@ -94,7 +94,7 @@ export function useAdoptionCalculator() {
 			}
 			return false;
 		},
-		[getCurrentValue]
+		[getCurrentValue],
 	);
 
 	const handleAnswer = useCallback((question: Question, value: unknown) => {
@@ -122,7 +122,7 @@ export function useAdoptionCalculator() {
 		// Auto-advance only for option-style questions (not sliders).
 		if (question.type !== "slider") {
 			setCurrentQuestionIndex((index) =>
-				index < questions.length - 1 ? index + 1 : index
+				index < questions.length - 1 ? index + 1 : index,
 			);
 		}
 	}, []);
@@ -145,7 +145,7 @@ export function useAdoptionCalculator() {
 			};
 
 			const response = await dogAPI.matchDogs(
-				preferences as Parameters<typeof dogAPI.matchDogs>[0]
+				preferences as Parameters<typeof dogAPI.matchDogs>[0],
 			);
 
 			if (!response || !response.matches) {
@@ -218,8 +218,7 @@ export function useAdoptionCalculator() {
 			setCurrentDogIndex(0);
 			setMatchFlowError({
 				mode: "criteria",
-				message:
-					"No more matches available. Try adjusting your preferences to see more options.",
+				message: "No more matches available.",
 			});
 		}
 	}, [currentDogIndex, dogs.length]);
@@ -252,6 +251,4 @@ export function useAdoptionCalculator() {
 	};
 }
 
-export type AdoptionCalculatorModel = ReturnType<
-	typeof useAdoptionCalculator
->;
+export type AdoptionCalculatorModel = ReturnType<typeof useAdoptionCalculator>;
