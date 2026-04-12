@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { dogAPI, Kennel } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useToast } from "../ToastContainer";
+import { resolveApiErrorMessage } from "../../helpers/apiErrorMessage";
 import {
 	faEdit,
 	faSave,
@@ -118,7 +119,10 @@ const UploadDogForm = ({
 			showToast({
 				type: "error",
 				title: "Error",
-				message: "Failed to save dog. Please try again.",
+				message: resolveApiErrorMessage(
+					err,
+					"Failed to save dog. Please try again.",
+				),
 				duration: 5000,
 			});
 		}

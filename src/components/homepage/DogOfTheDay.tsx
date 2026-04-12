@@ -16,6 +16,7 @@ import {
 	shouldFetchNewDogOfTheDay,
 	getTodayDateString,
 } from "../../store/dogOfTheDay/actions";
+import { resolveApiErrorMessage } from "../../helpers/apiErrorMessage";
 
 const DogOfTheDay: React.FC = () => {
 	const navigate = useNavigate();
@@ -71,7 +72,14 @@ const DogOfTheDay: React.FC = () => {
 				}
 			} catch (error) {
 				console.error("Error fetching featured dogs:", error);
-				dispatch(setError("Failed to fetch today's featured dogs"));
+				dispatch(
+					setError(
+						resolveApiErrorMessage(
+							error,
+							"Failed to fetch today's featured dogs",
+						),
+					),
+				);
 			} finally {
 				dispatch(setLoading(false));
 				setHasFetched(true);

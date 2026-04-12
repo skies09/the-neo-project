@@ -15,88 +15,8 @@ import {
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useKennelActions } from "../../hooks/kennel.actions";
-
-interface ContactFormData {
-	name: string;
-	email: string;
-	contact_number: string;
-	address_line_1?: string;
-	town?: string;
-	city?: string;
-	postcode?: string;
-	contact_type:
-		| "general"
-		| "rescue_signup"
-		| "adoption_inquiry"
-		| "support"
-		| "other";
-	subject?: string;
-	message: string;
-	priority?: "low" | "medium" | "high" | "urgent";
-}
-
-interface ContactResponse {
-	message: string;
-	contact_id: string;
-	status: "success" | "error";
-}
-
-class ContactApiService {
-	private baseUrl: string;
-
-	constructor() {
-		this.baseUrl = process.env.REACT_APP_NEO_PROJECT_BASE_URL || "";
-	}
-
-	async submitContact(
-		contactData: ContactFormData
-	): Promise<ContactResponse> {
-		try {
-			const response = await fetch(`${this.baseUrl}api/contacts/`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(contactData),
-			});
-
-			const data = await response.json();
-
-			if (!response.ok) {
-				throw new Error(
-					data.message || "Failed to submit contact form"
-				);
-			}
-
-			return data;
-		} catch (error) {
-			console.error("Contact submission error:", error);
-			throw error;
-		}
-	}
-
-	async submitRescueSignup(formData: {
-		name: string;
-		email: string;
-		contact_number: string;
-		address_line_1?: string;
-		town?: string;
-		city?: string;
-		postcode?: string;
-		message: string;
-	}): Promise<ContactResponse> {
-		const contactData: ContactFormData = {
-			...formData,
-			contact_type: "rescue_signup",
-			priority: "high",
-			subject: "Rescue Center Signup Request",
-		};
-
-		return this.submitContact(contactData);
-	}
-}
-
-const contactApiService = new ContactApiService();
+import { resolveApiErrorMessage } from "../../helpers/apiErrorMessage";
+import { contactApiService } from "../../services/contactApi";
 
 interface KennelSignupValues {
 	name: string;
@@ -119,7 +39,7 @@ const KennelAdmin = () => {
 	const [isLoginForm, setIsLoginForm] = useState(true);
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [errorMessage, setErrorMessage] = useState("");
+	const [errorMessage, setErrorMessage] = useState<React.ReactNode>("");
 
 	const kennelActions = useKennelActions();
 
@@ -141,8 +61,11 @@ const KennelAdmin = () => {
 			return response;
 		} catch (error: any) {
 			setErrorMessage(
-				error.message ||
-					"Failed to submit kennel signup. Please try again."
+				resolveApiErrorMessage(
+					error,
+					error?.message ||
+						"Failed to submit kennel signup. Please try again.",
+				),
 			);
 			setLoading(false);
 			throw error;
@@ -151,7 +74,7 @@ const KennelAdmin = () => {
 
 	const login = async (
 		values: LoginValues,
-		setSubmitting?: (isSubmitting: boolean) => void
+		setSubmitting?: (isSubmitting: boolean) => void,
 	) => {
 		const data = {
 			username: values.username,
@@ -166,6 +89,7 @@ const KennelAdmin = () => {
 		} catch (err: any) {
 			// Extract error message from different possible sources
 			let errorMsg = "Invalid username or password";
+			let networkLoginUi = false;
 
 			if (err.response?.data) {
 				// API error response
@@ -186,7 +110,9 @@ const KennelAdmin = () => {
 			} else if (err.message) {
 				// Network or other error
 				if (err.message.includes("Network Error")) {
-					errorMsg = "Network error. Please check your connection.";
+					networkLoginUi = true;
+					errorMsg =
+						"Account section is currently unavailable. Please try again later.";
 				} else if (err.message.includes("timeout")) {
 					errorMsg = "Request timed out. Please try again.";
 				} else if (
@@ -208,7 +134,18 @@ const KennelAdmin = () => {
 				errorMsg = "Invalid username or password";
 			}
 
-			setErrorMessage(errorMsg);
+			if (networkLoginUi) {
+				setErrorMessage(
+					<>
+						<span className="block">
+							Account section is currently unavailable. <br />
+							Please try again later.
+						</span>
+					</>,
+				);
+			} else {
+				setErrorMessage(resolveApiErrorMessage(err, errorMsg));
+			}
 			setIsLoggingIn(false);
 			if (setSubmitting) setSubmitting(false);
 		}
@@ -241,7 +178,7 @@ const KennelAdmin = () => {
 					values: KennelSignupValues,
 					{
 						setSubmitting,
-					}: { setSubmitting: (isSubmitting: boolean) => void }
+					}: { setSubmitting: (isSubmitting: boolean) => void },
 				) => {
 					setLoading(true);
 					setErrorMessage("");
@@ -512,10 +449,10 @@ const KennelAdmin = () => {
 									}}
 									validationSchema={Yup.object({
 										username: Yup.string().required(
-											"Username is required"
+											"Username is required",
 										),
 										password: Yup.string().required(
-											"Password is required"
+											"Password is required",
 										),
 									})}
 									onSubmit={(values, { setSubmitting }) => {
@@ -559,7 +496,7 @@ const KennelAdmin = () => {
 												<span
 													onClick={() =>
 														setShowPassword(
-															!showPassword
+															!showPassword,
 														)
 													}
 													className="absolute right-4 top-[2.75rem] cursor-pointer text-oxfordBlue/60 hover:text-oxfordBlue"
@@ -613,9 +550,9 @@ const KennelAdmin = () => {
 								>
 									<div className="w-full max-w-md mb-4">
 										<div className="px-4 py-3">
-											<p className="text-sm lg:text-base text-center font-poppins font-medium text-tara">
+											<div className="text-sm lg:text-base text-center font-poppins font-medium text-tara">
 												{errorMessage}
-											</p>
+											</div>
 										</div>
 									</div>
 									<div className="bg-gradient-to-br from-tara to-mintCream backdrop-blur-sm rounded-2xl p-4 shadow-lg border-2 border-oxfordBlue w-full max-w-md">
@@ -655,15 +592,16 @@ const KennelAdmin = () => {
 										</h2>
 										<p className="text-lg lg:text-xl text-tara/90 font-fredoka max-w-3xl mx-auto mb-4">
 											Are you a re-homing or animal rescue
-											center? Sign up here to upload dogs
-											available for adoption.
+											center? <br /> Sign up here to
+											upload dogs available for adoption.
 										</p>
 										<p className="text-center mb-8">
 											<Link
 												to="/kennel-partnership"
 												className="text-tara hover:text-sunset font-fredoka underline text-base lg:text-lg transition-colors duration-200"
 											>
-												Learn more about joining The Neo Project
+												Learn more about joining The Neo
+												Project
 											</Link>
 										</p>
 									</div>

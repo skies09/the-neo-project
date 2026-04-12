@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 /** Preset actions rendered with shared card button styles. */
 export type ErrorCardButton =
 	| { type: "home" }
+	| { type: "shop" }
 	| { type: "blogIndex" }
 	| { type: "goBack"; onClick: () => void };
 
@@ -22,7 +23,6 @@ export interface ErrorCardProps {
 	buttons?: ErrorCardButton[];
 	/** Extra classes on the outer card (e.g. max-w-2xl mx-auto) */
 	className?: string;
-	cardPaddingClass?: string;
 	titleClassName?: string;
 }
 
@@ -37,7 +37,6 @@ export const ErrorCard: React.FC<ErrorCardProps> = ({
 	detail,
 	buttons,
 	className = "",
-	cardPaddingClass = "px-4 sm:px-6 py-8",
 	titleClassName = "font-delius text-xl font-bold text-oxfordBlue sm:text-2xl",
 }) => {
 	const actions = buttons ?? [];
@@ -57,6 +56,16 @@ export const ErrorCard: React.FC<ErrorCardProps> = ({
 						className="btn-primary inline-flex items-center justify-center px-8 py-3"
 					>
 						Back to home
+					</Link>
+				);
+			case "shop":
+				return (
+					<Link
+						key={index}
+						to="/shop"
+						className="btn-secondary inline-flex items-center justify-center px-6 py-3"
+					>
+						Back to shop
 					</Link>
 				);
 			case "blogIndex":
@@ -85,14 +94,14 @@ export const ErrorCard: React.FC<ErrorCardProps> = ({
 
 	return (
 		<div
-			className={`w-full rounded-2xl border-2 border-oxfordBlue/10 bg-gradient-to-br from-tara to-mintCream text-center shadow-xl ${cardPaddingClass} ${className}`.trim()}
+			className={`w-full rounded-2xl border-2 border-oxfordBlue/10 bg-gradient-to-br from-tara to-mintCream px-4 py-8 text-center shadow-xl md:p-8 ${className}`.trim()}
 		>
 			<div className="flex flex-col items-center gap-3">
 				{icon != null && (
 					<div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-highland to-sark shadow-lg">
 						<FontAwesomeIcon
 							icon={icon}
-							className="text-2xl text-honeydew"
+							className="text-2xl text-sunset"
 							aria-hidden
 						/>
 					</div>

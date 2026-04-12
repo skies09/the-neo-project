@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { shopAPI, type CreateOrderData } from "../services/shopApi";
+import { resolveApiErrorMessage } from "../helpers/apiErrorMessage";
 import {
 	fetchProductsRequest,
 	fetchProductsSuccess,
@@ -52,7 +53,7 @@ export const useShop = () => {
 		} catch (error: any) {
 			dispatch(
 				fetchProductsFailure(
-					error.message || "Failed to fetch products"
+					resolveApiErrorMessage(error, "Failed to fetch products"),
 				)
 			);
 		}
@@ -65,7 +66,9 @@ export const useShop = () => {
 			dispatch(fetchProductSuccess(response));
 		} catch (error: any) {
 			dispatch(
-				fetchProductFailure(error.message || "Failed to fetch product")
+				fetchProductFailure(
+					resolveApiErrorMessage(error, "Failed to fetch product"),
+				)
 			);
 		}
 	};
@@ -78,7 +81,10 @@ export const useShop = () => {
 		} catch (error: any) {
 			dispatch(
 				fetchFeaturedProductsFailure(
-					error.message || "Failed to fetch featured products"
+					resolveApiErrorMessage(
+						error,
+						"Failed to fetch featured products",
+					),
 				)
 			);
 		}
@@ -92,7 +98,7 @@ export const useShop = () => {
 		} catch (error: any) {
 			dispatch(
 				fetchCategoriesFailure(
-					error.message || "Failed to fetch categories"
+					resolveApiErrorMessage(error, "Failed to fetch categories"),
 				)
 			);
 		}
@@ -173,7 +179,9 @@ export const useShop = () => {
 			}
 		} catch (error: any) {
 			dispatch(
-				addToCartFailure(error.message || "Failed to add item to cart")
+				addToCartFailure(
+					resolveApiErrorMessage(error, "Failed to add item to cart"),
+				)
 			);
 		}
 	};
@@ -216,7 +224,7 @@ export const useShop = () => {
 		} catch (error: any) {
 			dispatch(
 				updateCartItemFailure(
-					error.message || "Failed to update cart item"
+					resolveApiErrorMessage(error, "Failed to update cart item"),
 				)
 			);
 		}
@@ -251,7 +259,10 @@ export const useShop = () => {
 		} catch (error: any) {
 			dispatch(
 				removeFromCartFailure(
-					error.message || "Failed to remove item from cart"
+					resolveApiErrorMessage(
+						error,
+						"Failed to remove item from cart",
+					),
 				)
 			);
 		}
@@ -269,7 +280,11 @@ export const useShop = () => {
 				})
 			);
 		} catch (error: any) {
-			dispatch(clearCartFailure(error.message || "Failed to clear cart"));
+			dispatch(
+				clearCartFailure(
+					resolveApiErrorMessage(error, "Failed to clear cart"),
+				),
+			);
 		}
 	};
 
@@ -281,7 +296,9 @@ export const useShop = () => {
 			dispatch(fetchOrdersSuccess(response, response));
 		} catch (error: any) {
 			dispatch(
-				fetchOrdersFailure(error.message || "Failed to fetch orders")
+				fetchOrdersFailure(
+					resolveApiErrorMessage(error, "Failed to fetch orders"),
+				)
 			);
 		}
 	};
@@ -294,7 +311,9 @@ export const useShop = () => {
 			return response;
 		} catch (error: any) {
 			dispatch(
-				createOrderFailure(error.message || "Failed to create order")
+				createOrderFailure(
+					resolveApiErrorMessage(error, "Failed to create order"),
+				)
 			);
 			throw error;
 		}
@@ -308,7 +327,9 @@ export const useShop = () => {
 			dispatch(applyCouponSuccess(response));
 		} catch (error: any) {
 			dispatch(
-				applyCouponFailure(error.message || "Invalid coupon code")
+				applyCouponFailure(
+					resolveApiErrorMessage(error, "Invalid coupon code"),
+				)
 			);
 		}
 	};

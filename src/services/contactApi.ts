@@ -1,3 +1,5 @@
+import { API_HTTP_404_USER_MESSAGE } from "../helpers/apiErrorMessage";
+
 function apiBaseUrl(): string {
 	const base = (process.env.REACT_APP_NEO_PROJECT_BASE_URL || "").trim();
 	if (!base) return "";
@@ -51,6 +53,9 @@ class ContactApiService {
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error(API_HTTP_404_USER_MESSAGE);
+        }
         throw new Error(data.message || 'Failed to submit contact form');
       }
 

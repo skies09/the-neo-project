@@ -13,6 +13,7 @@ import {
   clearCartSuccess,
   clearCartFailure,
 } from '../../store/shop/actions';
+import { resolveApiErrorMessage } from '../../helpers/apiErrorMessage';
 
 const CartPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const CartPage: React.FC = () => {
         total_price: totalPrice
       }));
     } catch (error: any) {
-      dispatch(updateCartItemFailure(error.message || 'Failed to update cart item'));
+      dispatch(updateCartItemFailure(resolveApiErrorMessage(error, 'Failed to update cart item')));
     }
   };
 
@@ -61,7 +62,7 @@ const CartPage: React.FC = () => {
         total_price: totalPrice
       }));
     } catch (error: any) {
-      dispatch(removeFromCartFailure(error.message || 'Failed to remove item from cart'));
+      dispatch(removeFromCartFailure(resolveApiErrorMessage(error, 'Failed to remove item from cart')));
     }
   };
 
@@ -75,7 +76,7 @@ const CartPage: React.FC = () => {
         total_price: '0.00'
       }));
     } catch (error: any) {
-      dispatch(clearCartFailure(error.message || 'Failed to clear cart'));
+      dispatch(clearCartFailure(resolveApiErrorMessage(error, 'Failed to clear cart')));
     }
   };
 

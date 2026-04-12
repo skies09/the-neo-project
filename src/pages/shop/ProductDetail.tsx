@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faStore } from "@fortawesome/free-solid-svg-icons";
 import { RootState } from "../../store/store";
 import { shopAPI } from "../../services/shopApi";
 import {
@@ -13,28 +12,41 @@ import {
 	addToCartSuccess,
 	addToCartFailure,
 } from "../../store/shop/actions";
+import {
+	resolveApiErrorMessage,
+	shopFetchErrorCardDetail,
+} from "../../helpers/apiErrorMessage";
+import { ErrorCard } from "../../components/ErrorCard";
 
 const ProductDetail: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { currentProduct, cart } = useSelector(
-		(state: RootState) => state.shop
+		(state: RootState) => state.shop,
 	);
 	const [selectedImage, setSelectedImage] = useState(0);
 	const [quantity, setQuantity] = useState(1);
 
-	const fetchProduct = useCallback(async (productId: number) => {
-		dispatch(fetchProductRequest());
-		try {
-			const response = await shopAPI.getProduct(productId);
-			dispatch(fetchProductSuccess(response));
-		} catch (error: any) {
-			dispatch(
-				fetchProductFailure(error.message || "Failed to fetch product")
-			);
-		}
-	}, [dispatch]);
+	const fetchProduct = useCallback(
+		async (productId: number) => {
+			dispatch(fetchProductRequest());
+			try {
+				const response = await shopAPI.getProduct(productId);
+				dispatch(fetchProductSuccess(response));
+			} catch (error: any) {
+				dispatch(
+					fetchProductFailure(
+						resolveApiErrorMessage(
+							error,
+							"Failed to fetch product",
+						),
+					),
+				);
+			}
+		},
+		[dispatch],
+	);
 
 	useEffect(() => {
 		if (id) {
@@ -52,7 +64,7 @@ const ProductDetail: React.FC = () => {
 			if (product) {
 				// Check if product already exists in cart
 				const existingItemIndex = cart.items.findIndex(
-					(item: any) => item.product === product.id
+					(item: any) => item.product === product.id,
 				);
 
 				let updatedItems;
@@ -61,19 +73,21 @@ const ProductDetail: React.FC = () => {
 
 				if (existingItemIndex >= 0) {
 					// Update existing item quantity
-					updatedItems = cart.items.map((item: any, index: number) => {
-						if (index === existingItemIndex) {
-							const newQuantity = item.quantity + quantity;
-							return {
-								...item,
-								quantity: newQuantity,
-								total_price: (
-									parseFloat(item.price) * newQuantity
-								).toFixed(2),
-							};
-						}
-						return item;
-					});
+					updatedItems = cart.items.map(
+						(item: any, index: number) => {
+							if (index === existingItemIndex) {
+								const newQuantity = item.quantity + quantity;
+								return {
+									...item,
+									quantity: newQuantity,
+									total_price: (
+										parseFloat(item.price) * newQuantity
+									).toFixed(2),
+								};
+							}
+							return item;
+						},
+					);
 					newTotalItems = cart.totalItems + quantity;
 					newTotalPrice = (
 						parseFloat(cart.totalPrice) +
@@ -105,12 +119,14 @@ const ProductDetail: React.FC = () => {
 						items: updatedItems,
 						total_items: newTotalItems,
 						total_price: newTotalPrice,
-					})
+					}),
 				);
 			}
 		} catch (error: any) {
 			dispatch(
-				addToCartFailure(error.message || "Failed to add item to cart")
+				addToCartFailure(
+					resolveApiErrorMessage(error, "Failed to add item to cart"),
+				),
 			);
 		}
 	};
@@ -120,15 +136,23 @@ const ProductDetail: React.FC = () => {
 	};
 
 	const getDiscountPercentage = () => {
-		if (currentProduct.item?.discount_percentage && parseFloat(currentProduct.item.discount_percentage.toString()) > 0) {
-			const discount = Math.round(parseFloat(currentProduct.item.discount_percentage.toString()));
+		if (
+			currentProduct.item?.discount_percentage &&
+			parseFloat(currentProduct.item.discount_percentage.toString()) > 0
+		) {
+			const discount = Math.round(
+				parseFloat(currentProduct.item.discount_percentage.toString()),
+			);
 			return `${discount}% OFF`;
 		}
 		return null;
 	};
 
 	const hasValidDiscount = () => {
-		return currentProduct.item?.discount_percentage && parseFloat(currentProduct.item.discount_percentage.toString()) > 0;
+		return (
+			currentProduct.item?.discount_percentage &&
+			parseFloat(currentProduct.item.discount_percentage.toString()) > 0
+		);
 	};
 
 	if (currentProduct.loading) {
@@ -140,27 +164,30 @@ const ProductDetail: React.FC = () => {
 	}
 
 	if (currentProduct.error || !currentProduct.item) {
+		const fetchFailed = Boolean(currentProduct.error);
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16 flex justify-center items-center">
-				<div className="text-center">
-					<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl p-8 max-w-2xl mx-auto border-2 border-oxfordBlue/10">
-						<h2 className="text-2xl font-bold text-oxfordBlue font-delius mb-4">
-							Product Not Found
-						</h2>
-						<p className="text-oxfordBlue/70 font-poppins mb-8">
-							The product you're looking for doesn't exist.
-						</p>
-						<button
-							onClick={() => navigate("/shop")}
-							className="group inline-flex items-center space-x-2 text-highland hover:text-sark transition-colors font-poppins font-semibold"
-						>
-							<FontAwesomeIcon
-								icon={faArrowLeft}
-								className="group-hover:-translate-x-1 transition-transform duration-300"
-							/>
-							<span>Back to Shop</span>
-						</button>
-					</div>
+			<div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16">
+				<div className="mx-auto flex max-w-7xl justify-center px-4 py-12 sm:px-6 lg:px-8">
+					<ErrorCard
+						icon={faStore}
+						title={
+							fetchFailed
+								? "We could not load this product"
+								: "Product not found"
+						}
+						showSubtitle={fetchFailed}
+						subtitleClassName="text-oxfordBlue/70"
+						detail={
+							fetchFailed
+								? shopFetchErrorCardDetail(
+										String(currentProduct.error),
+									)
+								: "The product you are looking for is not available."
+						}
+						buttons={[{ type: "home" }, { type: "shop" }]}
+						className="max-w-2xl"
+						titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
+					/>
 				</div>
 			</div>
 		);
@@ -198,7 +225,9 @@ const ProductDetail: React.FC = () => {
 							</button>
 						</li>
 						<li>/</li>
-						<li className="text-oxfordBlue font-semibold">{product.name}</li>
+						<li className="text-oxfordBlue font-semibold">
+							{product.name}
+						</li>
 					</ol>
 				</nav>
 
@@ -359,12 +388,14 @@ const ProductDetail: React.FC = () => {
 									<button
 										onClick={() =>
 											setQuantity(
-												Math.max(1, quantity - 1)
+												Math.max(1, quantity - 1),
 											)
 										}
 										className="w-10 h-10 rounded-full border-2 border-oxfordBlue/20 flex items-center justify-center hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300 font-poppins"
 									>
-										<span className="text-oxfordBlue">-</span>
+										<span className="text-oxfordBlue">
+											-
+										</span>
 									</button>
 									<span className="w-12 text-center font-medium font-poppins text-oxfordBlue">
 										{quantity}
@@ -374,8 +405,8 @@ const ProductDetail: React.FC = () => {
 											setQuantity(
 												Math.min(
 													product.stock_quantity,
-													quantity + 1
-												)
+													quantity + 1,
+												),
 											)
 										}
 										className="w-10 h-10 rounded-full border-2 border-oxfordBlue/20 flex items-center justify-center hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300 font-poppins"
@@ -383,7 +414,9 @@ const ProductDetail: React.FC = () => {
 											quantity >= product.stock_quantity
 										}
 									>
-										<span className="text-oxfordBlue">+</span>
+										<span className="text-oxfordBlue">
+											+
+										</span>
 									</button>
 								</div>
 							</div>

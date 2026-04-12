@@ -1,8 +1,16 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { dogAPI, Dog, breedsAPI } from "../../services/api";
-import { useToast } from "../../components/ToastContainer";
+import {
+	isNetworkOrTransportFailure,
+	resolveApiErrorMessage,
+} from "../../helpers/apiErrorMessage";
 import type { BreedSearchOption } from "../../components/forms/BreedSearchSelect";
 import { questions, Question } from "./adoptionCalculatorQuestions";
+
+export type AdoptionMatchFlowError =
+	| null
+	| { mode: "network" }
+	| { mode: "criteria"; message: string };
 
 const initialAnswers: Record<string, unknown> = {
 	size: "",
@@ -24,11 +32,11 @@ export function useAdoptionCalculator() {
 	const [dogs, setDogs] = useState<Dog[]>([]);
 	const [matchRates, setMatchRates] = useState<Record<string, number>>({});
 	const [currentDogIndex, setCurrentDogIndex] = useState(0);
-	const [error, setError] = useState("");
+	const [matchFlowError, setMatchFlowError] =
+		useState<AdoptionMatchFlowError>(null);
 	const [loading, setLoading] = useState(false);
 	const [breedOptions, setBreedOptions] = useState<BreedSearchOption[]>([]);
 	const resultsRef = useRef<HTMLDivElement>(null);
-	const { showToast } = useToast();
 
 	useEffect(() => {
 		breedsAPI
@@ -121,7 +129,7 @@ export function useAdoptionCalculator() {
 
 	const handleSubmit = useCallback(async () => {
 		setLoading(true);
-		setError("");
+		setMatchFlowError(null);
 
 		try {
 			const preferences: Record<string, unknown> = {
@@ -154,50 +162,30 @@ export function useAdoptionCalculator() {
 			setMatchRates(rates);
 			setCurrentDogIndex(0);
 
-			if (matchedDogs.length > 0) {
-				showToast({
-					type: "success",
-					title: "Dogs Found!",
-					message: `Found ${matchedDogs.length} dog${
-						matchedDogs.length === 1 ? "" : "s"
-					} that match your criteria.`,
-					duration: 4000,
-				});
-			} else {
-				setError(
-					"No dogs found with a match rate greater than 0%. Try adjusting your preferences to be less specific."
-				);
-				showToast({
-					type: "info",
-					title: "No Matches Found",
+			if (matchedDogs.length === 0) {
+				setMatchFlowError({
+					mode: "criteria",
 					message:
-						"No dogs matched your criteria. Try adjusting your preferences.",
-					duration: 5000,
+						"No dogs found with a match rate greater than 0%. Try adjusting your preferences to be less specific.",
 				});
 			}
 		} catch (err: unknown) {
 			console.error("Search error:", err);
 			setDogs([]);
 			setMatchRates({});
-			const axiosErr = err as {
-				response?: { data?: { error?: string } };
-				message?: string;
-			};
-			const errorMessage =
-				axiosErr.response?.data?.error ||
-				axiosErr.message ||
-				"No matching dogs found. Try adjusting your search criteria.";
-			setError(errorMessage);
-			showToast({
-				type: "error",
-				title: "Search Failed",
-				message: errorMessage,
-				duration: 5000,
-			});
+			if (isNetworkOrTransportFailure(err)) {
+				setMatchFlowError({ mode: "network" });
+			} else {
+				const errorMessage = resolveApiErrorMessage(
+					err,
+					"No matching dogs found. Try adjusting your search criteria.",
+				);
+				setMatchFlowError({ mode: "criteria", message: errorMessage });
+			}
 		} finally {
 			setLoading(false);
 		}
-	}, [answers, showToast]);
+	}, [answers]);
 
 	const handleNext = useCallback(() => {
 		if (currentQuestionIndex < questions.length - 1) {
@@ -215,7 +203,7 @@ export function useAdoptionCalculator() {
 		setHasStarted(false);
 		setCurrentQuestionIndex(0);
 		setAnswers({ ...initialAnswers });
-		setError("");
+		setMatchFlowError(null);
 		setDogs([]);
 		setMatchRates({});
 		setCurrentDogIndex(0);
@@ -228,18 +216,13 @@ export function useAdoptionCalculator() {
 			setDogs([]);
 			setMatchRates({});
 			setCurrentDogIndex(0);
-			setError(
-				"No more matches available. Try adjusting your preferences to see more options."
-			);
-			showToast({
-				type: "info",
-				title: "No More Matches",
+			setMatchFlowError({
+				mode: "criteria",
 				message:
-					"All available matches have been shown. Try adjusting your preferences.",
-				duration: 5000,
+					"No more matches available. Try adjusting your preferences to see more options.",
 			});
 		}
-	}, [currentDogIndex, dogs.length, showToast]);
+	}, [currentDogIndex, dogs.length]);
 
 	const currentQuestion = questions[currentQuestionIndex];
 	const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
@@ -252,7 +235,7 @@ export function useAdoptionCalculator() {
 		dogs,
 		matchRates,
 		currentDogIndex,
-		error,
+		matchFlowError,
 		loading,
 		breedOptions,
 		resultsRef,

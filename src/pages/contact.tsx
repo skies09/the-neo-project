@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,6 +7,8 @@ import {
 	faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import ContactForm from "../components/forms/ContactForm";
+import { ErrorCard } from "../components/ErrorCard";
+import { contactSubmitErrorCardDetail } from "../helpers/apiErrorMessage";
 
 interface ContactProps {
 	form?: any;
@@ -14,6 +16,16 @@ interface ContactProps {
 
 const Contact = (form: ContactProps) => {
 	const containerRef = useRef(null);
+	const [submitError, setSubmitError] = useState<string | null>(null);
+	const submitErrorRef = useRef<HTMLDivElement | null>(null);
+
+	useEffect(() => {
+		if (!submitError) return;
+		submitErrorRef.current?.scrollIntoView({
+			behavior: "smooth",
+			block: "start",
+		});
+	}, [submitError]);
 
 	return (
 		<motion.div
@@ -139,9 +151,29 @@ const Contact = (form: ContactProps) => {
 								contactType="general"
 								title="Send us a Message"
 								description="Have a question or need help? Send us a message and we'll get back to you as soon as possible."
+								onSubmitErrorMessage={setSubmitError}
 							/>
 						</div>
 					</motion.div>
+
+					{submitError != null && (
+						<div
+							ref={submitErrorRef}
+							className="mt-8 scroll-mt-24"
+							role="alert"
+						>
+							<ErrorCard
+								icon={faEnvelope}
+								title="We couldn't send your message"
+								showSubtitle
+								detail={contactSubmitErrorCardDetail(
+									submitError,
+								)}
+								buttons={[{ type: "home" }]}
+								className="mx-auto max-w-2xl"
+							/>
+						</div>
+					)}
 				</div>
 			</div>
 		</motion.div>

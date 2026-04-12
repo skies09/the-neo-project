@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { faSearch, faDog } from "@fortawesome/free-solid-svg-icons";
 import PawLoading from "../../components/PawLoading";
 import { ErrorCard } from "../../components/ErrorCard";
+import { resolveApiErrorMessage } from "../../helpers/apiErrorMessage";
 
 export default function AllDogs() {
 	const [dogData, setDogData] = useState<Dog[]>([]);
@@ -30,7 +31,10 @@ export default function AllDogs() {
 					error instanceof Error ? error.message : String(error),
 				);
 				setError(
-					"No dogs available for adoption at this time, please check back later",
+					resolveApiErrorMessage(
+						error,
+						"No dogs available for adoption at this time, please check back later",
+					),
 				);
 				setDogData([]);
 			} finally {
@@ -92,7 +96,6 @@ export default function AllDogs() {
 						<ErrorCard
 							icon={faDog}
 							className="mx-auto max-w-2xl"
-							cardPaddingClass="p-8"
 							title="No dogs available for adoption"
 							titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
 							showSubtitle={error != null}

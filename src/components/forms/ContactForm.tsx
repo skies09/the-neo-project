@@ -1,8 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	CONTACT_FORM_SUBMIT_FALLBACK_MESSAGE,
+	contactSubmitErrorCardDetail,
+	resolveApiErrorMessage,
+} from "../../helpers/apiErrorMessage";
+import { ErrorCard } from "../ErrorCard";
+import {
+	contactApiService,
+	type ContactFormData,
+} from "../../services/contactApi";
 import {
 	faEnvelope,
 	faUser,
@@ -13,68 +23,6 @@ import {
 	faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
-interface ContactFormData {
-	name: string;
-	email: string;
-	contact_number: string;
-	address_line_1?: string;
-	town?: string;
-	city?: string;
-	postcode?: string;
-	contact_type:
-		| "general"
-		| "rescue_signup"
-		| "adoption_inquiry"
-		| "support"
-		| "other";
-	subject?: string;
-	message: string;
-	priority?: "low" | "medium" | "high" | "urgent";
-}
-
-interface ContactResponse {
-	message: string;
-	contact_id: string;
-	status: "success" | "error";
-}
-
-class ContactApiService {
-	private baseUrl: string;
-
-	constructor() {
-		this.baseUrl = process.env.REACT_APP_NEO_PROJECT_BASE_URL || "";
-	}
-
-	async submitContact(
-		contactData: ContactFormData
-	): Promise<ContactResponse> {
-		try {
-			const response = await fetch(`${this.baseUrl}api/contacts/`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(contactData),
-			});
-
-			const data = await response.json();
-
-			if (!response.ok) {
-				throw new Error(
-					data.message || "Failed to submit contact form"
-				);
-			}
-
-			return data;
-		} catch (error) {
-			console.error("Contact submission error:", error);
-			throw error;
-		}
-	}
-}
-
-const contactApiService = new ContactApiService();
-
 interface ContactFormProps {
 	contactType: "general" | "rescue_signup" | "adoption_inquiry" | "support";
 	title: string;
@@ -83,6 +31,8 @@ interface ContactFormProps {
 	customFields?: React.ReactNode;
 	onSuccess?: (response: any) => void;
 	onError?: (error: any) => void;
+	/** When set, submit errors are reported here instead of rendering below the fields (e.g. parent shows ErrorCard under the form card). */
+	onSubmitErrorMessage?: (message: string | null) => void;
 	className?: string;
 }
 
@@ -106,11 +56,22 @@ const ContactForm: React.FC<ContactFormProps> = ({
 	customFields,
 	onSuccess,
 	onError,
+	onSubmitErrorMessage,
 	className = "",
 }) => {
 	const [isSubmitted, setIsSubmitted] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [submitError, setSubmitError] = useState<string | null>(null);
+	const submitErrorRef = useRef<HTMLDivElement | null>(null);
+	const parentHandlesSubmitError = onSubmitErrorMessage != null;
+
+	useEffect(() => {
+		if (!submitError || parentHandlesSubmitError) return;
+		submitErrorRef.current?.scrollIntoView({
+			behavior: "smooth",
+			block: "start",
+		});
+	}, [submitError, parentHandlesSubmitError]);
 
 	const validationSchema = Yup.object({
 		name: Yup.string().required("Name is required"),
@@ -125,9 +86,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 		city: showAddressFields ? Yup.string() : Yup.string(),
 		postcode: showAddressFields ? Yup.string() : Yup.string(),
 		subject: Yup.string(),
-		message: Yup.string()
-			.required("Message is required")
-			.min(10, "Message must be at least 10 characters"),
+		message: Yup.string().required("Message is required"),
 	});
 
 	const initialValues: FormValues = {
@@ -144,7 +103,10 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
 	const handleSubmit = async (values: FormValues, { setSubmitting }: any) => {
 		setIsLoading(true);
-		setSubmitError(null);
+		onSubmitErrorMessage?.(null);
+		if (!parentHandlesSubmitError) {
+			setSubmitError(null);
+		}
 
 		try {
 			const contactData: ContactFormData = {
@@ -156,12 +118,21 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
 			const response = await contactApiService.submitContact(contactData);
 
+			onSubmitErrorMessage?.(null);
+			if (!parentHandlesSubmitError) {
+				setSubmitError(null);
+			}
 			setIsSubmitted(true);
 			onSuccess?.(response);
 		} catch (error: any) {
-			setSubmitError(
-				error.message || "Failed to submit form. Please try again."
+			const resolved = resolveApiErrorMessage(
+				error,
+				CONTACT_FORM_SUBMIT_FALLBACK_MESSAGE,
 			);
+			onSubmitErrorMessage?.(resolved);
+			if (!parentHandlesSubmitError) {
+				setSubmitError(resolved);
+			}
 			onError?.(error);
 		} finally {
 			setIsLoading(false);
@@ -239,18 +210,6 @@ const ContactForm: React.FC<ContactFormProps> = ({
 				</p>
 			</div>
 
-			{submitError && (
-				<motion.div
-					className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6"
-					initial={{ opacity: 0, y: -10 }}
-					animate={{ opacity: 1, y: 0 }}
-				>
-					<p className="text-red-600 font-poppins text-sm">
-						{submitError}
-					</p>
-				</motion.div>
-			)}
-
 			<Formik
 				initialValues={initialValues}
 				validationSchema={validationSchema}
@@ -267,7 +226,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 							Full Name *
 						</label>
 						<Field
-							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
+							className="w-full rounded-full border-2 border-oxfordBlue bg-honeydew px-4 py-3 font-poppins text-oxfordBlue placeholder:text-oxfordBlue/50 transition-colors focus:outline-none focus:ring-2 focus:ring-highland/30 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(241,250,238)] [&:-webkit-autofill]:[-webkit-text-fill-color:#0B2545]"
 							type="text"
 							name="name"
 							placeholder="Enter your full name"
@@ -289,7 +248,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 							Email Address *
 						</label>
 						<Field
-							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
+							className="w-full rounded-full border-2 border-oxfordBlue bg-honeydew px-4 py-3 font-poppins text-oxfordBlue placeholder:text-oxfordBlue/50 transition-colors focus:outline-none focus:ring-2 focus:ring-highland/30 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(241,250,238)] [&:-webkit-autofill]:[-webkit-text-fill-color:#0B2545]"
 							type="email"
 							name="email"
 							placeholder="Enter your email address"
@@ -311,7 +270,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 							Contact Number *
 						</label>
 						<Field
-							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
+							className="w-full rounded-full border-2 border-oxfordBlue bg-honeydew px-4 py-3 font-poppins text-oxfordBlue placeholder:text-oxfordBlue/50 transition-colors focus:outline-none focus:ring-2 focus:ring-highland/30 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(241,250,238)] [&:-webkit-autofill]:[-webkit-text-fill-color:#0B2545]"
 							type="tel"
 							name="contact_number"
 							placeholder="Enter your contact number"
@@ -335,7 +294,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 									Address Line 1
 								</label>
 								<Field
-									className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
+									className="w-full rounded-full border-2 border-oxfordBlue bg-honeydew px-4 py-3 font-poppins text-oxfordBlue placeholder:text-oxfordBlue/50 transition-colors focus:outline-none focus:ring-2 focus:ring-highland/30 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(241,250,238)] [&:-webkit-autofill]:[-webkit-text-fill-color:#0B2545]"
 									type="text"
 									name="address_line_1"
 									placeholder="Enter your address"
@@ -353,7 +312,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 										Town
 									</label>
 									<Field
-										className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
+										className="w-full rounded-full border-2 border-oxfordBlue bg-honeydew px-4 py-3 font-poppins text-oxfordBlue placeholder:text-oxfordBlue/50 transition-colors focus:outline-none focus:ring-2 focus:ring-highland/30 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(241,250,238)] [&:-webkit-autofill]:[-webkit-text-fill-color:#0B2545]"
 										type="text"
 										name="town"
 										placeholder="Enter your town"
@@ -370,7 +329,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 										City
 									</label>
 									<Field
-										className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
+										className="w-full rounded-full border-2 border-oxfordBlue bg-honeydew px-4 py-3 font-poppins text-oxfordBlue placeholder:text-oxfordBlue/50 transition-colors focus:outline-none focus:ring-2 focus:ring-highland/30 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(241,250,238)] [&:-webkit-autofill]:[-webkit-text-fill-color:#0B2545]"
 										type="text"
 										name="city"
 										placeholder="Enter your city"
@@ -388,7 +347,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 									Postcode
 								</label>
 								<Field
-									className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
+									className="w-full rounded-full border-2 border-oxfordBlue bg-honeydew px-4 py-3 font-poppins text-oxfordBlue placeholder:text-oxfordBlue/50 transition-colors focus:outline-none focus:ring-2 focus:ring-highland/30 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(241,250,238)] [&:-webkit-autofill]:[-webkit-text-fill-color:#0B2545]"
 									type="text"
 									name="postcode"
 									placeholder="Enter your postcode"
@@ -408,7 +367,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 							Subject
 						</label>
 						<Field
-							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-full font-poppins focus:outline-none transition-colors"
+							className="w-full rounded-full border-2 border-oxfordBlue bg-honeydew px-4 py-3 font-poppins text-oxfordBlue placeholder:text-oxfordBlue/50 transition-colors focus:outline-none focus:ring-2 focus:ring-highland/30 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(241,250,238)] [&:-webkit-autofill]:[-webkit-text-fill-color:#0B2545]"
 							type="text"
 							name="subject"
 							placeholder="Enter a subject (optional)"
@@ -434,7 +393,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 						</label>
 						<Field
 							as="textarea"
-							className="w-full px-4 py-3 border-2 border-oxfordBlue rounded-3xl font-poppins focus:outline-none transition-colors resize-none"
+							className="w-full resize-none rounded-3xl border-2 border-oxfordBlue bg-honeydew px-4 py-3 font-poppins text-oxfordBlue placeholder:text-oxfordBlue/50 transition-colors focus:outline-none focus:ring-2 focus:ring-highland/30 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(241,250,238)] [&:-webkit-autofill]:[-webkit-text-fill-color:#0B2545]"
 							name="message"
 							rows="4"
 							placeholder="Enter your message"
@@ -474,6 +433,25 @@ const ContactForm: React.FC<ContactFormProps> = ({
 					</div>
 				</Form>
 			</Formik>
+
+			{submitError != null && !parentHandlesSubmitError && (
+				<motion.div
+					ref={submitErrorRef}
+					role="alert"
+					className="mt-8 scroll-mt-24"
+					initial={{ opacity: 0, y: 8 }}
+					animate={{ opacity: 1, y: 0 }}
+				>
+					<ErrorCard
+						icon={faEnvelope}
+						title="We couldn't send your message"
+						showSubtitle
+						detail={contactSubmitErrorCardDetail(submitError)}
+						buttons={[{ type: "home" }]}
+						className="mx-auto max-w-2xl"
+					/>
+				</motion.div>
+			)}
 		</div>
 	);
 };

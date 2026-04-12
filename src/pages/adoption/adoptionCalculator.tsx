@@ -11,8 +11,13 @@ import {
 	faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import AdoptionCard from "../../components/cards/adoptCard";
-import { useToast } from "../../components/ToastContainer";
+import { ErrorCard } from "../../components/ErrorCard";
 import { questions, Question } from "./adoptionCalculatorQuestions";
+import {
+	isNetworkOrTransportFailure,
+	resolveApiErrorMessage,
+} from "../../helpers/apiErrorMessage";
+import type { AdoptionMatchFlowError } from "./useAdoptionCalculator";
 
 export default function Adoption() {
 	const [hasStarted, setHasStarted] = useState(false);
@@ -34,13 +39,13 @@ export default function Adoption() {
 	const [dogs, setDogs] = useState<Dog[]>([]);
 	const [matchRates, setMatchRates] = useState<Record<string, number>>({});
 	const [currentDogIndex, setCurrentDogIndex] = useState(0);
-	const [error, setError] = useState("");
+	const [matchFlowError, setMatchFlowError] =
+		useState<AdoptionMatchFlowError>(null);
 	const [loading, setLoading] = useState(false);
 	const [breedOptions, setBreedOptions] = useState<
 		{ value: string; label: string }[]
 	>([]);
 	const resultsRef = useRef<HTMLDivElement>(null);
-	const { showToast } = useToast();
 
 	// Fetch breeds for the breed dropdown
 	useEffect(() => {
@@ -66,6 +71,15 @@ export default function Adoption() {
 			});
 		}
 	}, [dogs]);
+
+	useEffect(() => {
+		if (matchFlowError != null && resultsRef.current) {
+			resultsRef.current.scrollIntoView({
+				behavior: "smooth",
+				block: "start",
+			});
+		}
+	}, [matchFlowError]);
 
 	const getCurrentValue = (field: string): any => {
 		return answers[field];
@@ -145,7 +159,7 @@ export default function Adoption() {
 
 	const handleSubmit = async () => {
 		setLoading(true);
-		setError("");
+		setMatchFlowError(null);
 
 		try {
 			// Build preferences object: pass all fields through (null/empty allowed).
@@ -181,42 +195,26 @@ export default function Adoption() {
 			setMatchRates(rates);
 			setCurrentDogIndex(0); // Reset to first dog
 
-			if (matchedDogs.length > 0) {
-				showToast({
-					type: "success",
-					title: "Dogs Found!",
-					message: `Found ${matchedDogs.length} dog${
-						matchedDogs.length === 1 ? "" : "s"
-					} that match your criteria.`,
-					duration: 4000,
-				});
-			} else {
-				setError(
-					"No dogs found with a match rate greater than 0%. Try adjusting your preferences to be less specific.",
-				);
-				showToast({
-					type: "info",
-					title: "No Matches Found",
+			if (matchedDogs.length === 0) {
+				setMatchFlowError({
+					mode: "criteria",
 					message:
-						"No dogs matched your criteria. Try adjusting your preferences.",
-					duration: 5000,
+						"No dogs found with a match rate greater than 0%. Try adjusting your preferences to be less specific.",
 				});
 			}
 		} catch (err: any) {
 			console.error("Search error:", err);
 			setDogs([]);
 			setMatchRates({});
-			const errorMessage =
-				err.response?.data?.error ||
-				err.message ||
-				"No matching dogs found. Try adjusting your search criteria.";
-			setError(errorMessage);
-			showToast({
-				type: "error",
-				title: "Search Failed",
-				message: errorMessage,
-				duration: 5000,
-			});
+			if (isNetworkOrTransportFailure(err)) {
+				setMatchFlowError({ mode: "network" });
+			} else {
+				const errorMessage = resolveApiErrorMessage(
+					err,
+					"No matching dogs found. Try adjusting your search criteria.",
+				);
+				setMatchFlowError({ mode: "criteria", message: errorMessage });
+			}
 		} finally {
 			setLoading(false);
 		}
@@ -238,8 +236,8 @@ export default function Adoption() {
 				{!hasStarted && (
 					<motion.div
 						className="text-center py-20"
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
 						transition={{ duration: 0.8, ease: "easeOut" }}
 					>
 						<motion.div
@@ -270,15 +268,19 @@ export default function Adoption() {
 							transition={{ duration: 0.6, delay: 0.4 }}
 						>
 							Tell us what you're looking for and we'll find your
-							ideal companion. <br></br>This will only take a few
-							moments!{" "}
+							ideal companion.
 						</motion.p>
 						<motion.button
+							type="button"
 							onClick={() => setHasStarted(true)}
 							className="btn-primary px-8 py-4 text-xl"
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.6, delay: 0.5 }}
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{
+								duration: 0.5,
+								delay: 0.55,
+								ease: "easeOut",
+							}}
 						>
 							<div className="flex items-center justify-center space-x-3 relative z-10">
 								<span>Begin</span>
@@ -728,15 +730,10 @@ export default function Adoption() {
 										setDogs([]);
 										setMatchRates({});
 										setCurrentDogIndex(0);
-										setError(
-											"No more matches available. Try adjusting your preferences to see more options.",
-										);
-										showToast({
-											type: "info",
-											title: "No More Matches",
+										setMatchFlowError({
+											mode: "criteria",
 											message:
-												"All available matches have been shown. Try adjusting your preferences.",
-											duration: 5000,
+												"No more matches available. Try adjusting your preferences to see more options.",
 										});
 									}
 								}}
@@ -749,8 +746,8 @@ export default function Adoption() {
 					</motion.div>
 				)}
 
-				{/* Error Message */}
-				{error && (
+				{/* Match / network errors */}
+				{matchFlowError && (
 					<motion.div
 						ref={resultsRef}
 						className="max-w-2xl mx-auto"
@@ -762,59 +759,71 @@ export default function Adoption() {
 							ease: "easeOut",
 						}}
 					>
-						<motion.div
-							className="bg-gradient-to-br from-tara to-mintCream rounded-3xl shadow-xl p-8 text-center border-2 border-oxfordBlue/20"
-							initial={{ opacity: 0, scale: 0.95 }}
-							animate={{ opacity: 1, scale: 1 }}
-							transition={{ duration: 0.5, delay: 0.3 }}
-						>
-							<div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mx-auto mb-4">
-								<FontAwesomeIcon
-									icon={faSearch}
-									className="text-2xl text-honeydew"
-								/>
-							</div>
-							<h3 className="text-2xl font-bold text-oxfordBlue mb-3 font-delius">
-								No Match Found
-							</h3>
-							<p className="text-oxfordBlue font-poppins text-lg mb-4">
-								{error}
-							</p>
-							<p className="text-oxfordBlue/70 font-poppins mb-6">
-								Try adjusting your search criteria or browse all
-								available dogs
-							</p>
-							<button
-								onClick={() => {
-									setHasStarted(false);
-									setCurrentQuestionIndex(0);
-									setAnswers({
-										size: "",
-										gender: "",
-										age_min: null,
-										age_max: null,
-										good_with_dogs: undefined,
-										good_with_cats: undefined,
-										good_with_children: undefined,
-										breed: "",
-										is_crossbreed: undefined,
-									});
-									setError("");
-									setDogs([]);
-									setMatchRates({});
-									setCurrentDogIndex(0);
-								}}
-								className="btn-primary px-8 py-4"
+						{matchFlowError.mode === "network" ? (
+							<ErrorCard
+								icon={faDog}
+								title="We couldn't load your matches"
+								showSubtitle
+								buttons={[{ type: "home" }]}
+								className="mx-auto border-2 border-oxfordBlue/20"
+								titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
+							/>
+						) : (
+							<motion.div
+								className="bg-gradient-to-br from-tara to-mintCream rounded-3xl shadow-xl p-8 text-center border-2 border-oxfordBlue/20"
+								initial={{ opacity: 0, scale: 0.95 }}
+								animate={{ opacity: 1, scale: 1 }}
+								transition={{ duration: 0.5, delay: 0.3 }}
 							>
-								<div className="flex items-center justify-center space-x-3 relative z-10">
-									<span>Try Again</span>
+								<div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-highland to-sark">
 									<FontAwesomeIcon
-										icon={faArrowRight}
-										className="text-lg group-hover:translate-x-1 transition-transform duration-300"
+										icon={faSearch}
+										className="text-2xl text-honeydew"
 									/>
 								</div>
-							</button>
-						</motion.div>
+								<h3 className="mb-3 font-delius text-2xl font-bold text-oxfordBlue">
+									No Match Found
+								</h3>
+								<p className="mb-4 font-poppins text-lg text-oxfordBlue">
+									{matchFlowError.message}
+								</p>
+								<p className="mb-6 font-poppins text-oxfordBlue/70">
+									Try adjusting your search criteria or browse
+									all available dogs
+								</p>
+								<button
+									type="button"
+									onClick={() => {
+										setHasStarted(false);
+										setCurrentQuestionIndex(0);
+										setAnswers({
+											size: "",
+											gender: "",
+											age_min: null,
+											age_max: null,
+											good_with_dogs: undefined,
+											good_with_cats: undefined,
+											good_with_children: undefined,
+											breed: "",
+											is_crossbreed: undefined,
+										});
+										setMatchFlowError(null);
+										setDogs([]);
+										setMatchRates({});
+										setCurrentDogIndex(0);
+									}}
+									className="btn-primary px-8 py-4"
+								>
+									<div className="relative z-10 flex items-center justify-center space-x-3">
+										<span>Try Again</span>
+										<FontAwesomeIcon
+											icon={faArrowRight}
+											className="text-lg transition-transform duration-300 group-hover:translate-x-1"
+										/>
+									</div>
+								</button>
+							</motion.div>
+						)}
 					</motion.div>
 				)}
 			</div>

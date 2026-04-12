@@ -11,6 +11,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { blogAPI, BlogPost } from "../../services/blogApi";
 import { formatDateLong } from "../../helpers/dateUtils";
 import PawLoading from "../../components/PawLoading";
+import { resolveApiErrorMessage } from "../../helpers/apiErrorMessage";
 import { ErrorCard } from "../../components/ErrorCard";
 
 // Utility function to convert line breaks to HTML
@@ -54,7 +55,7 @@ const BlogPostPage: React.FC = () => {
 			setPost(postData);
 		} catch (err) {
 			console.error("Error fetching post:", err);
-			setError("Failed to load blog post");
+			setError(resolveApiErrorMessage(err, "Failed to load blog post"));
 		} finally {
 			setLoading(false);
 		}
@@ -85,7 +86,6 @@ const BlogPostPage: React.FC = () => {
 							icon={faNewspaper}
 							title={error || "Post Not Found"}
 							className="mx-auto max-w-2xl"
-							cardPaddingClass="p-8"
 							titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
 							showSubtitle
 							subtitleClassName="text-oxfordBlue/70"

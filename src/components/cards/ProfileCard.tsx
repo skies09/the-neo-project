@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useKennelActions } from "../../hooks/kennel.actions";
+import { resolveApiErrorMessage } from "../../helpers/apiErrorMessage";
 import { Kennel } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useToast } from "../ToastContainer";
@@ -50,10 +51,10 @@ const ProfileCard = ({
 				duration: 4000,
 			});
 		} catch (err) {
-			const errorMessage =
-				err instanceof Error
-					? err.message
-					: "An error occurred while saving";
+			const errorMessage = resolveApiErrorMessage(
+				err,
+				"An error occurred while saving",
+			);
 			setError(errorMessage);
 			showToast({
 				type: "error",

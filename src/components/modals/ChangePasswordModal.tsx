@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faEye, faEyeSlash, faLock } from "@fortawesome/free-solid-svg-icons";
 import { kennelAPI } from "../../services/api";
+import { resolveApiErrorMessage } from "../../helpers/apiErrorMessage";
 
 interface ChangePasswordModalProps {
 	isOpen: boolean;
@@ -91,10 +92,10 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 		} catch (err: any) {
 			console.error("Error changing password:", err);
 			setError(
-				err.response?.data?.message ||
-				err.response?.data?.error ||
-				err.message ||
-				"Failed to change password. Please try again."
+				resolveApiErrorMessage(
+					err,
+					"Failed to change password. Please try again.",
+				),
 			);
 		} finally {
 			setLoading(false);

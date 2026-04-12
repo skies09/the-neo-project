@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
 
 	const quickLinks = [
 		{ name: "Browse Dogs", href: "/all-dogs" },
-		{ name: "Adoption Process", href: "/adopt" },
+		{ name: "Adopt a Dog", href: "/adopt" },
 		{ name: "Breed Calculator", href: "/breed-calculator" },
 		{ name: "Dog Breeds", href: "/breeds" },
 		{ name: "Shop", href: "/shop" },

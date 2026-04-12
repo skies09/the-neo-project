@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw, faList, faDog } from "@fortawesome/free-solid-svg-icons";
 import PawLoading from "../../components/PawLoading";
+import { resolveApiErrorMessage } from "../../helpers/apiErrorMessage";
 import { ErrorCard } from "../../components/ErrorCard";
 
 export default function Breeds() {
@@ -39,7 +40,12 @@ export default function Breeds() {
 					"Error fetching initial data:",
 					error instanceof Error ? error.message : String(error),
 				);
-				setError("No breeds found, please check back later");
+				setError(
+					resolveApiErrorMessage(
+						error,
+						"No breeds found, please check back later",
+					),
+				);
 			} finally {
 				setLoading(false);
 			}
@@ -61,7 +67,12 @@ export default function Breeds() {
 				"Error fetching breeds:",
 				error instanceof Error ? error.message : String(error),
 			);
-			setError("Error fetching breeds. Please try again.");
+			setError(
+				resolveApiErrorMessage(
+					error,
+					"Error fetching breeds. Please try again.",
+				),
+			);
 		} finally {
 			setLoading(false);
 		}
@@ -80,7 +91,12 @@ export default function Breeds() {
 				"Error fetching breeds:",
 				error instanceof Error ? error.message : String(error),
 			);
-			setError("Error fetching breeds. Please try again.");
+			setError(
+				resolveApiErrorMessage(
+					error,
+					"Error fetching breeds. Please try again.",
+				),
+			);
 		} finally {
 			setLoading(false);
 		}

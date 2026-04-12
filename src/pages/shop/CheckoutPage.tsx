@@ -13,6 +13,7 @@ import {
   applyCouponFailure,
   clearCoupon,
 } from '../../store/shop/actions';
+import { resolveApiErrorMessage } from '../../helpers/apiErrorMessage';
 
 const CheckoutPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ const CheckoutPage: React.FC = () => {
       dispatch(createOrderSuccess(response));
       navigate(`/shop`, { state: { order: response } });
     } catch (error: any) {
-      dispatch(createOrderFailure(error.message || 'Failed to create order'));
+      dispatch(createOrderFailure(resolveApiErrorMessage(error, 'Failed to create order')));
     }
   };
 
@@ -36,7 +37,7 @@ const CheckoutPage: React.FC = () => {
       const response = await shopAPI.applyCoupon(code, cart.totalPrice);
       dispatch(applyCouponSuccess(response));
     } catch (error: any) {
-      dispatch(applyCouponFailure(error.message || 'Invalid coupon code'));
+      dispatch(applyCouponFailure(resolveApiErrorMessage(error, 'Invalid coupon code')));
     }
   };
 

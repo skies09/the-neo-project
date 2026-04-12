@@ -16,6 +16,7 @@ import {
 	faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { getSizeDisplayName } from "../../helpers/sizeUtils";
+import { resolveApiErrorMessage } from "../../helpers/apiErrorMessage";
 
 interface DogToEdit {
 	id?: string;
@@ -88,8 +89,7 @@ const KennelAccount = () => {
 			} catch (err) {
 				console.error("Error fetching kennel details:", err);
 				setProfileError(
-					"Error fetching kennel details: " +
-						(err instanceof Error ? err.message : String(err)),
+					resolveApiErrorMessage(err, "Error fetching kennel details."),
 				);
 			} finally {
 				setLoadingKennel(false);
@@ -115,7 +115,7 @@ const KennelAccount = () => {
 				setDogData(Array.isArray(data) ? data : []);
 			} catch (err) {
 				console.error("Error fetching dogs:", err);
-				setDogsError("Error fetching dogs");
+				setDogsError(resolveApiErrorMessage(err, "Error fetching dogs"));
 				// Set empty array on error to prevent map errors
 				setDogData([]);
 			} finally {
@@ -142,7 +142,12 @@ const KennelAccount = () => {
 				"Error deleting dog:",
 				error instanceof Error ? error.message : String(error),
 			);
-			setDogsError("Error deleting dog. Please try again.");
+			setDogsError(
+				resolveApiErrorMessage(
+					error,
+					"Error deleting dog. Please try again.",
+				),
+			);
 		}
 	};
 

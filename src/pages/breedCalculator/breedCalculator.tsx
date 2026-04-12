@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 import { breedsAPI, Breed } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion, AnimatePresence } from "framer-motion";
-import { useToast } from "../../components/ToastContainer";
+import { ErrorCard } from "../../components/ErrorCard";
 import { breedDetailPath } from "../../helpers/breedRoutes";
 import {
-	faSearch,
+	isNetworkOrTransportFailure,
+	resolveApiErrorMessage,
+} from "../../helpers/apiErrorMessage";
+import {
 	faArrowRight,
 	faInfoCircle,
 	faDog,
@@ -44,8 +47,8 @@ export default function BreedCalculator() {
 	const [matchRates, setMatchRates] = useState<Record<string, number>>({});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+	const [networkError, setNetworkError] = useState(false);
 	const resultsRef = useRef<HTMLDivElement>(null);
-	const { showToast } = useToast();
 	const [isDragging, setIsDragging] = useState(false);
 	const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -253,6 +256,7 @@ export default function BreedCalculator() {
 	const handleSubmit = async () => {
 		setLoading(true);
 		setError("");
+		setNetworkError(false);
 
 		try {
 			const preferences = mapFormValuesToPreferences();
@@ -280,43 +284,22 @@ export default function BreedCalculator() {
 			setBreeds(matchedBreeds);
 			setMatchRates(rates);
 
-			if (matchedBreeds.length > 0) {
-				showToast({
-					type: "success",
-					title: "Breeds Found!",
-					message: `Found ${matchedBreeds.length} breed${
-						matchedBreeds.length === 1 ? "" : "s"
-					} that match your criteria.`,
-					duration: 4000,
-				});
-			} else {
-				// API returned successfully but no breeds matched (all had 0% match rate)
+			if (matchedBreeds.length === 0) {
 				setError(
 					"No breeds found with a match rate greater than 0%. Try adjusting your preferences to be less specific.",
 				);
-				showToast({
-					type: "info",
-					title: "No Matches Found",
-					message:
-						"No breeds matched your criteria. Try adjusting your preferences.",
-					duration: 5000,
-				});
 			}
 		} catch (err: any) {
 			console.error("Search error:", err);
 			setBreeds([]);
 			setMatchRates({});
-			const errorMessage =
-				err.response?.data?.error ||
-				err.message ||
-				"No matching breeds found. Try adjusting your criteria.";
+			const isNet = isNetworkOrTransportFailure(err);
+			setNetworkError(isNet);
+			const errorMessage = resolveApiErrorMessage(
+				err,
+				"No matching breeds found. Try adjusting your criteria.",
+			);
 			setError(errorMessage);
-			showToast({
-				type: "error",
-				title: "Search Failed",
-				message: errorMessage,
-				duration: 5000,
-			});
 		} finally {
 			setLoading(false);
 		}
@@ -338,8 +321,8 @@ export default function BreedCalculator() {
 				{!hasStarted && (
 					<motion.div
 						className="text-center py-20"
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
 						transition={{ duration: 0.8, ease: "easeOut" }}
 					>
 						<motion.div
@@ -370,15 +353,19 @@ export default function BreedCalculator() {
 							transition={{ duration: 0.6, delay: 0.4 }}
 						>
 							Tell us about your lifestyle and we'll recommend the
-							perfect breeds for you. This will only take a few
-							minutes!
+							perfect breeds for you.
 						</motion.p>
 						<motion.button
+							type="button"
 							onClick={() => setHasStarted(true)}
 							className="btn-primary px-8 py-4 text-xl"
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.6, delay: 0.5 }}
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{
+								duration: 0.5,
+								delay: 0.55,
+								ease: "easeOut",
+							}}
 						>
 							<div className="flex items-center justify-center space-x-3 relative z-10">
 								<span>Begin</span>
@@ -421,7 +408,7 @@ export default function BreedCalculator() {
 						</motion.div>
 
 						{/* Question Card */}
-						<div className="bg-tomThumb rounded-3xl shadow-xl p-8 lg:p-10 mb-8">
+						<div className="bg-tomThumb rounded-3xl shadow-xl p-8 lg:p-10 mb-4">
 							<AnimatePresence mode="wait">
 								<motion.div
 									key={currentQuestionIndex}
@@ -740,7 +727,7 @@ export default function BreedCalculator() {
 				{/* Results Section */}
 				<motion.div
 					ref={resultsRef}
-					className="max-w-7xl mx-auto py-10"
+					className="max-w-7xl mx-auto"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
@@ -859,27 +846,23 @@ export default function BreedCalculator() {
 						})}
 					</div>
 
-					{error && (
-						<motion.div
-							className="text-center p-8 bg-tomThumb rounded-3xl shadow-xl mt-8"
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.6 }}
-						>
-							<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
-								<FontAwesomeIcon
-									icon={faSearch}
-									className="text-2xl text-sunset"
-								/>
-							</div>
-							<p className="text-tara font-poppins font-semibold text-lg mb-2">
-								{error}
-							</p>
-							<p className="text-tara/80 font-poppins text-sm">
-								Try adjusting your search criteria
-							</p>
-						</motion.div>
-					)}
+					{error ? (
+						<div className="mt-8 flex justify-center px-2">
+							<ErrorCard
+								icon={faDog}
+								title={
+									networkError
+										? "We could not load breed matches"
+										: error
+								}
+								showSubtitle={networkError}
+								subtitleClassName="text-oxfordBlue/70"
+								buttons={[{ type: "home" }]}
+								className="max-w-2xl"
+								titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
+							/>
+						</div>
+					) : null}
 				</motion.div>
 			</div>
 		</motion.div>

@@ -6,6 +6,7 @@ import {
 	faGem,
 	faImage,
 	faTruckFast,
+	faStore,
 } from "@fortawesome/free-solid-svg-icons";
 import { RootState } from "../../store/store";
 import ProductList from "../../components/shop/ProductList";
@@ -26,6 +27,11 @@ import {
 	addToCartFailure,
 	setProductFilters,
 } from "../../store/shop/actions";
+import {
+	resolveApiErrorMessage,
+	shopFetchErrorCardDetail,
+} from "../../helpers/apiErrorMessage";
+import { ErrorCard } from "../../components/ErrorCard";
 
 function getProductDiscountLabel(product: Product): string | null {
 	if (!product.discount_percentage) return null;
@@ -67,6 +73,16 @@ const ShopHome: React.FC = () => {
 		error: null,
 	};
 
+	const categoriesUnavailable =
+		!categories.loading &&
+		categories.error != null &&
+		String(categories.error).length > 0;
+	const productsUnavailable =
+		selectedCategory != null &&
+		!products.loading &&
+		products.error != null &&
+		String(products.error).length > 0;
+
 	const fetchProducts = useCallback(
 		async (filters?: any) => {
 			dispatch(fetchProductsRequest());
@@ -76,7 +92,10 @@ const ShopHome: React.FC = () => {
 			} catch (error: any) {
 				dispatch(
 					fetchProductsFailure(
-						error.message || "Failed to fetch products",
+						resolveApiErrorMessage(
+							error,
+							"Failed to fetch products",
+						),
 					),
 				);
 			}
@@ -92,7 +111,10 @@ const ShopHome: React.FC = () => {
 		} catch (error: any) {
 			dispatch(
 				fetchFeaturedProductsFailure(
-					error.message || "Failed to fetch bestseller products",
+					resolveApiErrorMessage(
+						error,
+						"Failed to fetch bestseller products",
+					),
 				),
 			);
 		}
@@ -106,7 +128,7 @@ const ShopHome: React.FC = () => {
 		} catch (error: any) {
 			dispatch(
 				fetchCategoriesFailure(
-					error.message || "Failed to fetch categories",
+					resolveApiErrorMessage(error, "Failed to fetch categories"),
 				),
 			);
 		}
@@ -188,7 +210,9 @@ const ShopHome: React.FC = () => {
 			}
 		} catch (error: any) {
 			dispatch(
-				addToCartFailure(error.message || "Failed to add item to cart"),
+				addToCartFailure(
+					resolveApiErrorMessage(error, "Failed to add item to cart"),
+				),
 			);
 		}
 	};
@@ -261,7 +285,7 @@ const ShopHome: React.FC = () => {
 							<span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-honeydew/20 text-honeydew">
 								<FontAwesomeIcon
 									icon={faTruckFast}
-									className="text-lg"
+									className="text-lg text-sunset"
 									aria-hidden
 								/>
 							</span>
@@ -273,7 +297,7 @@ const ShopHome: React.FC = () => {
 							<span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-honeydew/20 text-honeydew">
 								<FontAwesomeIcon
 									icon={faGem}
-									className="text-lg"
+									className="text-lg text-sunset"
 									aria-hidden
 								/>
 							</span>
@@ -285,7 +309,7 @@ const ShopHome: React.FC = () => {
 							<span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-honeydew/20 text-honeydew">
 								<FontAwesomeIcon
 									icon={faClipboardList}
-									className="text-lg"
+									className="text-lg text-sunset"
 									aria-hidden
 								/>
 							</span>
@@ -297,195 +321,243 @@ const ShopHome: React.FC = () => {
 				</div>
 			</div>
 
-			{/* Featured Products Section */}
-			{featuredProducts.items && featuredProducts.items.length > 0 && (
-				<div className="py-16">
-					<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-						<div className="text-center mb-12">
-							<h2 className="text-3xl font-bold text-oxfordBlue font-delius mb-4">
-								Bestseller Products
-							</h2>
-							<p className="text-lg text-highland font-fredoka">
-								Our most popular and best-selling items
-							</p>
-						</div>
-
-						<div className="flex flex-wrap items-stretch justify-center gap-6">
-							{featuredProducts.items
-								?.slice(0, 4)
-								.map((product) => {
-									const discountLabel =
-										getProductDiscountLabel(product);
-									return (
-										<div
-											key={product.id}
-											className="group flex h-full min-h-[26rem] w-full max-w-sm shrink-0 flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-tara to-mintCream shadow-lg transition-all duration-300 hover:shadow-xl sm:min-h-[26rem] sm:w-72"
-										>
-											<div className="relative h-48 w-full shrink-0 overflow-hidden bg-gradient-to-br from-highland/20 to-sark/20">
-												{product.primary_image ? (
-													<img
-														src={
-															product.primary_image
-														}
-														alt={product.name}
-														className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-													/>
-												) : (
-													<div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-sprout/45 via-tara/35 to-mintCream/50 px-3 text-center">
-														<FontAwesomeIcon
-															icon={faImage}
-															className="text-5xl text-highland/30"
-															aria-hidden
-														/>
-													</div>
-												)}
-												{discountLabel && (
-													<div className="absolute left-2 top-2 z-10 rounded-full bg-gradient-to-r from-highland to-sark px-3 py-1 font-poppins text-xs font-bold text-honeydew shadow-md">
-														{discountLabel}
-													</div>
-												)}
-												<div className="absolute right-2 top-2 z-10 rounded-full bg-gradient-to-r from-highland to-sark px-3 py-1 font-poppins text-xs font-bold text-honeydew shadow-md">
-													Bestseller
-												</div>
-											</div>
-											<div className="flex min-h-0 flex-1 flex-col p-4">
-												<div className="min-h-0 flex-1">
-													{product.brand && (
-														<div className="mb-2">
-															<span className="font-poppins text-sm font-medium text-oxfordBlue/70">
-																{product.brand}
-															</span>
-														</div>
-													)}
-													<h3 className="mb-0 line-clamp-2 font-delius text-lg font-semibold text-oxfordBlue transition-colors group-hover:text-highland">
-														{product.name}
-													</h3>
-												</div>
-												<div className="mt-auto shrink-0 pt-4">
-													<div className="mb-3 flex items-center gap-2">
-														<span className="font-poppins text-xl font-bold text-oxfordBlue">
-															£
-															{parseFloat(
-																product.price,
-															).toFixed(2)}
-														</span>
-														{product.compare_price && (
-															<span className="font-poppins text-sm text-oxfordBlue/50 line-through">
-																£
-																{parseFloat(
-																	product.compare_price,
-																).toFixed(2)}
-															</span>
-														)}
-													</div>
-													<button
-														type="button"
-														onClick={() =>
-															handleAddToCart(
-																product.id,
-																1,
-															)
-														}
-														disabled={
-															!product.is_in_stock
-														}
-														className={`w-full rounded-full px-4 py-2 font-fredoka font-semibold transition-all duration-300 ${
-															product.is_in_stock
-																? "btn-primary"
-																: "cursor-not-allowed bg-gray-300 text-gray-500"
-														}`}
-													>
-														{product.is_in_stock
-															? "Add to Cart"
-															: "Out of Stock"}
-													</button>
-												</div>
-											</div>
-										</div>
-									);
-								})}
-						</div>
-					</div>
+			{categoriesUnavailable && (
+				<div className="max-w-7xl mx-auto px-4 pb-12 pt-2 sm:px-6 lg:px-8">
+					<ErrorCard
+						icon={faStore}
+						title="Apologies, the shop is currently unavailable"
+						showSubtitle
+						subtitleClassName="text-oxfordBlue/70"
+						detail={shopFetchErrorCardDetail(
+							String(categories.error),
+						)}
+						buttons={[{ type: "home" }]}
+						className="mx-auto max-w-2xl"
+						titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
+					/>
 				</div>
 			)}
 
-			{/* Main Content */}
-			<div className="py-4">
-				{!selectedCategory || selectedCategory === null ? (
-					/* Show Categories */
-					<>
-						<CategoryGrid
-							categories={categories.items || []}
-							loading={categories.loading}
-							onCategorySelect={handleCategorySelect}
-						/>
-					</>
-				) : (
-					/* Show Products for Selected Category */
-					<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-						{/* Back to Categories Button */}
-						<div className="mb-8">
-							<button
-								onClick={handleBackToCategories}
-								className="group flex items-center space-x-2 text-highland hover:text-sark font-poppins font-semibold transition-colors"
-							>
-								<svg
-									className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M15 19l-7-7 7-7"
-									/>
-								</svg>
-								<span>Back to Categories</span>
-							</button>
-						</div>
+			{/* Featured Products Section */}
+			{!categoriesUnavailable &&
+				featuredProducts.items &&
+				featuredProducts.items.length > 0 && (
+					<div className="py-16">
+						<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+							<div className="text-center mb-12">
+								<h2 className="text-3xl font-bold text-oxfordBlue font-delius mb-4">
+									Bestseller Products
+								</h2>
+								<p className="text-lg text-highland font-fredoka">
+									Our most popular and best-selling items
+								</p>
+							</div>
 
-						{/* Category Title */}
-						<div className="text-center mb-4">
-							<h2 className="text-3xl font-bold text-oxfordBlue font-delius mb-4">
-								{selectedCategory === "all"
-									? "All Products"
-									: selectedCategory
-										? categories.items?.find(
-												(cat) =>
-													cat.code ===
-													selectedCategory,
-											)?.name || "Products"
-										: "All Products"}
-							</h2>
-							<p className="text-lg text-highland font-fredoka">
-								{selectedCategory === "all"
-									? "Browse our complete collection of pet products"
-									: selectedCategory
-										? `Browse ${categories.items
-												?.find(
+							<div className="flex flex-wrap items-stretch justify-center gap-6">
+								{featuredProducts.items
+									?.slice(0, 4)
+									.map((product) => {
+										const discountLabel =
+											getProductDiscountLabel(product);
+										return (
+											<div
+												key={product.id}
+												className="group flex h-full min-h-[26rem] w-full max-w-sm shrink-0 flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-tara to-mintCream shadow-lg transition-all duration-300 hover:shadow-xl sm:min-h-[26rem] sm:w-72"
+											>
+												<div className="relative h-48 w-full shrink-0 overflow-hidden bg-gradient-to-br from-highland/20 to-sark/20">
+													{product.primary_image ? (
+														<img
+															src={
+																product.primary_image
+															}
+															alt={product.name}
+															className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+														/>
+													) : (
+														<div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-sprout/45 via-tara/35 to-mintCream/50 px-3 text-center">
+															<FontAwesomeIcon
+																icon={faImage}
+																className="text-5xl text-highland/30"
+																aria-hidden
+															/>
+														</div>
+													)}
+													{discountLabel && (
+														<div className="absolute left-2 top-2 z-10 rounded-full bg-gradient-to-r from-highland to-sark px-3 py-1 font-poppins text-xs font-bold text-honeydew shadow-md">
+															{discountLabel}
+														</div>
+													)}
+													<div className="absolute right-2 top-2 z-10 rounded-full bg-gradient-to-r from-highland to-sark px-3 py-1 font-poppins text-xs font-bold text-honeydew shadow-md">
+														Bestseller
+													</div>
+												</div>
+												<div className="flex min-h-0 flex-1 flex-col p-4">
+													<div className="min-h-0 flex-1">
+														{product.brand && (
+															<div className="mb-2">
+																<span className="font-poppins text-sm font-medium text-oxfordBlue/70">
+																	{
+																		product.brand
+																	}
+																</span>
+															</div>
+														)}
+														<h3 className="mb-0 line-clamp-2 font-delius text-lg font-semibold text-oxfordBlue transition-colors group-hover:text-highland">
+															{product.name}
+														</h3>
+													</div>
+													<div className="mt-auto shrink-0 pt-4">
+														<div className="mb-3 flex items-center gap-2">
+															<span className="font-poppins text-xl font-bold text-oxfordBlue">
+																£
+																{parseFloat(
+																	product.price,
+																).toFixed(2)}
+															</span>
+															{product.compare_price && (
+																<span className="font-poppins text-sm text-oxfordBlue/50 line-through">
+																	£
+																	{parseFloat(
+																		product.compare_price,
+																	).toFixed(
+																		2,
+																	)}
+																</span>
+															)}
+														</div>
+														<button
+															type="button"
+															onClick={() =>
+																handleAddToCart(
+																	product.id,
+																	1,
+																)
+															}
+															disabled={
+																!product.is_in_stock
+															}
+															className={`w-full rounded-full px-4 py-2 font-fredoka font-semibold transition-all duration-300 ${
+																product.is_in_stock
+																	? "btn-primary"
+																	: "cursor-not-allowed bg-gray-300 text-gray-500"
+															}`}
+														>
+															{product.is_in_stock
+																? "Add to Cart"
+																: "Out of Stock"}
+														</button>
+													</div>
+												</div>
+											</div>
+										);
+									})}
+							</div>
+						</div>
+					</div>
+				)}
+
+			{/* Main Content */}
+			{!categoriesUnavailable && (
+				<div className="py-4">
+					{!selectedCategory || selectedCategory === null ? (
+						/* Show Categories */
+						<>
+							<CategoryGrid
+								categories={categories.items || []}
+								loading={categories.loading}
+								onCategorySelect={handleCategorySelect}
+							/>
+						</>
+					) : (
+						/* Show Products for Selected Category */
+						<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+							{/* Back to Categories Button */}
+							<div className="mb-8">
+								<button
+									onClick={handleBackToCategories}
+									className="group flex items-center space-x-2 text-highland hover:text-sark font-poppins font-semibold transition-colors"
+								>
+									<svg
+										className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M15 19l-7-7 7-7"
+										/>
+									</svg>
+									<span>Back to Categories</span>
+								</button>
+							</div>
+
+							{/* Category Title */}
+							<div className="text-center mb-4">
+								<h2 className="text-3xl font-bold text-oxfordBlue font-delius mb-4">
+									{selectedCategory === "all"
+										? "All Products"
+										: selectedCategory
+											? categories.items?.find(
 													(cat) =>
 														cat.code ===
 														selectedCategory,
-												)
-												?.name?.toLowerCase()} products`
-										: "Browse our complete collection of pet products"}
-							</p>
-						</div>
+												)?.name || "Products"
+											: "All Products"}
+								</h2>
+								<p className="text-lg text-highland font-fredoka">
+									{selectedCategory === "all"
+										? "Browse our complete collection of pet products"
+										: selectedCategory
+											? `Browse ${categories.items
+													?.find(
+														(cat) =>
+															cat.code ===
+															selectedCategory,
+													)
+													?.name?.toLowerCase()} products`
+											: "Browse our complete collection of pet products"}
+								</p>
+							</div>
 
-						<ProductList
-							products={products.items || []}
-							loading={products.loading}
-							onAddToCart={handleAddToCart}
-							showFilters={true}
-							onFilterChange={handleFilterChange}
-							categories={categories.items || []}
-							currentFilters={currentFilters}
-						/>
-					</div>
-				)}
-			</div>
+							{productsUnavailable ? (
+								<div className="mt-6 flex justify-center px-2">
+									<ErrorCard
+										icon={faStore}
+										title="We could not load these products"
+										showSubtitle
+										subtitleClassName="text-oxfordBlue/70"
+										detail={shopFetchErrorCardDetail(
+											String(products.error),
+										)}
+										buttons={[
+											{ type: "home" },
+											{
+												type: "goBack",
+												onClick: handleBackToCategories,
+											},
+										]}
+										className="max-w-2xl"
+										titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
+									/>
+								</div>
+							) : (
+								<ProductList
+									products={products.items || []}
+									loading={products.loading}
+									onAddToCart={handleAddToCart}
+									showFilters={true}
+									onFilterChange={handleFilterChange}
+									categories={categories.items || []}
+									currentFilters={currentFilters}
+								/>
+							)}
+						</div>
+					)}
+				</div>
+			)}
 		</div>
 	);
 };

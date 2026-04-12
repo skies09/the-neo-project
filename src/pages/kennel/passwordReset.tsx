@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useKennelActions } from "../../hooks/kennel.actions";
+import { resolveApiErrorMessage } from "../../helpers/apiErrorMessage";
 
 const PasswordReset = () => {
 	const { resetPassword } = useKennelActions();
@@ -25,9 +26,10 @@ const PasswordReset = () => {
 			setSuccess(true);
 		} catch (err) {
 			setError(
-				err instanceof Error
-					? err.message
-					: "An error occurred during password reset"
+				resolveApiErrorMessage(
+					err,
+					"An error occurred during password reset",
+				),
 			);
 		}
 	};
