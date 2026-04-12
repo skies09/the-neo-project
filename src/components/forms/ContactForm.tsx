@@ -11,7 +11,6 @@ import {
 	faMapMarkerAlt,
 	faBuilding,
 	faCheckCircle,
-	faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface ContactFormData {

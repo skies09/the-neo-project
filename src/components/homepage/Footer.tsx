@@ -86,7 +86,10 @@ const Footer: React.FC = () => {
 						</p>
 						<div className="flex space-x-4">
 							<a
+								// href="https://www.instagram.com/"
 								href="#"
+								target="_blank"
+								rel="noopener noreferrer"
 								className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-95"
 								style={neoRaisedStyle}
 								onMouseEnter={(e) => handleNeoHover(e, true)}
@@ -98,7 +101,10 @@ const Footer: React.FC = () => {
 								/>
 							</a>
 							<a
+								// href="https://www.facebook.com/"
 								href="#"
+								target="_blank"
+								rel="noopener noreferrer"
 								className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-95"
 								style={neoRaisedStyle}
 								onMouseEnter={(e) => handleNeoHover(e, true)}
@@ -110,7 +116,10 @@ const Footer: React.FC = () => {
 								/>
 							</a>
 							<a
+								// href="https://www.tiktok.com/"
 								href="#"
+								target="_blank"
+								rel="noopener noreferrer"
 								className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-95"
 								style={neoRaisedStyle}
 								onMouseEnter={(e) => handleNeoHover(e, true)}

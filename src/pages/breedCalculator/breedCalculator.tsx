@@ -247,6 +247,7 @@ export default function BreedCalculator() {
 				document.removeEventListener("mouseup", handleMouseUp);
 			};
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- document listeners use currentQuestionIndex when drag starts; listing handlers would rebind every render while dragging
 	}, [isDragging, currentQuestionIndex]);
 
 	const handleSubmit = async () => {

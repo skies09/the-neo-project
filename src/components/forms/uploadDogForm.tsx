@@ -5,7 +5,6 @@ import { dogAPI, Kennel } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useToast } from "../ToastContainer";
 import {
-	faDog,
 	faEdit,
 	faSave,
 	faTimes,
@@ -15,7 +14,6 @@ import {
 	faWeightHanging,
 	faRuler,
 	faVenusMars,
-	faQuestionCircle,
 	faHeart,
 	faCat,
 	faBaby,
