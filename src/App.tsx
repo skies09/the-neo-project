@@ -31,6 +31,7 @@ import { ToastContainer } from "./components/ToastContainer";
 import FloatingCartIcon from "./components/shop/FloatingCartIcon";
 import ScrollToTop from "./components/ScrollToTop";
 import Footer from "./components/homepage/Footer";
+import NotFound from "./pages/NotFound";
 
 const CartIcon: React.FC = () => {
 	return <FloatingCartIcon />;
@@ -76,6 +77,7 @@ const App: React.FC = () => (
 						</ProtectedRoute>
 					}
 				/>
+				<Route path="*" element={<NotFound />} />
 			</Routes>
 			<CartIcon />
 			<Footer />

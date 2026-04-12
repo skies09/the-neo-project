@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendar, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import {
+	faCalendar,
+	faArrowRight,
+	faNewspaper,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { blogAPI, BlogPost } from "../../services/blogApi";
 import { formatDateShort } from "../../helpers/dateUtils";
 import TransitionCTA from "../homepage/TransitionCTA";
 import PawLoading from "../PawLoading";
+import { ErrorCard, RefreshContactSubtitle } from "../ErrorCard";
 
 const BlogHomepage: React.FC = () => {
 	const [featuredPosts, setFeaturedPosts] = useState<BlogPost[]>([]);
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+	const [error, setError] = useState(false);
 
 	const fetchBlogData = async () => {
 		try {
 			setLoading(true);
-			setError(null);
+			setError(false);
 
 			// Fetch all posts and filter for featured ones
 			const response = await blogAPI.getPosts({ page_size: 100 });
@@ -29,7 +34,7 @@ const BlogHomepage: React.FC = () => {
 			setFeaturedPosts(featuredPosts);
 		} catch (err) {
 			console.error("Error fetching blog data:", err);
-			setError("Failed to load blog posts");
+			setError(true);
 		} finally {
 			setLoading(false);
 		}
@@ -38,11 +43,6 @@ const BlogHomepage: React.FC = () => {
 	useEffect(() => {
 		fetchBlogData();
 	}, []);
-
-	// Don't render the section if there are no blog posts (regardless of error state)
-	if (!loading && featuredPosts.length === 0) {
-		return null;
-	}
 
 	if (loading) {
 		return (
@@ -56,6 +56,69 @@ const BlogHomepage: React.FC = () => {
 					</div>
 				</div>
 			</section>
+		);
+	}
+
+	const blogAsideWithCta = (card: React.ReactNode) => (
+		<section className="py-10 bg-gradient-to-br from-honeydew to-mintCream">
+			<div className="max-w-7xl mx-auto px-4 pb-8">
+				<motion.div
+					className="mx-auto max-w-xl text-center"
+					initial={{ opacity: 0, y: 12 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.45, ease: "easeOut" }}
+				>
+					{card}
+				</motion.div>
+			</div>
+			<TransitionCTA
+				simplified
+				title="Ready to find your perfect dog?"
+				firstButtonText="Begin Your Journey Today"
+				showFirstButtonIcon={true}
+			/>
+		</section>
+	);
+
+	/** Request failed — not the same as “no featured posts”. */
+	if (error) {
+		return blogAsideWithCta(
+			<ErrorCard
+				icon={faNewspaper}
+				title="Apologies, the blog is currently unavailable"
+				footer={
+					<Link
+						to="/"
+						className="btn-primary inline-flex items-center justify-center px-8 py-3"
+					>
+						Back to home
+					</Link>
+				}
+			>
+				<RefreshContactSubtitle />
+			</ErrorCard>,
+		);
+	}
+
+	/** Loaded OK but nothing to feature on the homepage (often no posts marked featured). */
+	if (featuredPosts.length === 0) {
+		return blogAsideWithCta(
+			<ErrorCard
+				title="Nothing to show yet"
+				footer={
+					<Link
+						to="/"
+						className="btn-primary inline-flex items-center justify-center px-8 py-3"
+					>
+						Back to home
+					</Link>
+				}
+			>
+				<p className="font-poppins leading-relaxed text-oxfordBlue/80 md:text-lg">
+					There are no featured posts at the moment. Please check back
+					soon, or open the blog from the menu.
+				</p>
+			</ErrorCard>,
 		);
 	}
 
@@ -101,12 +164,16 @@ const BlogHomepage: React.FC = () => {
 									}}
 									whileHover={{ scale: 1.02 }}
 								>
-									<Link to={`/blog/${encodeURIComponent(post.slug)}`}>
+									<Link
+										to={`/blog/${encodeURIComponent(post.slug)}`}
+									>
 										<div className="relative">
 											{post.featured_image ? (
 												<div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-highland/20 to-sark/20">
 													<img
-														src={post.featured_image}
+														src={
+															post.featured_image
+														}
 														alt={post.title}
 														className="absolute inset-0 h-full w-full object-cover"
 														loading="lazy"

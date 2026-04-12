@@ -4,12 +4,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faArrowLeft,
 	faCalendar,
+	faNewspaper,
 	faTag,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { blogAPI, BlogPost } from "../../services/blogApi";
 import { formatDateLong } from "../../helpers/dateUtils";
 import PawLoading from "../../components/PawLoading";
+import {
+	ErrorCard,
+	RefreshContactSubtitle,
+} from "../../components/ErrorCard";
 
 // Utility function to convert line breaks to HTML
 const formatContent = (content: string): string => {
@@ -79,35 +84,32 @@ const BlogPostPage: React.FC = () => {
 			<div className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16">
 				<div className="max-w-4xl mx-auto px-4 py-20">
 					<div className="text-center">
-						<div className="bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-xl p-8 max-w-2xl mx-auto border-2 border-oxfordBlue/10">
-							<div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-								<FontAwesomeIcon
-									icon={faArrowLeft}
-									className="text-2xl text-honeydew"
-								/>
-							</div>
-							<h2 className="text-2xl font-bold text-oxfordBlue font-delius mb-4">
-								{error || "Post Not Found"}
-							</h2>
-							<p className="text-oxfordBlue/70 font-poppins mb-6">
-								The blog post you're looking for doesn't exist
-								or has been removed.
-							</p>
-							<div className="flex flex-col sm:flex-row gap-4 justify-center">
-								<button
-									onClick={() => navigate(-1)}
-									className="bg-gradient-to-r from-highland to-sark text-honeydew px-6 py-3 rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-fredoka font-semibold"
-								>
-									Go Back
-								</button>
-								<Link
-									to="/blog"
-									className="bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue px-6 py-3 rounded-full hover:bg-oxfordBlue hover:text-honeydew transition-all duration-300 inline-block font-fredoka font-semibold"
-								>
-									View All Posts
-								</Link>
-							</div>
-						</div>
+						<ErrorCard
+							icon={faNewspaper}
+							title={error || "Post Not Found"}
+							className="mx-auto max-w-2xl"
+							cardPaddingClass="p-8"
+							titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
+							footer={
+								<div className="flex flex-col justify-center gap-4 sm:flex-row">
+									<button
+										type="button"
+										onClick={() => navigate(-1)}
+										className="btn-primary px-6 py-3"
+									>
+										Go Back
+									</button>
+									<Link
+										to="/blog"
+										className="btn-secondary inline-flex items-center justify-center px-6 py-3"
+									>
+										View All Posts
+									</Link>
+								</div>
+							}
+						>
+							<RefreshContactSubtitle className="text-oxfordBlue/70" />
+						</ErrorCard>
 					</div>
 				</div>
 			</div>

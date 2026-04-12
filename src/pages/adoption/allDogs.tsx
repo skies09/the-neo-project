@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import AdoptCard from "../../components/cards/adoptCard";
 import { dogAPI, Dog } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
-import { faSearch, faHome } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faDog } from "@fortawesome/free-solid-svg-icons";
 import PawLoading from "../../components/PawLoading";
+import {
+	ErrorCard,
+	RefreshContactSubtitle,
+} from "../../components/ErrorCard";
 
 export default function AllDogs() {
 	const [dogData, setDogData] = useState<Dog[]>([]);
@@ -40,6 +45,8 @@ export default function AllDogs() {
 		fetchDogs();
 	}, []);
 
+	const showEmptyState = !loading && (Boolean(error) || dogData.length === 0);
+
 	if (loading) {
 		return (
 			<div className="relative min-h-screen bg-gradient-to-br from-honeydew to-mintCream pt-16">
@@ -54,7 +61,7 @@ export default function AllDogs() {
 
 	return (
 		<motion.div
-			className="min-h-screen pt-16 pb-20 px-4 bg-mintCream"
+			className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream px-4 pb-20 pt-16"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
@@ -77,50 +84,51 @@ export default function AllDogs() {
 				</p>
 			</motion.div>
 
-			{/* Error Message */}
-			{error && (
+			{/* Empty / error — same card layout as blog post not found */}
+			{showEmptyState && (
 				<motion.div
-					className="max-w-7xl mx-auto pt-8"
+					className="mx-auto max-w-4xl px-4"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+					transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
 				>
-					<div className="flex flex-col justify-center items-center py-12 bg-sark rounded-3xl shadow-xl">
-						<p className="text-lg lg:text-xl text-mintCream font-fredoka max-w-5xl mx-auto text-center">
-							{error}
-						</p>
+					<div className="text-center">
+						<ErrorCard
+							icon={faDog}
+							className="mx-auto max-w-2xl"
+							cardPaddingClass="p-8"
+							title="No dogs available for adoption"
+							titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
+							footer={
+								<div className="flex justify-center">
+									<Link
+										to="/"
+										className="btn-primary inline-flex items-center justify-center px-6 py-3"
+									>
+										Back to home
+									</Link>
+								</div>
+							}
+						>
+							<RefreshContactSubtitle className="text-oxfordBlue/70" />
+						</ErrorCard>
 					</div>
 				</motion.div>
 			)}
 
 			{/* Content Section */}
-			{!error && (
+			{!showEmptyState && (
 				<motion.div
-					className="max-w-7xl mx-auto pt-12"
+					className="mx-auto max-w-7xl pt-12"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
 				>
-					{dogData && dogData.length > 0 ? (
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-							{dogData.map((dog) => (
-								<AdoptCard key={dog.id} dog={dog} />
-							))}
-						</div>
-					) : (
-						<div className="flex flex-col justify-center items-center py-12">
-							<FontAwesomeIcon
-								icon={faHome}
-								className="text-6xl mb-4 text-oxfordBlue/50"
-							/>
-							<p className="text-lg text-oxfordBlue font-poppins">
-								No dogs available for adoption at the moment.
-							</p>
-							<p className="text-sm text-oxfordBlue/70 mt-2 font-poppins">
-								Check back soon for new arrivals!
-							</p>
-						</div>
-					)}
+					<div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-2 lg:grid-cols-3">
+						{dogData.map((dog) => (
+							<AdoptCard key={dog.id} dog={dog} />
+						))}
+					</div>
 				</motion.div>
 			)}
 		</motion.div>

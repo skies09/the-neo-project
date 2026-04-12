@@ -7,18 +7,20 @@ import {
 	faCalendar,
 	faTag,
 	faFolder,
+	faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { blogAPI, BlogPost, BlogFilters } from "../../services/blogApi";
 import { formatDateLong } from "../../helpers/dateUtils";
 import PawLoading from "../../components/PawLoading";
+import { ErrorCard, RefreshContactSubtitle } from "../../components/ErrorCard";
 
 const BlogList: React.FC = () => {
 	const [posts, setPosts] = useState<BlogPost[]>([]);
 	const [categories, setCategories] = useState<string[]>([]);
 	const [tags, setTags] = useState<string[]>([]);
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+	const [error, setError] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(
 		null,
@@ -32,7 +34,7 @@ const BlogList: React.FC = () => {
 	const fetchPosts = async () => {
 		try {
 			setLoading(true);
-			setError(null);
+			setError(false);
 
 			const filters: BlogFilters = {
 				page: currentPage,
@@ -59,7 +61,7 @@ const BlogList: React.FC = () => {
 			}
 		} catch (err) {
 			console.error("Error fetching posts:", err);
-			setError("Failed to load blog posts, please check back later");
+			setError(true);
 		} finally {
 			setLoading(false);
 		}
@@ -120,12 +122,21 @@ const BlogList: React.FC = () => {
 		);
 	}
 
+	const showBlogEmpty =
+		!loading &&
+		!error &&
+		totalPostCount === 0 &&
+		!searchTerm &&
+		!selectedCategory &&
+		!selectedTag;
+	const noBlogsAvailable = error || showBlogEmpty;
+
 	return (
 		<div className="min-h-screen pt-16 bg-gradient-to-br from-honeydew to-mintCream">
 			<div className="max-w-7xl mx-auto px-4 pt-4 pb-12">
 				{/* Header */}
 				<motion.div
-					className={`text-center ${error ? "mb-0" : "mb-12"}`}
+					className={`text-center ${noBlogsAvailable ? "mb-6" : "mb-12"}`}
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6 }}
@@ -141,29 +152,46 @@ const BlogList: React.FC = () => {
 					</p>
 				</motion.div>
 
-				{/* Error Message */}
-				{error && (
+				{noBlogsAvailable && (
 					<motion.div
-						className="max-w-7xl mx-auto pt-8 min-h-screen"
-						initial={{ opacity: 0, y: 20 }}
+						className="mx-auto max-w-xl text-center"
+						initial={{ opacity: 0, y: 12 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{
-							duration: 0.6,
-							delay: 0.3,
-							ease: "easeOut",
-						}}
+						transition={{ duration: 0.45, ease: "easeOut" }}
 					>
-						<div className="flex flex-col justify-center items-center py-12 bg-gradient-to-br from-tara to-mintCream rounded-3xl shadow-xl border-2 border-oxfordBlue/20">
-							<div className="w-16 h-16 bg-gradient-to-br from-highland to-sark rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-								<FontAwesomeIcon
-									icon={faSearch}
-									className="text-2xl text-honeydew"
-								/>
-							</div>
-							<p className="text-lg lg:text-xl text-oxfordBlue font-poppins max-w-5xl mx-auto text-center">
-								{error}
-							</p>
-						</div>
+						{error ? (
+							<ErrorCard
+								icon={faNewspaper}
+								title="Apologies, the blog is currently unavailable"
+								footer={
+									<Link
+										to="/"
+										className="btn-primary inline-flex items-center justify-center px-8 py-3"
+									>
+										Back to home
+									</Link>
+								}
+							>
+								<RefreshContactSubtitle />
+							</ErrorCard>
+						) : (
+							<ErrorCard
+								title="Nothing to read yet"
+								footer={
+									<Link
+										to="/"
+										className="btn-primary inline-flex items-center justify-center px-8 py-3"
+									>
+										Back to home
+									</Link>
+								}
+							>
+								<p className="font-poppins leading-relaxed text-oxfordBlue/80 md:text-lg">
+									There are no posts on the blog at the
+									moment. Please check back soon.
+								</p>
+							</ErrorCard>
+						)}
 					</motion.div>
 				)}
 
