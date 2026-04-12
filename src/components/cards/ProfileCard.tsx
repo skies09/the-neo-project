@@ -66,7 +66,7 @@ const ProfileCard = ({
 	};
 
 	return (
-		<div className="bg-tomThumb rounded-3xl shadow-xl">
+		<div className="rounded-3xl border-2 border-oxfordBlue/10 bg-gradient-to-br from-tara to-mintCream shadow-xl">
 			{error && (
 				<div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-t-3xl">
 					{error}
@@ -76,10 +76,10 @@ const ProfileCard = ({
 			{isEditing ? (
 				<div className="p-8 lg:p-10">
 					<div className="text-center mb-8">
-						<h2 className="text-3xl font-bold text-tara font-delius mb-8 text-center">
+						<h2 className="text-3xl font-bold text-oxfordBlue font-delius mb-8 text-center">
 							Edit Profile
 						</h2>
-						<p className="text-lg lg:text-xl text-tara/90 font-fredoka max-w-3xl mx-auto mb-8">
+						<p className="text-lg lg:text-xl text-oxfordBlue/80 font-fredoka max-w-3xl mx-auto mb-8">
 							Update your kennel information
 						</p>
 					</div>
@@ -126,10 +126,10 @@ const ProfileCard = ({
 									{/* Left Column */}
 									<div className="space-y-6">
 										<div>
-											<label className="block text-tara font-poppins font-semibold mb-2 flex items-center">
+											<label className="block text-oxfordBlue font-poppins font-semibold mb-2 flex items-center">
 												<FontAwesomeIcon
 													icon={faEnvelope}
-													className="mr-2 text-tara"
+													className="mr-2 text-highland"
 												/>
 												Email
 											</label>
@@ -147,10 +147,10 @@ const ProfileCard = ({
 										</div>
 
 										<div>
-											<label className="block text-tara font-poppins font-semibold mb-2 flex items-center">
+											<label className="block text-oxfordBlue font-poppins font-semibold mb-2 flex items-center">
 												<FontAwesomeIcon
 													icon={faUser}
-													className="mr-2 text-tara"
+													className="mr-2 text-highland"
 												/>
 												Username
 											</label>
@@ -168,10 +168,10 @@ const ProfileCard = ({
 										</div>
 
 										<div>
-											<label className="block text-tara font-poppins font-semibold mb-2 flex items-center">
+											<label className="block text-oxfordBlue font-poppins font-semibold mb-2 flex items-center">
 												<FontAwesomeIcon
 													icon={faHome}
-													className="mr-2 text-tara"
+													className="mr-2 text-highland"
 												/>
 												Kennel Name
 											</label>
@@ -189,10 +189,10 @@ const ProfileCard = ({
 										</div>
 
 										<div>
-											<label className="block text-tara font-poppins font-semibold mb-2 flex items-center">
+											<label className="block text-oxfordBlue font-poppins font-semibold mb-2 flex items-center">
 												<FontAwesomeIcon
 													icon={faMapMarkerAlt}
-													className="mr-2 text-tara"
+													className="mr-2 text-highland"
 												/>
 												Address Line 1
 											</label>
@@ -214,10 +214,10 @@ const ProfileCard = ({
 									<div className="space-y-6">
 										<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
 											<div className="w-full">
-												<label className="block text-tara font-poppins font-semibold mb-2 flex items-center">
+												<label className="block text-oxfordBlue font-poppins font-semibold mb-2 flex items-center">
 													<FontAwesomeIcon
 														icon={faBuilding}
-														className="mr-2 text-tara"
+														className="mr-2 text-highland"
 													/>
 													Town
 												</label>
@@ -234,10 +234,10 @@ const ProfileCard = ({
 												/>
 											</div>
 											<div className="w-full">
-												<label className="block text-tara font-poppins font-semibold mb-2 flex items-center">
+												<label className="block text-oxfordBlue font-poppins font-semibold mb-2 flex items-center">
 													<FontAwesomeIcon
 														icon={faCity}
-														className="mr-2 text-tara"
+														className="mr-2 text-highland"
 													/>
 													City
 												</label>
@@ -256,10 +256,10 @@ const ProfileCard = ({
 										</div>
 
 										<div>
-											<label className="block text-tara font-poppins font-semibold mb-2 flex items-center">
+											<label className="block text-oxfordBlue font-poppins font-semibold mb-2 flex items-center">
 												<FontAwesomeIcon
 													icon={faAddressCard}
-													className="mr-2 text-tara"
+													className="mr-2 text-highland"
 												/>
 												Postcode
 											</label>
@@ -277,10 +277,10 @@ const ProfileCard = ({
 										</div>
 
 										<div>
-											<label className="block text-tara font-poppins font-semibold mb-2 flex items-center">
+											<label className="block text-oxfordBlue font-poppins font-semibold mb-2 flex items-center">
 												<FontAwesomeIcon
 													icon={faPhone}
-													className="mr-2 text-tara"
+													className="mr-2 text-highland"
 												/>
 												Contact Number
 											</label>
@@ -334,16 +334,16 @@ const ProfileCard = ({
 			) : (
 				<div className="p-8 lg:p-10">
 					<div className="text-center mb-8">
-						<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
+						<div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-highland to-sark shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
 							<FontAwesomeIcon
 								icon={faHome}
 								className="text-2xl text-sunset"
 							/>
 						</div>
-						<h2 className="text-3xl font-bold text-tara font-delius mb-8 text-center">
+						<h2 className="text-3xl font-bold text-oxfordBlue font-delius mb-8 text-center">
 							{kennelData.name}
 						</h2>
-						<p className="text-lg lg:text-xl text-tara/90 font-fredoka max-w-3xl mx-auto mb-8">
+						<p className="text-lg lg:text-xl text-oxfordBlue/80 font-fredoka max-w-3xl mx-auto mb-8">
 							Kennel Profile
 						</p>
 					</div>
@@ -351,47 +351,47 @@ const ProfileCard = ({
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 						<div className="space-y-4">
 							<div className="rounded-xl p-4">
-								<h3 className="text-lg font-semibold text-tara font-poppins mb-3 flex items-center">
+								<h3 className="text-lg font-semibold text-oxfordBlue font-poppins mb-3 flex items-center">
 									<FontAwesomeIcon
 										icon={faAddressCard}
-										className="mr-2 text-tara"
+										className="mr-2 text-highland"
 									/>
 									Contact Information
 								</h3>
 								<div className="space-y-2">
 									<div className="flex justify-between items-center">
-										<span className="text-tara/70 font-poppins flex items-center">
+										<span className="text-oxfordBlue/70 font-poppins flex items-center">
 											<FontAwesomeIcon
 												icon={faEnvelope}
-												className="mr-2 text-tara"
+												className="mr-2 text-highland"
 											/>
 											Email:
 										</span>
-										<span className="font-medium text-tara font-poppins">
+										<span className="font-medium text-oxfordBlue font-poppins">
 											{kennelData.email}
 										</span>
 									</div>
 									<div className="flex justify-between items-center">
-										<span className="text-tara/70 font-poppins flex items-center">
+										<span className="text-oxfordBlue/70 font-poppins flex items-center">
 											<FontAwesomeIcon
 												icon={faUser}
-												className="mr-2 text-tara"
+												className="mr-2 text-highland"
 											/>
 											Username:
 										</span>
-										<span className="font-medium text-tara font-poppins">
+										<span className="font-medium text-oxfordBlue font-poppins">
 											{kennelData.username}
 										</span>
 									</div>
 									<div className="flex justify-between items-center">
-										<span className="text-tara/70 font-poppins flex items-center">
+										<span className="text-oxfordBlue/70 font-poppins flex items-center">
 											<FontAwesomeIcon
 												icon={faPhone}
-												className="mr-2 text-tara"
+												className="mr-2 text-highland"
 											/>
 											Phone:
 										</span>
-										<span className="font-medium text-tara font-poppins">
+										<span className="font-medium text-oxfordBlue font-poppins">
 											{kennelData.contact_number}
 										</span>
 									</div>
@@ -401,59 +401,59 @@ const ProfileCard = ({
 
 						<div className="space-y-4">
 							<div className="rounded-xl p-4">
-								<h3 className="text-lg font-semibold text-tara font-poppins mb-3 flex items-center">
+								<h3 className="text-lg font-semibold text-oxfordBlue font-poppins mb-3 flex items-center">
 									<FontAwesomeIcon
 										icon={faMapMarkerAlt}
-										className="mr-2 text-tara"
+										className="mr-2 text-highland"
 									/>
 									Address
 								</h3>
 								<div className="space-y-2">
 									<div className="flex justify-between items-center">
-										<span className="text-tara/70 font-poppins flex items-center">
+										<span className="text-oxfordBlue/70 font-poppins flex items-center">
 											<FontAwesomeIcon
 												icon={faMapMarkerAlt}
-												className="mr-2 text-tara"
+												className="mr-2 text-highland"
 											/>
 											Address:
 										</span>
-										<span className="font-medium text-tara font-poppins">
+										<span className="font-medium text-oxfordBlue font-poppins">
 											{kennelData.address_line_1}
 										</span>
 									</div>
 									<div className="flex justify-between items-center">
-										<span className="text-tara/70 font-poppins flex items-center">
+										<span className="text-oxfordBlue/70 font-poppins flex items-center">
 											<FontAwesomeIcon
 												icon={faBuilding}
-												className="mr-2 text-tara"
+												className="mr-2 text-highland"
 											/>
 											Town:
 										</span>
-										<span className="font-medium text-tara font-poppins">
+										<span className="font-medium text-oxfordBlue font-poppins">
 											{kennelData.town}
 										</span>
 									</div>
 									<div className="flex justify-between items-center">
-										<span className="text-tara/70 font-poppins flex items-center">
+										<span className="text-oxfordBlue/70 font-poppins flex items-center">
 											<FontAwesomeIcon
 												icon={faCity}
-												className="mr-2 text-tara"
+												className="mr-2 text-highland"
 											/>
 											City:
 										</span>
-										<span className="font-medium text-tara font-poppins">
+										<span className="font-medium text-oxfordBlue font-poppins">
 											{kennelData.city}
 										</span>
 									</div>
 									<div className="flex justify-between items-center">
-										<span className="text-tara/70 font-poppins flex items-center">
+										<span className="text-oxfordBlue/70 font-poppins flex items-center">
 											<FontAwesomeIcon
 												icon={faAddressCard}
-												className="mr-2 text-tara"
+												className="mr-2 text-highland"
 											/>
 											Postcode:
 										</span>
-										<span className="font-medium text-tara font-poppins">
+										<span className="font-medium text-oxfordBlue font-poppins">
 											{kennelData.postcode}
 										</span>
 									</div>

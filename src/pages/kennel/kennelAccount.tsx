@@ -17,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getSizeDisplayName } from "../../helpers/sizeUtils";
 import { resolveApiErrorMessage } from "../../helpers/apiErrorMessage";
+import { ErrorCard } from "../../components/ErrorCard";
 
 interface DogToEdit {
 	id?: string;
@@ -89,7 +90,10 @@ const KennelAccount = () => {
 			} catch (err) {
 				console.error("Error fetching kennel details:", err);
 				setProfileError(
-					resolveApiErrorMessage(err, "Error fetching kennel details."),
+					resolveApiErrorMessage(
+						err,
+						"Error fetching kennel details.",
+					),
 				);
 			} finally {
 				setLoadingKennel(false);
@@ -115,7 +119,9 @@ const KennelAccount = () => {
 				setDogData(Array.isArray(data) ? data : []);
 			} catch (err) {
 				console.error("Error fetching dogs:", err);
-				setDogsError(resolveApiErrorMessage(err, "Error fetching dogs"));
+				setDogsError(
+					resolveApiErrorMessage(err, "Error fetching dogs"),
+				);
 				// Set empty array on error to prevent map errors
 				setDogData([]);
 			} finally {
@@ -187,29 +193,31 @@ const KennelAccount = () => {
 				>
 					<div className="flex flex-wrap justify-center gap-4">
 						<button
+							type="button"
 							onClick={() => {
 								setShowProfile(false);
 								setShowDogUploadForm(false);
 								setDogToEdit(null);
 							}}
-							className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
+							className={`px-6 py-3 ${
 								!showProfile
-									? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
-									: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
+									? "btn-primary"
+									: "btn-secondary bg-gradient-to-r from-tara to-mintCream"
 							}`}
 						>
 							<FontAwesomeIcon icon={faDog} className="mr-2" />
 							Dogs
 						</button>
 						<button
+							type="button"
 							onClick={() => {
 								setShowProfile(true);
 								setProfileEdited(false);
 							}}
-							className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
+							className={`px-6 py-3 ${
 								showProfile
-									? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
-									: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
+									? "btn-primary"
+									: "btn-secondary bg-gradient-to-r from-tara to-mintCream"
 							}`}
 						>
 							<FontAwesomeIcon icon={faUser} className="mr-2" />
@@ -228,13 +236,6 @@ const KennelAccount = () => {
 						<div className="max-w-2xl mx-auto mb-6">
 							<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
 								{profileError}
-							</div>
-						</div>
-					)}
-					{!showProfile && dogsError && (
-						<div className="max-w-2xl mx-auto mb-6">
-							<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
-								{dogsError}
 							</div>
 						</div>
 					)}
@@ -285,28 +286,31 @@ const KennelAccount = () => {
 
 						{/* Dogs List */}
 						{!showDogUploadForm && (
-							<div className="bg-tomThumb rounded-3xl p-8 shadow-xl">
+							<>
 								{loadingDogs ? (
 									<div className="text-center py-12">
-										<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-tara mx-auto mb-4"></div>
-										<p className="text-lg text-tara font-semibold font-poppins">
+										<div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-oxfordBlue"></div>
+										<p className="font-poppins text-lg font-semibold text-oxfordBlue">
 											Fetching dogs...
 										</p>
 									</div>
+								) : dogsError ? (
+									<div className="py-4">
+										<ErrorCard
+											icon={faDog}
+											title={dogsError}
+											showSubtitle
+											className="mx-auto max-w-2xl"
+										/>
+									</div>
 								) : dogData.length === 0 ? (
-									<div className="text-center py-12">
-										<div className="text-6xl mb-4">
-											<FontAwesomeIcon
-												icon={faDog}
-												className="text-tara"
-											/>
-										</div>
-										<h3 className="text-2xl font-bold text-tara font-delius mb-2">
-											No dogs found
-										</h3>
-										<p className="text-tara/70 font-poppins">
-											Add your first dog to get started!
-										</p>
+									<div className="py-4">
+										<ErrorCard
+											icon={faDog}
+											title="No dogs found"
+											detail="Add your first dog to get started!"
+											className="mx-auto max-w-2xl"
+										/>
 									</div>
 								) : (
 									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
@@ -316,7 +320,7 @@ const KennelAccount = () => {
 												className="bg-gradient-to-br from-tara to-mintCream rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200"
 											>
 												<div className="text-center mb-4">
-													<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
+													<div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-highland to-sark shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
 														<FontAwesomeIcon
 															icon={faDog}
 															className="text-2xl text-sunset"
@@ -442,7 +446,7 @@ const KennelAccount = () => {
 										))}
 									</div>
 								)}
-							</div>
+							</>
 						)}
 					</div>
 				)}
