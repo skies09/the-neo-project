@@ -168,10 +168,11 @@ export default function Breeds() {
 								return (
 									<button
 										key={index}
-										className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
+										type="button"
+										className={`rounded-full px-6 py-3 font-poppins font-semibold transition-all duration-300 ${
 											selectedGroup === group
-												? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
-												: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
+												? "scale-105 transform bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg hover:shadow-xl"
+												: "border-2 border-tomThumb bg-gradient-to-r from-tara to-mintCream text-oxfordBlue hover:scale-105 hover:bg-gradient-to-r hover:from-titan hover:to-twilight hover:text-oxfordBlue"
 										}`}
 										onClick={() =>
 											fetchBreedsOfGroup(group)
@@ -192,10 +193,11 @@ export default function Breeds() {
 					{breeds && breeds.length > 0 && (
 						<div className="flex justify-center items-center">
 							<button
-								className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
+								type="button"
+								className={`rounded-full px-6 py-3 font-poppins font-semibold transition-all duration-300 ${
 									!selectedGroup
-										? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
-										: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
+										? "scale-105 transform bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg hover:shadow-xl"
+										: "border-2 border-tomThumb bg-gradient-to-r from-tara to-mintCream text-oxfordBlue hover:scale-105 hover:bg-gradient-to-r hover:from-titan hover:to-twilight hover:text-oxfordBlue"
 								}`}
 								onClick={() => fetchAll()}
 							>

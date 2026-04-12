@@ -316,7 +316,7 @@ export default function BreedDetailPage() {
 		<div className="min-h-screen bg-mintCream pb-20 pt-16">
 			{/* Hero — name bar centered, half on image / half on page */}
 			<div className="relative mb-8 sm:mb-10">
-				<div className="relative h-[min(52vh,420px)] min-h-[240px] w-full overflow-hidden bg-gradient-to-br from-highland via-sark to-tomThumb">
+				<div className="relative h-[min(52vh,420px)] min-h-[240px] w-full overflow-hidden border-b-2 border-highland/55 bg-gradient-to-br from-highland via-sark to-tomThumb">
 					{heroImage ? (
 						<img
 							src={heroImage}
@@ -334,7 +334,7 @@ export default function BreedDetailPage() {
 					<div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-oxfordBlue/90 via-oxfordBlue/25 to-transparent" />
 					{/* Group — same dark green pill as breed cards */}
 					<div className="absolute right-3 top-3 z-10 sm:right-4 sm:top-4 md:right-5 md:top-5">
-						<span className="inline-flex max-w-[min(calc(100vw-2.5rem),16rem)] rounded-full bg-gradient-to-r from-highland to-sark px-3 py-1.5 font-poppins text-[10px] font-bold uppercase leading-tight tracking-wide text-honeydew shadow-md sm:max-w-xs sm:px-3.5 sm:py-2 sm:text-[11px]">
+						<span className="inline-flex max-w-[min(calc(100vw-2.5rem),18rem)] rounded-full bg-gradient-to-r from-highland to-sark px-3.5 py-2 font-poppins text-xs font-bold uppercase leading-snug tracking-wide text-honeydew shadow-md sm:max-w-sm sm:px-4 sm:py-2.5 sm:text-sm">
 							<span className="line-clamp-2 break-words text-center">
 								{breed.group}
 							</span>
@@ -361,7 +361,7 @@ export default function BreedDetailPage() {
 					)}
 				</div>
 				<div className="absolute left-0 right-0 top-full z-20 flex -translate-y-1/2 justify-center px-4">
-					<div className="w-fit max-w-[min(100%,calc(100vw-2rem))] rounded-full border border-oxfordBlue/12 bg-honeydew/95 px-8 py-3.5 text-center shadow-[0_16px_48px_rgba(11,37,69,0.2)] backdrop-blur-md sm:px-12 sm:py-4 md:px-14 md:py-5">
+					<div className="w-fit max-w-[min(100%,calc(100vw-2rem))] rounded-full border-2 border-highland/55 bg-honeydew/95 px-8 py-3.5 text-center shadow-[0_16px_48px_rgba(11,37,69,0.2)] backdrop-blur-md sm:px-12 sm:py-4 md:px-14 md:py-5">
 						<motion.h1
 							className="break-words text-center font-delius text-3xl font-bold leading-tight tracking-tight text-oxfordBlue sm:text-4xl md:text-5xl lg:text-6xl"
 							initial={{ opacity: 0, y: 10 }}

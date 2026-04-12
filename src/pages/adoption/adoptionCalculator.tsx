@@ -12,6 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import AdoptionCard from "../../components/cards/adoptCard";
 import { ErrorCard } from "../../components/ErrorCard";
+import PawLoading from "../../components/PawLoading";
 import { questions, Question } from "./adoptionCalculatorQuestions";
 import {
 	isNetworkOrTransportFailure,
@@ -630,16 +631,7 @@ export default function Adoption() {
 
 				{/* Loading State */}
 				{loading && (
-					<motion.div
-						className="bg-tomThumb rounded-3xl shadow-xl p-12 text-center"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-					>
-						<div className="animate-spin w-16 h-16 border-4 border-skyBlue border-t-transparent rounded-full mx-auto mb-4"></div>
-						<p className="text-tara font-poppins text-lg">
-							Finding your perfect dogs...
-						</p>
-					</motion.div>
+					<PawLoading message="Finding your perfect dogs..." />
 				)}
 
 				{/* Results Section */}

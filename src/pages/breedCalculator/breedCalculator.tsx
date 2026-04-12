@@ -1,20 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { breedsAPI, Breed } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion, AnimatePresence } from "framer-motion";
 import { ErrorCard } from "../../components/ErrorCard";
-import { breedDetailPath } from "../../helpers/breedRoutes";
+import PawLoading from "../../components/PawLoading";
+import BreedCard from "../../components/cards/breedCard";
 import {
 	isNetworkOrTransportFailure,
 	resolveApiErrorMessage,
 } from "../../helpers/apiErrorMessage";
-import {
-	faArrowRight,
-	faInfoCircle,
-	faDog,
-	faPaw,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faDog, faPaw } from "@fortawesome/free-solid-svg-icons";
 import { questions, Question } from "./breedCalculatorQuestions";
 
 export default function BreedCalculator() {
@@ -307,11 +302,15 @@ export default function BreedCalculator() {
 
 	const currentQuestion = questions[currentQuestionIndex];
 	const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+	const resultsBackground =
+		breeds.length > 0
+			? "bg-gradient-to-br from-honeydew to-mintCream"
+			: "bg-gradient-to-br from-twilight to-sprout";
 
 	return (
 		<motion.div
 			id="breedCalculator"
-			className="min-h-screen bg-gradient-to-br from-twilight to-sprout pt-16 pb-8 px-4"
+			className={`min-h-screen pt-16 pb-8 px-4 ${resultsBackground}`}
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
@@ -712,159 +711,86 @@ export default function BreedCalculator() {
 
 				{/* Loading State */}
 				{loading && (
-					<motion.div
-						className="bg-tomThumb rounded-3xl shadow-xl p-12 text-center"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-					>
-						<div className="animate-spin w-16 h-16 border-4 border-skyBlue border-t-transparent rounded-full mx-auto mb-4"></div>
-						<p className="text-tara font-poppins text-lg">
-							Finding your perfect breeds...
-						</p>
-					</motion.div>
+					<PawLoading message="Finding your perfect breeds..." />
 				)}
+			</div>
 
-				{/* Results Section */}
-				<motion.div
-					ref={resultsRef}
-					className="max-w-7xl mx-auto"
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-				>
-					{breeds.length > 0 && (
+			{/* Results — outside max-w-4xl so the grid matches the Breeds list page width */}
+			<motion.div
+				ref={resultsRef}
+				className="mx-auto mt-2 w-full max-w-7xl"
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+			>
+				{breeds.length > 0 ? (
+					<>
 						<motion.div
-							className="text-center mb-12"
+							className="mb-8 text-center sm:mb-10 mt-8"
 							initial={{ opacity: 0, y: -20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.6, delay: 0.7 }}
 						>
-							<div className="flex justify-center items-center mb-4">
-								<h2 className="font-delius text-3xl lg:text-4xl font-bold text-oxfordBlue tracking-wider drop-shadow-md">
-									Perfect Breeds for You
-								</h2>
-							</div>
-							<p className="text-lg text-highland font-fredoka max-w-3xl mx-auto">
+							<h2 className="mb-3 font-delius text-4xl font-bold text-oxfordBlue drop-shadow-md md:text-5xl">
+								Perfect Breeds for You
+							</h2>
+							<p className="mx-auto max-w-2xl font-fredoka text-lg text-highland">
 								Based on your lifestyle, here are the breeds
 								that would be perfect for you
 							</p>
 						</motion.div>
-					)}
 
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-						{breeds.map((breed, index) => {
-							const match = matchRates[breed.breed];
-							const detailState =
-								match != null && Number.isFinite(match)
-									? { matchRate: match }
-									: undefined;
-							return (
-								<motion.div
-									key={
-										breed.id ||
-										breed.breed ||
-										`breed-${index}`
-									}
-									className="relative group w-full max-w-xs p-2"
-									initial={{ opacity: 0, y: 20 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{
-										duration: 0.6,
-										delay: 0.8 + index * 0.1,
-									}}
-								>
+						<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+							{breeds.map((breed, index) => {
+								const match = matchRates[breed.breed];
+								const calculatorMatch =
+									match != null && Number.isFinite(match)
+										? match
+										: null;
+								return (
 									<motion.div
-										className="w-full min-h-80 bg-gradient-to-br from-tara to-mintCream rounded-2xl shadow-lg transition-all duration-200 hover:shadow-xl flex flex-col overflow-hidden"
-										whileHover={{ scale: 1.02 }}
-										whileTap={{ scale: 0.98 }}
+										key={
+											breed.id ??
+											breed.breed ??
+											`breed-${index}`
+										}
+										className="min-w-0"
+										initial={{ opacity: 0, y: 20 }}
+										animate={{ opacity: 1, y: 0 }}
+										transition={{
+											duration: 0.6,
+											delay: 0.8 + index * 0.1,
+										}}
 									>
-										{/* Header with icon */}
-										<div className="h-36 relative rounded-t-2xl flex items-center justify-center pt-6 flex-shrink-0">
-											<div className="w-16 h-16 bg-gradient-to-br from-highland to-tomThumb rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
-												<FontAwesomeIcon
-													icon={faDog}
-													className="text-2xl text-sunset"
-												/>
-											</div>
-										</div>
-
-										{/* Content */}
-										<div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-4 sm:pb-6 flex flex-col flex-grow min-h-0">
-											<motion.h3
-												className="font-delius font-bold text-lg sm:text-xl text-oxfordBlue text-center mb-4 min-h-[5rem] flex items-center justify-center flex-shrink-0"
-												whileHover={{ scale: 1.02 }}
-											>
-												{breed.breed}
-											</motion.h3>
-
-											<div className="space-y-2 sm:space-y-3 flex-grow flex flex-col justify-center flex-shrink-0">
-												<div className="flex items-center justify-between">
-													<span className="text-oxfordBlue/70 font-poppins text-xs sm:text-sm font-medium">
-														Group:
-													</span>
-													<span className="font-semibold font-poppins text-oxfordBlue bg-oxfordBlue/10 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
-														{breed.group}
-													</span>
-												</div>
-												<div className="flex items-center justify-between">
-													<span className="text-oxfordBlue/70 font-poppins text-xs sm:text-sm font-medium">
-														Match Score:
-													</span>
-													<span className="font-semibold font-poppins text-oxfordBlue bg-gradient-to-r from-highland to-sark text-honeydew px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
-														{matchRates[breed.breed]
-															? `${matchRates[
-																	breed.breed
-																].toFixed(1)}%`
-															: "N/A"}
-													</span>
-												</div>
-											</div>
-
-											{/* Link to full breed page */}
-											<div className="flex-shrink-0 mt-4">
-												<Link
-													to={breedDetailPath(
-														breed.breed,
-													)}
-													state={detailState}
-													className="btn-secondary flex w-full bg-gradient-to-r from-tara to-mintCream px-3 py-3 text-xs shadow-lg hover:shadow-xl sm:px-4 sm:text-sm"
-												>
-													<div className="flex flex-1 items-center justify-center space-x-2 relative z-10">
-														<FontAwesomeIcon
-															icon={faInfoCircle}
-															className="text-sm"
-														/>
-														<span>Learn More</span>
-													</div>
-													<div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-turquoise to-skyBlue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-												</Link>
-											</div>
-										</div>
+										<BreedCard
+											breed={breed}
+											calculatorMatch={calculatorMatch}
+										/>
 									</motion.div>
-								</motion.div>
-							);
-						})}
-					</div>
-
-					{error ? (
-						<div className="mt-8 flex justify-center px-2">
-							<ErrorCard
-								icon={faDog}
-								title={
-									networkError
-										? "We could not load breed matches"
-										: error
-								}
-								showSubtitle={networkError}
-								subtitleClassName="text-oxfordBlue/70"
-								buttons={[{ type: "home" }]}
-								className="max-w-2xl"
-								titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
-							/>
+								);
+							})}
 						</div>
-					) : null}
-				</motion.div>
-			</div>
+					</>
+				) : null}
+
+				{error ? (
+					<div className="mt-8 flex justify-center px-2">
+						<ErrorCard
+							icon={faDog}
+							title={
+								networkError
+									? "We could not load breed matches"
+									: error
+							}
+							showSubtitle={networkError}
+							subtitleClassName="text-oxfordBlue/70"
+							buttons={[{ type: "home" }]}
+							className="max-w-2xl"
+							titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
+						/>
+					</div>
+				) : null}
+			</motion.div>
 		</motion.div>
 	);
 }
