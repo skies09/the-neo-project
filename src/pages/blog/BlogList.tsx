@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import { blogAPI, BlogPost, BlogFilters } from "../../services/blogApi";
 import { formatDateLong } from "../../helpers/dateUtils";
 import PawLoading from "../../components/PawLoading";
-import { ErrorCard, RefreshContactSubtitle } from "../../components/ErrorCard";
+import { ErrorCard } from "../../components/ErrorCard";
 
 const BlogList: React.FC = () => {
 	const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -31,7 +31,10 @@ const BlogList: React.FC = () => {
 	const [totalPages, setTotalPages] = useState(1);
 	const [totalPostCount, setTotalPostCount] = useState(0);
 
-	const fetchPosts = async () => {
+	const searchTermRef = useRef(searchTerm);
+	searchTermRef.current = searchTerm;
+
+	const fetchPosts = useCallback(async () => {
 		try {
 			setLoading(true);
 			setError(false);
@@ -41,8 +44,9 @@ const BlogList: React.FC = () => {
 				page_size: 12,
 			};
 
-			if (searchTerm) {
-				filters.search = searchTerm;
+			const term = searchTermRef.current;
+			if (term) {
+				filters.search = term;
 			}
 			if (selectedCategory) {
 				filters.category = selectedCategory;
@@ -56,7 +60,7 @@ const BlogList: React.FC = () => {
 			setTotalPages(Math.ceil(response.count / 12));
 
 			// Track total count when no filters are applied
-			if (!searchTerm && !selectedCategory && !selectedTag) {
+			if (!term && !selectedCategory && !selectedTag) {
 				setTotalPostCount(response.count);
 			}
 		} catch (err) {
@@ -65,7 +69,7 @@ const BlogList: React.FC = () => {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, [currentPage, selectedCategory, selectedTag]);
 
 	const fetchCategoriesAndTags = async () => {
 		try {
@@ -82,7 +86,7 @@ const BlogList: React.FC = () => {
 
 	useEffect(() => {
 		fetchPosts();
-	}, [currentPage, selectedCategory, selectedTag]);
+	}, [fetchPosts]);
 
 	useEffect(() => {
 		fetchCategoriesAndTags();
@@ -163,34 +167,15 @@ const BlogList: React.FC = () => {
 							<ErrorCard
 								icon={faNewspaper}
 								title="Apologies, the blog is currently unavailable"
-								footer={
-									<Link
-										to="/"
-										className="btn-primary inline-flex items-center justify-center px-8 py-3"
-									>
-										Back to home
-									</Link>
-								}
-							>
-								<RefreshContactSubtitle />
-							</ErrorCard>
+								showSubtitle
+								buttons={[{ type: "home" }]}
+							/>
 						) : (
 							<ErrorCard
 								title="Nothing to read yet"
-								footer={
-									<Link
-										to="/"
-										className="btn-primary inline-flex items-center justify-center px-8 py-3"
-									>
-										Back to home
-									</Link>
-								}
-							>
-								<p className="font-poppins leading-relaxed text-oxfordBlue/80 md:text-lg">
-									There are no posts on the blog at the
-									moment. Please check back soon.
-								</p>
-							</ErrorCard>
+								detail="There are no posts on the blog at the moment. Please check back soon."
+								buttons={[{ type: "home" }]}
+							/>
 						)}
 					</motion.div>
 				)}

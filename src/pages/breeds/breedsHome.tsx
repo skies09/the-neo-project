@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw, faList, faDog } from "@fortawesome/free-solid-svg-icons";
 import PawLoading from "../../components/PawLoading";
+import { ErrorCard } from "../../components/ErrorCard";
 
 export default function Breeds() {
 	const [groups, setGroups] = useState<string[]>([]);
@@ -99,14 +100,14 @@ export default function Breeds() {
 
 	return (
 		<motion.div
-			className="min-h-screen pt-16 pb-8 px-4 bg-mintCream"
+			className="min-h-screen bg-gradient-to-br from-honeydew to-mintCream px-4 pb-8 pt-16"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.8, ease: "easeOut" }}
 		>
 			{/* Header Section */}
 			<motion.div
-				className="text-center pt-4 mb-16"
+				className={`text-center pt-4 ${error ? "mb-8" : "mb-16"}`}
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
@@ -118,131 +119,135 @@ export default function Breeds() {
 				</div>
 				{error && (
 					<motion.div
-						className="max-w-7xl mx-auto pt-8"
-						initial={{ opacity: 0, y: 20 }}
+						className="mx-auto max-w-xl pt-4 px-2"
+						initial={{ opacity: 0, y: 12 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{
-							duration: 0.6,
-							delay: 0.3,
+							duration: 0.45,
+							delay: 0.1,
 							ease: "easeOut",
 						}}
 					>
-						<div className="flex flex-col justify-center items-center py-12 bg-sark rounded-3xl shadow-xl">
-							<p className="text-lg lg:text-xl text-mintCream font-fredoka max-w-5xl mx-auto text-center">
-								{error}
-							</p>
-						</div>
+						<ErrorCard
+							icon={faDog}
+							title={error}
+							showSubtitle
+							buttons={[{ type: "home" }]}
+						/>
 					</motion.div>
 				)}
 			</motion.div>
 
 			{/* Filter Buttons Section */}
-			<motion.div
-				className="mb-8"
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-			>
-				{groups && groups.length > 0 && (
-					<div className="flex justify-center items-center flex-wrap gap-4 mb-6">
-						{groups.map((group, index) => {
-							return (
-								<button
-									key={index}
-									className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
-										selectedGroup === group
-											? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
-											: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
-									}`}
-									onClick={() => fetchBreedsOfGroup(group)}
-								>
-									<div className="flex items-center justify-center space-x-3">
-										<FontAwesomeIcon
-											icon={faPaw}
-											className="text-lg"
-										/>
-										<span>{group}</span>
-									</div>
-								</button>
-							);
-						})}
-					</div>
-				)}
-				{breeds && breeds.length > 0 && (
-					<div className="flex justify-center items-center">
-						<button
-							className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
-								!selectedGroup
-									? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
-									: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
-							}`}
-							onClick={() => fetchAll()}
-						>
-							<div className="flex items-center justify-center space-x-3">
-								<FontAwesomeIcon
-									icon={faList}
-									className="text-lg"
-								/>
-								<span>All Breeds</span>
-							</div>
-						</button>
-					</div>
-				)}
-			</motion.div>
+			{!error && (
+				<motion.div
+					className="mb-8"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+				>
+					{groups && groups.length > 0 && (
+						<div className="flex justify-center items-center flex-wrap gap-4 mb-6">
+							{groups.map((group, index) => {
+								return (
+									<button
+										key={index}
+										className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
+											selectedGroup === group
+												? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
+												: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
+										}`}
+										onClick={() =>
+											fetchBreedsOfGroup(group)
+										}
+									>
+										<div className="flex items-center justify-center space-x-3">
+											<FontAwesomeIcon
+												icon={faPaw}
+												className="text-lg"
+											/>
+											<span>{group}</span>
+										</div>
+									</button>
+								);
+							})}
+						</div>
+					)}
+					{breeds && breeds.length > 0 && (
+						<div className="flex justify-center items-center">
+							<button
+								className={`px-6 py-3 rounded-full font-poppins font-semibold transition-all duration-300 hover:text-yellowOrange ${
+									!selectedGroup
+										? "bg-gradient-to-r from-highland to-sark text-honeydew shadow-lg transform scale-105"
+										: "bg-gradient-to-r from-tara to-mintCream text-oxfordBlue border-2 border-oxfordBlue hover:bg-oxfordBlue"
+								}`}
+								onClick={() => fetchAll()}
+							>
+								<div className="flex items-center justify-center space-x-3">
+									<FontAwesomeIcon
+										icon={faList}
+										className="text-lg"
+									/>
+									<span>All Breeds</span>
+								</div>
+							</button>
+						</div>
+					)}
+				</motion.div>
+			)}
 
 			{/* Content Section */}
-			<motion.div
-				className="max-w-7xl mx-auto"
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-			>
-				{loading && breeds.length === 0 ? (
-					<div className="flex flex-col justify-center items-center py-12 mt-8">
-						<p className="text-lg text-oxfordBlue">
-							Fetching breeds...
-						</p>
-						<PawLoading />
-					</div>
-				) : breeds.length > 0 ? (
-					<div>
-						{selectedGroup && (
-							<h2 className="text-4xl font-bold text-center mb-8 text-oxfordBlue font-delius">
-								{selectedGroup} Breeds
-							</h2>
-						)}
-						{!selectedGroup && (
-							<h2 className="text-4xl font-bold text-center mb-8 text-oxfordBlue font-delius">
-								All Breeds
-							</h2>
-						)}
-						<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
-							{breeds.map((breed) => (
-								<BreedCard
-									key={
-										breed.id ??
-										`${breed.breed}::${breed.group}`
-									}
-									breed={breed}
-								/>
-							))}
+			{!error && (
+				<motion.div
+					className="max-w-7xl mx-auto"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+				>
+					{loading && breeds.length === 0 ? (
+						<div className="flex flex-col justify-center items-center py-12 mt-8">
+							<p className="text-lg text-oxfordBlue">
+								Fetching breeds...
+							</p>
+							<PawLoading />
 						</div>
-					</div>
-				) : (
-					<div className="flex flex-col justify-center items-center py-12">
-						<FontAwesomeIcon
-							icon={faDog}
-							className="text-6xl mb-4 text-oxfordBlue/50"
-						/>
-						<p className="text-lg text-oxfordBlue font-poppins">
-							No breeds available at the moment.
-						</p>
-						<p className="text-sm text-oxfordBlue/70 mt-2 font-poppins">
-							Check back soon for new breeds!
-						</p>
-					</div>
-				)}
-			</motion.div>
+					) : breeds.length > 0 ? (
+						<div>
+							{selectedGroup && (
+								<h2 className="text-4xl font-bold text-center mb-8 text-oxfordBlue font-delius">
+									{selectedGroup} Breeds
+								</h2>
+							)}
+							{!selectedGroup && (
+								<h2 className="text-4xl font-bold text-center mb-8 text-oxfordBlue font-delius">
+									All Breeds
+								</h2>
+							)}
+							<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+								{breeds.map((breed) => (
+									<BreedCard
+										key={
+											breed.id ??
+											`${breed.breed}::${breed.group}`
+										}
+										breed={breed}
+									/>
+								))}
+							</div>
+						</div>
+					) : (
+						<div className="flex justify-center py-12">
+							<ErrorCard
+								icon={faDog}
+								title="No breeds available at the moment."
+								className="max-w-xl"
+								detail="Check back soon for new breeds!"
+								buttons={[{ type: "home" }]}
+							/>
+						</div>
+					)}
+				</motion.div>
+			)}
 		</motion.div>
 	);
 }

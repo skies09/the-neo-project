@@ -11,7 +11,7 @@ import { blogAPI, BlogPost } from "../../services/blogApi";
 import { formatDateShort } from "../../helpers/dateUtils";
 import TransitionCTA from "../homepage/TransitionCTA";
 import PawLoading from "../PawLoading";
-import { ErrorCard, RefreshContactSubtitle } from "../ErrorCard";
+import { ErrorCard } from "../ErrorCard";
 
 const BlogHomepage: React.FC = () => {
 	const [featuredPosts, setFeaturedPosts] = useState<BlogPost[]>([]);
@@ -86,17 +86,9 @@ const BlogHomepage: React.FC = () => {
 			<ErrorCard
 				icon={faNewspaper}
 				title="Apologies, the blog is currently unavailable"
-				footer={
-					<Link
-						to="/"
-						className="btn-primary inline-flex items-center justify-center px-8 py-3"
-					>
-						Back to home
-					</Link>
-				}
-			>
-				<RefreshContactSubtitle />
-			</ErrorCard>,
+				showSubtitle
+				buttons={[{ type: "home" }]}
+			/>,
 		);
 	}
 
@@ -105,20 +97,9 @@ const BlogHomepage: React.FC = () => {
 		return blogAsideWithCta(
 			<ErrorCard
 				title="Nothing to show yet"
-				footer={
-					<Link
-						to="/"
-						className="btn-primary inline-flex items-center justify-center px-8 py-3"
-					>
-						Back to home
-					</Link>
-				}
-			>
-				<p className="font-poppins leading-relaxed text-oxfordBlue/80 md:text-lg">
-					There are no featured posts at the moment. Please check back
-					soon, or open the blog from the menu.
-				</p>
-			</ErrorCard>,
+				detail="There are no featured posts at the moment. Please check back soon, or open the blog from the menu."
+				buttons={[{ type: "home" }]}
+			/>,
 		);
 	}
 

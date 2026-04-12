@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import AdoptCard from "../../components/cards/adoptCard";
 import { dogAPI, Dog } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 import { faSearch, faDog } from "@fortawesome/free-solid-svg-icons";
 import PawLoading from "../../components/PawLoading";
-import {
-	ErrorCard,
-	RefreshContactSubtitle,
-} from "../../components/ErrorCard";
+import { ErrorCard } from "../../components/ErrorCard";
 
 export default function AllDogs() {
 	const [dogData, setDogData] = useState<Dog[]>([]);
@@ -99,19 +95,10 @@ export default function AllDogs() {
 							cardPaddingClass="p-8"
 							title="No dogs available for adoption"
 							titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
-							footer={
-								<div className="flex justify-center">
-									<Link
-										to="/"
-										className="btn-primary inline-flex items-center justify-center px-6 py-3"
-									>
-										Back to home
-									</Link>
-								</div>
-							}
-						>
-							<RefreshContactSubtitle className="text-oxfordBlue/70" />
-						</ErrorCard>
+							showSubtitle={error != null}
+							subtitleClassName="text-oxfordBlue/70"
+							buttons={[{ type: "home" }]}
+						/>
 					</div>
 				</motion.div>
 			)}

@@ -40,10 +40,6 @@ export interface BlogFilters {
 }
 
 class BlogAPI {
-	constructor() {
-		// Use the existing axiosService which already has the correct base URL
-	}
-
 	private async request<T>(endpoint: string, options: any = {}): Promise<T> {
 		try {
 			const response = await axiosService.request({

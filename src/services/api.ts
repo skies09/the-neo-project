@@ -346,9 +346,11 @@ export const authAPI = {
 	},
 };
 
-export default {
+const api = {
 	kennel: kennelAPI,
 	dog: dogAPI,
 	breeds: breedsAPI,
 	auth: authAPI,
 };
+
+export default api;

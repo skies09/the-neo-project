@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,10 +11,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { blogAPI, BlogPost } from "../../services/blogApi";
 import { formatDateLong } from "../../helpers/dateUtils";
 import PawLoading from "../../components/PawLoading";
-import {
-	ErrorCard,
-	RefreshContactSubtitle,
-} from "../../components/ErrorCard";
+import { ErrorCard } from "../../components/ErrorCard";
 
 // Utility function to convert line breaks to HTML
 const formatContent = (content: string): string => {
@@ -34,7 +31,7 @@ const BlogPostPage: React.FC = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const fetchPost = async () => {
+	const fetchPost = useCallback(async () => {
 		if (!slug) {
 			setError("Post slug not provided");
 			setLoading(false);
@@ -61,11 +58,11 @@ const BlogPostPage: React.FC = () => {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, [slug]);
 
 	useEffect(() => {
 		fetchPost();
-	}, [slug]);
+	}, [fetchPost]);
 
 	if (loading) {
 		return (
@@ -90,26 +87,13 @@ const BlogPostPage: React.FC = () => {
 							className="mx-auto max-w-2xl"
 							cardPaddingClass="p-8"
 							titleClassName="font-delius text-2xl font-bold text-oxfordBlue"
-							footer={
-								<div className="flex flex-col justify-center gap-4 sm:flex-row">
-									<button
-										type="button"
-										onClick={() => navigate(-1)}
-										className="btn-primary px-6 py-3"
-									>
-										Go Back
-									</button>
-									<Link
-										to="/blog"
-										className="btn-secondary inline-flex items-center justify-center px-6 py-3"
-									>
-										View All Posts
-									</Link>
-								</div>
-							}
-						>
-							<RefreshContactSubtitle className="text-oxfordBlue/70" />
-						</ErrorCard>
+							showSubtitle
+							subtitleClassName="text-oxfordBlue/70"
+							buttons={[
+								{ type: "goBack", onClick: () => navigate(-1) },
+								{ type: "blogIndex" },
+							]}
+						/>
 					</div>
 				</div>
 			</div>
